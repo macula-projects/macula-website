@@ -117,19 +117,19 @@ public class Config {
     @Primary
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClientOne(ApplicationContext ctx, RedissonProperties redissonPropertiesOne) throws Exception {
-        Config config = RedissonConfigBuilder.create().build(ctx, null, redissonProperties);
+        Config config = RedissonConfigBuilder.create().build(ctx, null, redissonPropertiesOne);
         return Redisson.create(config);
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.redis.redisson.tow")
+    @ConfigurationProperties(prefix = "spring.redis.redisson.two")
     public RedissonProperties redissonPropertiesTwo() {
         return new RedissonProperties();
     }
 
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClientTwo(ApplicationContext ctx, RedissonProperties redissonPropertiesTwo) throws Exception {
-        Config config = RedissonConfigBuilder.create().build(ctx, null, redissonProperties);
+        Config config = RedissonConfigBuilder.create().build(ctx, null, redissonPropertiesTwo);
         return Redisson.create(config);
     }
 }
@@ -142,9 +142,9 @@ public class Config {
 spring:
   redis:
     one:
-			xxx
+      xxx
     two:
-    	xxx
+      xxx
 ```
 
 然后添加配置Bean，注意其中一个要设置@Primary注解，以便给默认的RedisConnectionFactory使用
