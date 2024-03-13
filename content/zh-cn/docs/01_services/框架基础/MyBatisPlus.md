@@ -27,8 +27,8 @@ weight: 3
 ```yaml
 macula:
   mybatis-plus:
-  	tenant-id: 1L															# 租户ID，默认1L
-  	tenant-suffixes: xxx											# 默认是tenant,TENANT
+    tenant-id: 1L                             # 租户ID，默认1L
+    tenant-suffixes: xxx                      # 默认是tenant,TENANT
     audit:
       create-by-name: createBy                # 创建人，默认createBy
       create-time-name: createTime            # 创建时间，默认createTime
@@ -63,11 +63,11 @@ public class BaseEntity implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     private String createBy;
 
-    @Schema(description = "更新人")
+    @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "更新人")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private String lastUpdateBy;
 
@@ -275,7 +275,7 @@ public IPage<UserVO> listUserPages(UserPageQuery queryParams) {
         <artifactId>macula-boot-commons</artifactId>
     </dependency>
 
-  	<!-- crypto -->
+    <!-- crypto -->
     <dependency>
         <groupId>dev.macula.boot</groupId>
         <artifactId>macula-boot-starter-crypto</artifactId>
