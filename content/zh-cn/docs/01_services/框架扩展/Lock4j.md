@@ -101,6 +101,35 @@ public class DemoService {
     }
 }
 ```
+
+### 不可重入锁执行器 RedissonNonReentrantLockExecutor
+
+基于 Redisson 的 RLock 实现，通过在加锁时检测当前线程是否已持有锁，从而确保锁的严格不可重入性。
+
+```java
+@Service
+public class DemoService {
+
+    // 使用不可重入锁执行器
+    @Lock4j(executor = RedissonNonReentrantLockExecutor.class)
+    public void nonReentrantMethod() {
+        // do something
+    }
+}
+```
+**实现原理：**
+
+- 基于 Redisson 的 `RLock` 实现
+- 在获取锁时检查当前线程是否已持有该锁
+- 如果当前线程已持有锁，则返回 `null` 表示获取锁失败
+- 实现了严格的不可重入特性，防止同一个线程重复获取锁
+
+**适用场景：**
+
+- 需要严格防止重入的业务场景
+- 对锁的获取有特殊控制要求的场景
+- 需要避免死锁风险的复杂业务逻辑
+
 ### 自定义锁key生成器
 默认的锁key生成器为 `com.baomidou.lock.DefaultLockKeyBuilder` 。
 ```java
