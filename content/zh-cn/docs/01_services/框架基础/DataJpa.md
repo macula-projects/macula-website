@@ -156,8 +156,6 @@ public interface BlogRepository extends JpaRepository<Blog, String> {
 
 Fenix具体使用请参考[官方文档](https://blinkfox.github.io/fenix/#/README)
 
-
-
 ## 依赖引入
 
 ```xml

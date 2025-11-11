@@ -283,9 +283,10 @@ macula:
 
 - [数据库与Java时间字段转换原理](https://www.jianshu.com/p/af8d7b3e2074)
 
+- [数据库时间存储原理](https://juejin.cn/post/7007044908250824741)
+
 - 与外部交互的接口层的时间建议使用有时区的，比如Date、ZonedDateTime
 
-  
 
 {{% alert title="提示" color="primary" %}}
 
