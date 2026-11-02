@@ -93,6 +93,8 @@ latest 的“平台简介 → 安全架构”用原理图概述网关认证、�
 
 原理图文字使用共享的正文 / 代码字号变量，并保持 720px 原生画布，避免在宽屏随容器拉伸而放大字号。窄屏在图形区域内横向滚动。Web 的“授权列表的资源凭证扩展”归入“核心功能 → 全局返回结构处理”，同步时也保持该归类。
 
+latest 的“平台简介 → 值对象与分层”复用应用分层章节的 `layer-model.png`、`model2.png` 原图，概要介绍 Query、Form、DTO、VO、BO、Entity 的命名、服务内传递及跨服务契约转换。图片与原规范保持共用，支持放大查看；新增章节通过 `LATEST_CHAPTERS` 显式声明，使用 `manual_content: true` 保留人工维护内容。
+
 Gateway 组件说明同时覆盖 README 中的完整能力：HTTP / WebSocket 路由、认证授权、内部 JWT、CryptoService 与接口加解密 / 签名、System Redis 扩展、Token 缓存管理、Trace ID 和灰度标签。页面直接介绍组件接入与使用，使用通用服务名和环境变量；协议细节对照 CryptoService、过滤器与配置属性，`source_paths` 记录相应来源。功能覆盖检查用于防止组件页在后续整理中遗漏这些内容。
 
 3.1、4.0 分别独立维护在 `content/zh-cn/docs/3.1/`、`content/zh-cn/docs/4.0/`，保留各自历史目录结构，直接从顶部版本菜单进入，不再嵌套或复制到其他版本中。它们在版本配置中标记为 `archived: true`，同步工具会跳过历史版本。原始 `/docs/98_old/<版本>/` 及曾使用的 `/docs/<5.x|6.0.x|latest>/98_old/<版本>/` 章节地址均跳转到独立历史文档；旧图片地址通过 Hugo 静态挂载保留。原有“历史文档”目录入口跳转到 4.0 首页。

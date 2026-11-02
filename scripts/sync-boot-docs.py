@@ -33,6 +33,9 @@ LATEST_CHAPTERS = {
     '00_introduce/安全架构.md': {
         'title': '安全架构', 'linkTitle': '安全架构', 'weight': 3,
     },
+    '00_introduce/值对象与分层.md': {
+        'title': '值对象与分层', 'linkTitle': '值对象与分层', 'weight': 4,
+    },
     '04_devmanual/模块说明.md': {
         'title': 'Samples 模块说明', 'linkTitle': '模块说明', 'weight': 3,
     },
