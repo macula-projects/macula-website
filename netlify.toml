@@ -1,4 +1,7 @@
 [build]
+command = "npm run build"
+publish = "public"
 [build.environment]
-HUGO_VERSION = "0.104.3"
-GO_VERSION = "1.19.2"
+HUGO_VERSION = "0.169.0"
+NODE_VERSION = "24"
+GO_VERSION = "1.27.2"

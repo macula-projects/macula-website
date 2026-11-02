@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sync branch content into the same chapter layout as the 5.x website."""
+"""Sync branch content into shared categories with explicit component pages."""
 import argparse
 import json
 import posixpath
@@ -14,17 +14,26 @@ SITE = Path(__file__).resolve().parents[1]
 DOCS = SITE / 'content/zh-cn/docs'
 REMOTE = 'https://github.com/macula-projects/macula-boot'
 
-# Editorial chapter paths are shared across releases; repository paths are sources only.
+# Editorial categories are shared across releases; repository paths are sources only.
+EXTRA_CHAPTERS = {
+    '01_services/框架基础/Commons.md': {
+        'title': 'Macula Boot Commons', 'linkTitle': 'Commons', 'weight': -1,
+    },
+    '01_services/框架基础/Async.md': {
+        'title': 'Macula Boot Starter Async', 'linkTitle': 'Async', 'weight': 0,
+    },
+}
+
 MAPPING = {
     'README.md': '00_introduce/概述/_index.md',
     'macula-boot-archetype': '04_devmanual/创建应用平台.md',
-    'macula-boot-commons': '01_services/框架基础/_index.md',
+    'macula-boot-commons': '01_services/框架基础/Commons.md',
     'macula-boot-examples': '04_devmanual/运行与测试.md',
     'docker': '04_devmanual/打包部署.md',
     'docs/migration/unified-observability.md': '05_ops/升级指南/_index.md',
 }
 for category, modules in {
-    '框架基础': {'async': '_index', 'web': 'Web', 'cache': 'Cache', 'crypto': 'Crypto',
+    '框架基础': {'async': 'Async', 'web': 'Web', 'cache': 'Cache', 'crypto': 'Crypto',
               'jpa': 'DataJpa', 'kafka': 'Kafka', 'mapstruct': 'Mapstruct',
               'mybatis-plus': 'MyBatisPlus', 'redis': 'Redis', 'rocketmq': 'RocketMQ',
               'security': 'Security', 'springdoc': 'Springdoc'},
@@ -65,6 +74,7 @@ def main():
     template = DOCS / '5.x'
     template_files = {p.relative_to(template) for p in template.rglob('*')
                       if p.is_file() and not p.name.startswith('.')}
+    expected_files = template_files | {Path(path) for path in EXTRA_CHAPTERS}
     for version in json.loads((SITE / 'data/doc_versions.json').read_text()):
         if version['id'] == '5.x' or version.get('archived'):
             continue
@@ -90,8 +100,8 @@ def main():
         chapters = defaultdict(list)
         for source in sources:
             chapter = chapter_for(source)
-            if Path(chapter) not in template_files:
-                raise ValueError(f'Chapter is not in the 5.x layout: {chapter}')
+            if Path(chapter) not in expected_files:
+                raise ValueError(f'Chapter is not in the shared layout or explicit additions: {chapter}')
             chapters[chapter].append(source)
         observability = next((p for p in sources if p.endswith('macula-boot-starter-observability/README.md')), None)
         if observability:
@@ -129,7 +139,7 @@ def main():
         root = DOCS / version['id']
         # Remove only pages owned by the previous generator; preserve unexpected files.
         for previous in root.rglob('*'):
-            if not previous.is_file() or previous.relative_to(root) in template_files:
+            if not previous.is_file() or previous.relative_to(root) in expected_files:
                 continue
             if previous.suffix == '.md' and any(marker in previous.read_text() for marker in (
                     '\nsource_path:', '\nsnapshot_generated:')):
@@ -140,7 +150,7 @@ def main():
             if directory.is_dir() and not any(directory.iterdir()):
                 directory.rmdir()
 
-        for relative in sorted(template_files):
+        for relative in sorted(expected_files):
             target = root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             if target.suffix == '.md' and target.exists():
@@ -150,8 +160,13 @@ def main():
             if relative.suffix != '.md':
                 shutil.copyfile(template / relative, target)
                 continue
-            header, body = split_page((template / relative).read_text())
             path = relative.as_posix()
+            if path in EXTRA_CHAPTERS:
+                header = '\n'.join(f'{key}: {json.dumps(value, ensure_ascii=False)}'
+                                   for key, value in EXTRA_CHAPTERS[path].items())
+                body = ''
+            else:
+                header, body = split_page((template / relative).read_text())
             page_sources = chapters.get(path, [])
             if page_sources:
                 body = '\n\n---\n\n'.join(render(source) for source in page_sources)
@@ -162,6 +177,8 @@ def main():
             elif body.strip() and path != '_index.md':
                 body = (f"> 本章沿用 5.x 的文档内容，尚未按 {version['label']} 分支核对。"
                         f"涉及依赖、配置或 API 时，请以 [{branch} 分支源码]({REMOTE}/tree/{branch}) 为准。\n\n" + body)
+            if path == '01_services/框架基础/_index.md':
+                body = '框架基础组件按职责独立成篇。请从下方目录选择 Commons、Async、Web、数据访问、缓存等组件。\n'
             if path == '_index.md':
                 header = header.replace('docs_version: "5.x"', f'docs_version: "{version["id"]}"')
                 header = header.replace('title: "Macula 5.x 文档"', f'title: "Macula {version["label"]} 文档"')
@@ -178,9 +195,9 @@ def main():
                         '各版本使用相同的栏目与章节路径。\n\n{{% docs/document_box %}}\n')
             target.write_text('---\n' + header + '\n---\n\n' + body)
         actual = {p.relative_to(root) for p in root.rglob('*') if p.is_file() and not p.name.startswith('.')}
-        if actual != template_files:
-            raise ValueError(f'Layout differs from 5.x: {actual ^ template_files}')
-        print(f"{version['id']}: same {len(template_files)} files as 5.x; "
+        if actual != expected_files:
+            raise ValueError(f'Layout differs from the declared chapters: {actual ^ expected_files}')
+        print(f"{version['id']}: {len(template_files)} base files and {len(EXTRA_CHAPTERS)} component pages; "
               f'{len(sources)} source documents mapped into {len(chapters)} chapters')
 
 

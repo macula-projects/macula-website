@@ -1,4 +1,7 @@
-FROM klakegg/hugo:ext-alpine
+FROM ghcr.io/gohugoio/hugo:v0.169.0
 
-RUN apk add git && \
-  git config --global --add safe.directory /src
+ENV PATH="/project/node_modules/.bin:${PATH}"
+WORKDIR /project
+USER root
+RUN mkdir -p /project/node_modules && chown hugo:hugo /project/node_modules
+USER hugo:hugo

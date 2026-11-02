@@ -81,7 +81,7 @@ macula:
 - `RequestDataContext` 类型的负载均衡请求直接读取请求头；即使头不存在，也不会再回退读取线程上下文。其他请求类型读取 `GrayVersionContextHolder`。
 - 配合 Web Starter 的 `GrayHandlerInterceptor`，Servlet 入站灰度头写入请求线程上下文，请求完成后清理；Feign Starter 的 `HeaderRelayInterceptor` 将上下文标签传递给下游。
 - 实例注册时，`GrayNacosRegistrationCustomizer` 将本实例标签写入 `GrayVersionMetaHolder`。这是实例级信息，不会自动让该实例发出的所有 HTTP 调用携带相同标签。
-- 异步调用需配合 [Async Starter](/docs/latest/01_services/框架基础/) 的受管执行器传播上下文；手动设置线程上下文时应在 `finally` 中清理。
+- 异步调用需配合 [Async Starter](/docs/latest/01_services/框架基础/async/) 的受管执行器传播上下文；手动设置线程上下文时应在 `finally` 中清理。
 
 以已启动的 Alibaba 示例链路为例，可发送带标签请求：
 

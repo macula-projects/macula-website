@@ -2,10 +2,10 @@
 {{- $root := partial "docs-version-root.html" . -}}
 {{- $current := $root.Params.docs_version | default "latest" -}}
 {{- $suffix := strings.TrimPrefix (printf "docs/%s" $current) .File.Dir -}}
-<div class="docs-version-selector d-flex align-items-center mr-3">
-  <label for="docs-version" class="mb-0 mr-2">文档版本</label>
-  <select id="docs-version" class="custom-select custom-select-sm" aria-label="切换文档版本" onchange="window.location.assign(this.value)">
-    {{- range .Site.Data.doc_versions -}}
+<div class="docs-version-selector d-flex align-items-center me-3">
+  <label for="docs-version" class="mb-0 me-2">文档版本</label>
+  <select id="docs-version" class="form-select form-select-sm" aria-label="切换文档版本" onchange="window.location.assign(this.value)">
+    {{- range hugo.Data.doc_versions -}}
       {{- $target := $page.Site.GetPage (printf "/docs/%s" .id) -}}
       {{- if $page.IsPage -}}
         {{- with $page.Site.GetPage (printf "/docs/%s%s%s" .id $suffix $page.File.BaseFileName) -}}

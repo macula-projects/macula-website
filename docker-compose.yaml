@@ -1,13 +1,16 @@
-version: "3.3"
-
 services:
 
   site:
-    image: docsy/docsy-example
+    image: macula-website:local
     build:
       context: .
-    command: server
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["npm ci && npm run dev -- --bind 0.0.0.0 --port 1313"]
     ports:
-      - "1313:1313"
+      - "127.0.0.1:1313:1313"
     volumes:
-      - .:/src
+      - .:/project
+      - site_node_modules:/project/node_modules
+
+volumes:
+  site_node_modules:

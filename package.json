@@ -1,24 +1,30 @@
 {
-  "name": "tech-doc-hugo",
+  "name": "macula-website",
   "version": "0.0.1",
-  "description": "Hugo theme for technical documentation.",
+  "description": "Macula 官方网站与版本化文档",
   "main": "none.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "hugo --minify --panicOnWarning",
+    "dev": "hugo server",
+    "hugo": "hugo"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google/docsy-example.git"
+    "url": "git+https://github.com/macula-projects/macula-website.git"
   },
-  "author": "",
+  "author": "Macula Authors",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/google/docsy-example/issues"
+    "url": "https://github.com/macula-projects/macula-website/issues"
   },
-  "homepage": "https://github.com/google/docsy-example#readme",
+  "homepage": "https://macula.dev",
   "devDependencies": {
-    "autoprefixer": "^10.4.0",
-    "postcss": "^8.3.7",
-    "postcss-cli": "^9.0.2"
+    "sass-embedded": "1.107.1",
+    "bootstrap": "5.3.8",
+    "@fortawesome/fontawesome-free": "7.3.1"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=24.0.0 <27"
   }
 }
