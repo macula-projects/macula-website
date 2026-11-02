@@ -19,6 +19,16 @@ npm run build
 
 Hugo 安装请参考[官方说明](https://gohugo.io/installation/)。直接使用 Hugo 命令时，需将 node_modules/.bin 加入 PATH；推荐使用上述 npm 命令。GitHub Pages 与 Netlify 使用相同的 Hugo、Node 和锁文件。Docsy 0.18 使用 _partials、_shortcodes、_markup 目录和 Bootstrap 5。自定义模板保留本站版本导航与阅读布局，图片预览使用浏览器原生弹窗。
 
+### 本地提示找不到 Dart Sass
+
+如果直接运行 `hugo server` 出现 `TOCSS-DART` / `You need to install Dart Sass`，请在项目目录执行 `npm ci` 后改用 `npm run dev`。Sass 安装在 `node_modules/.bin`，npm 脚本会自动将该目录加入 PATH；终端直接执行 Hugo 时需要显式提供路径：
+
+```bash
+PATH="$PWD/node_modules/.bin:$PATH" hugo server
+```
+
+IDE 的启动命令也推荐使用 `npm run dev`，工作目录设置为本仓库根目录。无需另装全局 Sass。
+
 ## 页面与样式维护
 
 首页内容位于 `content/zh-cn/_index.html`；共享导航、页脚以及文档阅读布局位于 `layouts/`。`assets/scss/_styles_project.scss` 统一维护首页与文档样式，在 Docsy 默认样式之后加载，避免改动主题依赖。`assets/js/site.js` 提供手机目录、可键盘操作的章节折叠、代码复制和页内目录定位，未新增前端依赖。
@@ -26,6 +36,14 @@ Hugo 安装请参考[官方说明](https://gohugo.io/installation/)。直接使�
 品牌标记使用 `static/img/macula-mark.svg`，保留 M 形结构和蓝、青、白配色。大写 `MACULA` 字标使用 `static/img/macula-wordmark.svg`，按参考图的宽厚几何字形制作成独立矢量路径，避免设备字体不同导致外观变化。`layouts/_partials/brand.html` 统一导航和页脚标识，尺寸在共享样式中维护；浏览器图标复用 M 形标记。字标、页面强调色与主按钮统一使用品牌蓝 `#1672CE`，Logo 底色使用同色系的轻微明暗变化。
 
 修改后运行 `npm run build` 验证构建，并通过 `npm run dev` 检查桌面与手机布局。验收时检查：首页不显示版本菜单、五个文档版本可切换、手机目录可展开、代码和表格不会撑宽页面。版本化 Markdown 正文与同步规则独立维护，不应为样式调整重写各分支内容。
+
+全站排版共用 `_styles_project.scss` 中的字体与字号变量：首页段落、文档、博客和变更历史在 PC 使用 `1rem`（默认 16px），767px 及以下使用 `.875rem`（默认 14px）。导航与目录统一为 14px，辅助说明为 PC 13px / 手机 12px，代码为 PC 14px / 手机 13px。使用相对单位以响应浏览器字体设置；正文、辅助文字、键盘焦点及手机导航采用同一套颜色与间距规则。
+
+## Release 变更历史
+
+`/releases/` 与文档中的“更新日志”共用 `data/boot_releases.json`，数据来源为 Macula Boot 的 GitHub Releases。latest 展示全部发布记录，5.x 与 6.0.x 筛选对应系列；版本标签展示时去掉 `v`，详情链接保留 GitHub 原始地址。发布日期按北京时间显示，预发布单独标记。摘要提取发布说明中的主要功能与修复条目，不将 main 的未发布改动冒充正式版本。
+
+运行 `npm run sync:releases` 更新本地快照；`npm run build` 直接使用快照，离线可构建。GitHub Pages 在构建前刷新 Release 数据，并每天北京时间 10:30 定时更新；Netlify 构建前也会刷新。同步失败不会覆盖上一份快照，CI 会保留已部署的网站。维护同步逻辑后执行 `python3 -m unittest discover -s scripts/tests -v`，覆盖版本筛选、摘要、分页与失败保护。
 
 ## 文档版本
 

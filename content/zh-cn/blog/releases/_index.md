@@ -1,7 +1,7 @@
 
 ---
-title: "版本发布"
-linkTitle: "版本发布"
+title: "版本解析"
+linkTitle: "版本解析"
 weight: 20
 ---
 

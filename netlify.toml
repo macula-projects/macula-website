@@ -1,5 +1,5 @@
 [build]
-command = "npm run build"
+command = "npm run sync:releases && npm run build"
 publish = "public"
 [build.environment]
 HUGO_VERSION = "0.169.0"

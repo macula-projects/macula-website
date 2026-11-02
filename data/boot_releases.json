@@ -1,0 +1,333 @@
+{
+  "repository": "macula-projects/macula-boot",
+  "source_url": "https://github.com/macula-projects/macula-boot/releases",
+  "releases": [
+    {
+      "version": "5.0.20",
+      "tag": "v5.0.20",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2026-07-07T02:24:45Z",
+      "date": "2026-07-07",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.20",
+      "prerelease": false,
+      "summary": [
+        "将 macula-boot-starter-operationlog 纳入 parent 依赖管理"
+      ]
+    },
+    {
+      "version": "6.0.0",
+      "tag": "v6.0.0",
+      "major": 6,
+      "series": "6.0",
+      "published_at": "2026-05-28T02:45:54Z",
+      "date": "2026-05-28",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v6.0.0",
+      "prerelease": false,
+      "summary": [
+        "升级 Java 版本至 17，升级 Spring Boot 至 3.5.x，升级 Spring Cloud 至 2023.0.6",
+        "全面迁移 javax.* 至 jakarta.* 包（servlet、sql、validation 等），适配 Spring Boot 3",
+        "添加 macula-boot-starter-snailjob 模块，集成 SnailJob 分布式任务调度，并完善示例",
+        "修复 TraceId 获取逻辑，优化追踪链路"
+      ]
+    },
+    {
+      "version": "5.0.19",
+      "tag": "v5.0.19",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2026-05-25T10:02:03Z",
+      "date": "2026-05-25",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.19",
+      "prerelease": false,
+      "summary": [
+        "新增 OperationLog Starter，基于 @OperationLog 注解记录操作日志",
+        "新增 Lock4J 自动配置及 Redisson 不可重入锁执行器实现",
+        "Idempotent 注解支持异常时自动删除幂等 key",
+        "修复 CryptoGlobalFilter Content-Type 判断不兼容带 charset 后缀的场景"
+      ]
+    },
+    {
+      "version": "5.0.18",
+      "tag": "v5.0.18",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2025-09-04T09:07:31Z",
+      "date": "2025-09-04",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.18",
+      "prerelease": false,
+      "summary": [
+        "升级至 1.46.19-SpringCloud2021-RELEASE 版本",
+        "FIX: 使用 RawQuery 保证 AKSK 验签一致性"
+      ]
+    },
+    {
+      "version": "5.0.17",
+      "tag": "v5.0.17",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2025-04-07T08:44:26Z",
+      "date": "2025-04-07",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.17",
+      "prerelease": false,
+      "summary": [
+        "AuditLog 加入请求参数和响应结果长度限制参数"
+      ]
+    },
+    {
+      "version": "5.0.16",
+      "tag": "v5.0.16",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-11-20T10:55:17Z",
+      "date": "2024-11-20",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.16",
+      "prerelease": false,
+      "summary": [
+        "FIX：Cors配置的条件属性不生效"
+      ]
+    },
+    {
+      "version": "5.0.15",
+      "tag": "v5.0.15",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-11-19T11:11:06Z",
+      "date": "2024-11-19",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.15",
+      "prerelease": false,
+      "summary": [
+        "FIX: 灰度请求到正常的生产者也需要发送灰度消息",
+        "FIX: GrayVersionMetaHolder是在nacos注册的时候设置version的，如果bean初始化的时候需要version则要提前获取"
+      ]
+    },
+    {
+      "version": "5.0.14",
+      "tag": "v5.0.14",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-11-12T02:52:04Z",
+      "date": "2024-11-12",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.14",
+      "prerelease": false,
+      "summary": [
+        "实现延迟注册服务到Nacos，以便优雅升级",
+        "FIX: 修复tsf网关启动异常(引入tsf网关依赖要注意顺序)"
+      ]
+    },
+    {
+      "version": "5.0.13",
+      "tag": "v5.0.13",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-09-09T09:40:16Z",
+      "date": "2024-09-09",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.13",
+      "prerelease": false,
+      "summary": [
+        "升级mybatis-plus版本，添加租户是否启用选项",
+        "FIX: 防止BigDecimal的JSON序列化变成科学计数法"
+      ]
+    },
+    {
+      "version": "5.0.12",
+      "tag": "v5.0.12",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-07-15T06:10:09Z",
+      "date": "2024-07-15",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.12",
+      "prerelease": false,
+      "summary": [
+        "针对LocalDateTime、LocalDate、LocalTime支持全局配置格式",
+        "前端传空串给后端用Date接收的对象的时候，会报空指针异常"
+      ]
+    },
+    {
+      "version": "5.0.11",
+      "tag": "v5.0.11",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-04-26T07:14:27Z",
+      "date": "2024-04-26",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.11",
+      "prerelease": false,
+      "summary": [
+        "add a custom maxLimit property for PaginationInnerInterceptor",
+        "修复GET请求经过网关中文等字符编码后获取不正确的问题"
+      ]
+    },
+    {
+      "version": "5.0.10",
+      "tag": "v5.0.10",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-04-25T04:24:45Z",
+      "date": "2024-04-25",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.10",
+      "prerelease": false,
+      "summary": [
+        "#15 修复经过网关后参数丢失问题",
+        "回退MyBatis Plus版本到3.5.5，解决与jpa的jsqlparser版本冲突"
+      ]
+    },
+    {
+      "version": "5.0.8",
+      "tag": "v5.0.8",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-04-24T09:40:12Z",
+      "date": "2024-04-24",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.8",
+      "prerelease": false,
+      "summary": [
+        "WebSocket模块支持FeignClient微服务调用携带用户上下文"
+      ]
+    },
+    {
+      "version": "5.0.7",
+      "tag": "v5.0.7",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-04-24T01:09:14Z",
+      "date": "2024-04-24",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.7",
+      "prerelease": false,
+      "summary": [
+        "升级springboot版本到2.7.18",
+        "升级mybatis-plus到3.5.6",
+        "升级seata版本到2.0.0",
+        "修复Inner注解获取NPE问题"
+      ]
+    },
+    {
+      "version": "5.0.6",
+      "tag": "v5.0.6",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-01-09T04:25:47Z",
+      "date": "2024-01-09",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.6",
+      "prerelease": false,
+      "summary": [
+        "BizCheckException从200改为510响应，200会导致feignclient无法识别微服务层的异常"
+      ]
+    },
+    {
+      "version": "5.0.5",
+      "tag": "v5.0.5",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2024-01-08T11:01:49Z",
+      "date": "2024-01-08",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.5",
+      "prerelease": false,
+      "summary": [
+        "添加BizCheckException，该异常http 200返回，用于业务检查类抛出异常，属于提醒用户输入的问题，一般无需告警"
+      ]
+    },
+    {
+      "version": "5.0.4",
+      "tag": "v5.0.4",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2023-12-07T03:41:04Z",
+      "date": "2023-12-07",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.4",
+      "prerelease": false,
+      "summary": [
+        "网关支持接口加解密和签名",
+        "支持全链路灰度发布",
+        "修复RocketMQ的灰度消费问题"
+      ]
+    },
+    {
+      "version": "5.0.3",
+      "tag": "v5.0.3",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2023-10-20T10:58:52Z",
+      "date": "2023-10-20",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.3",
+      "prerelease": false,
+      "summary": [
+        "支持反向角色",
+        "支持排他角色",
+        "支持人群包角色",
+        "FIX没有定义MQProcuder导致DefaultRocketMQLocalTransactionListener异常"
+      ]
+    },
+    {
+      "version": "5.0.2",
+      "tag": "v5.0.2",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2023-09-17T14:59:18Z",
+      "date": "2023-09-17",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.2",
+      "prerelease": false,
+      "summary": [
+        "修复system-starter不能获取按钮权限",
+        "修复DefaultRocketMQLocalTransactionListener没有判断TxMessage"
+      ]
+    },
+    {
+      "version": "5.0.1",
+      "tag": "v5.0.1",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2023-09-11T12:28:52Z",
+      "date": "2023-09-11",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.1",
+      "prerelease": false,
+      "summary": [
+        "实现RocketMQ的灰度消费支持",
+        "Result增加cause字段，表示异常原因描述",
+        "新增日志、审计、监控模块",
+        "异常包裹的result不能设置data为string，序列化有问题"
+      ]
+    },
+    {
+      "version": "5.0.0",
+      "tag": "v5.0.0",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2023-07-26T16:15:07Z",
+      "date": "2023-07-27",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.0",
+      "prerelease": false,
+      "summary": [
+        "基于spring-boot 2.7.x的应用开发框架",
+        "基于spring-cloud 2021.x的微服务开发框架",
+        "macula-boot-starter-mapstruct                对象转换",
+        "macula-boot-starter-crypto                      加解密模块"
+      ]
+    },
+    {
+      "version": "5.0.0-RC4",
+      "tag": "v5.0.0-RC4",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2023-03-27T07:22:18Z",
+      "date": "2023-03-27",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.0-RC4",
+      "prerelease": true,
+      "summary": [
+        "此版本未提供条目摘要，请查看 Release 发布详情。"
+      ]
+    },
+    {
+      "version": "5.0.0-RC3",
+      "tag": "v5.0.0-RC3",
+      "major": 5,
+      "series": "5.0",
+      "published_at": "2023-03-27T02:52:13Z",
+      "date": "2023-03-27",
+      "url": "https://github.com/macula-projects/macula-boot/releases/tag/v5.0.0-RC3",
+      "prerelease": true,
+      "summary": [
+        "Feign使用的Kong支持Ipaas"
+      ]
+    }
+  ]
+}

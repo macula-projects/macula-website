@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="{{ .Site.Language.Lang }}" class="no-js">
+<head>{{ partial "head.html" . }}</head>
+<body class="macula-docs macula-releases td-{{ .Kind }}">
+  <header>{{ partial "navbar.html" . }}</header>
+  <div class="td-outer" id="doc-outer">
+    <main id="main-content" tabindex="-1" class="site-container release-main">
+      {{ block "main" . }}{{ end }}
+    </main>
+    {{ partial "footer.html" . }}
+  </div>
+  {{ partial "scripts.html" . }}
+</body>
+</html>

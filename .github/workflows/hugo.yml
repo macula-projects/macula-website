@@ -8,6 +8,9 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  schedule:
+    # Refresh public Macula Boot Releases daily at 10:30 Asia/Shanghai.
+    - cron: "30 2 * * *"
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -55,6 +58,12 @@ jobs:
         uses: actions/configure-pages@v6
       - name: Install Node.js dependencies
         run: npm ci
+      - name: Verify release sync
+        run: python3 -m unittest discover -s scripts/tests
+      - name: Sync Macula Boot Releases
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run sync:releases
       - name: Build with Hugo
         env:
           # For maximum backward compatibility with Hugo modules

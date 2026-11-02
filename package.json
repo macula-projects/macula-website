@@ -6,7 +6,8 @@
   "scripts": {
     "build": "hugo --minify --panicOnWarning",
     "dev": "hugo server",
-    "hugo": "hugo"
+    "hugo": "hugo",
+    "sync:releases": "python3 scripts/sync-boot-releases.py"
   },
   "repository": {
     "type": "git",

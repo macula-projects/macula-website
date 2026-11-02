@@ -1,0 +1,24 @@
+{{- $feed := hugo.Data.boot_releases -}}
+{{- $series := .Get "series" | default "all" -}}
+{{- $releases := $feed.releases -}}
+{{- if eq $series "5.x" -}}
+  {{- $releases = where $releases "major" 5 -}}
+{{- else if ne $series "all" -}}
+  {{- $releases = where $releases "series" $series -}}
+{{- end -}}
+<div class="release-history">
+  <p class="release-source">版本与摘要来自 <a href="{{ $feed.source_url }}">Macula Boot Releases</a>，按发布日期排列。完整变更与升级说明见各版本的发布详情。</p>
+  {{- range $releases }}
+  <article class="release-entry" aria-labelledby="release-{{ .version | anchorize }}">
+    <div class="release-entry-heading">
+      <h2 id="release-{{ .version | anchorize }}">{{ .version }}</h2>
+      <span class="release-badge{{ if .prerelease }} is-preview{{ end }}">{{ if .prerelease }}预发布{{ else }}正式发布{{ end }}</span>
+      <time datetime="{{ .published_at }}">{{ .date }}</time>
+    </div>
+    <ul>{{ range .summary }}<li>{{ . }}</li>{{ end }}</ul>
+    <a class="release-detail" href="{{ .url }}" aria-label="查看 Macula Boot {{ .version }} 的 Release 详情">查看发布详情 <span aria-hidden="true">↗</span></a>
+  </article>
+  {{- else }}
+  <p>此系列暂无公开 Release，请查看 <a href="{{ $feed.source_url }}">全部发布记录</a>。</p>
+  {{- end }}
+</div>
