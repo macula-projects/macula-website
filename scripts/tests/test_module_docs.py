@@ -8,6 +8,20 @@ from module_docs import SECTIONS, normalize_module, pom_defaults
 
 
 class ModuleDocsTest(unittest.TestCase):
+    def test_web_passkey_extension_belongs_to_response_processing(self):
+        source = ('## 核心功能\n\n### 全局返回结构处理\n\n响应包装\n'
+                  '\n#### Controller示例\n\n示例\n\n### 国际化\n\n语言\n'
+                  '\n## 依赖引入\n\n依赖\n\n## 版权说明\n\n许可证\n'
+                  '\n### 授权列表的资源凭证扩展\n\nPasskeyResource 扩展正文\n')
+        result = normalize_module(source, component='Web')
+        response = result.index('### 全局返回结构处理')
+        extension = result.index('#### 授权列表的资源凭证扩展')
+        self.assertLess(response, extension)
+        self.assertLess(extension, result.index('### 国际化'))
+        self.assertLess(extension, result.index('## 依赖引入'))
+        self.assertIn('PasskeyResource 扩展正文', result)
+        self.assertEqual(result, normalize_module(result, component='Web'))
+
     def test_gateway_usage_does_not_depend_on_example_projects(self):
         page = (Path(__file__).resolve().parents[2] /
                 'content/zh-cn/docs/latest/01_services/微服务/Gateway.md').read_text()

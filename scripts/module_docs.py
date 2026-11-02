@@ -38,6 +38,28 @@ def pom_defaults(poms):
     }
 
 
+def place_web_response_extension(body):
+    """Keep the list-passkey extension inside response processing, including old READMEs."""
+    extension = re.search(r'(?m)^#{3,4} 授权列表的资源凭证扩展\s*$', body)
+    response = re.search(r'(?m)^### 全局返回结构处理\s*$', body)
+    if not extension or not response:
+        return body
+    next_response = re.search(r'(?m)^#{1,3} ', body[response.end():])
+    response_end = response.end() + next_response.start() if next_response else len(body)
+    if response.end() <= extension.start() < response_end:
+        return body
+    level = len(extension[0].split(' ', 1)[0])
+    next_extension = re.search(r'(?m)^#{1,' + str(level) + r'} ', body[extension.end():])
+    extension_end = extension.end() + next_extension.start() if next_extension else len(body)
+    text = re.sub(r'^#{3,4} ', '#### ', body[extension.start():extension_end].strip(), count=1)
+    remaining = body[:extension.start()].rstrip() + '\n\n' + body[extension_end:].lstrip()
+    response = re.search(r'(?m)^### 全局返回结构处理\s*$', remaining)
+    next_response = re.search(r'(?m)^#{1,3} ', remaining[response.end():])
+    insert_at = response.end() + next_response.start() if next_response else len(remaining)
+    result = remaining[:insert_at].rstrip() + '\n\n' + text + '\n\n' + remaining[insert_at:].lstrip()
+    return result.rstrip() + '\n'
+
+
 def normalize_module(body, defaults=None, component=''):
     """Group headings while preserving fenced code and all original prose.
 
@@ -45,6 +67,8 @@ def normalize_module(body, defaults=None, component=''):
     headings. Existing canonical pages remain byte-stable on a second pass.
     """
     defaults = dict(defaults or {})
+    if component == 'Web':
+        body = place_web_response_extension(body)
     if component in {'Gateway', 'Security'} and '## 组件坐标' not in body:
         body = body.replace('## 职责与接入', '## 概览').replace('## 内层安全的职责', '## 概览')
         body = body.replace('```xml', '## 组件坐标\n\n```xml', 1)

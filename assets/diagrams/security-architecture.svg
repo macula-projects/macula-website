@@ -4,12 +4,17 @@
   <defs>
     <marker id="security-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="#1672ce"/></marker>
     <style>
-      #macula-security-architecture text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #172839; font-size: 18px; }
-      #macula-security-architecture .heading { font-size: 22px; font-weight: 600; }
+      #macula-security-architecture { font-size: var(--macula-body-size, 15px); }
+      #macula-security-architecture text { font-family: var(--macula-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif); fill: #172839; font-size: 1em; }
+      #macula-security-architecture .heading { font-size: 1.2em; font-weight: 600; }
       #macula-security-architecture .strong { font-weight: 600; }
       #macula-security-architecture .muted { fill: #526579; }
       #macula-security-architecture .blue { fill: #145ca8; }
-      #macula-security-architecture .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; }
+      #macula-security-architecture .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: var(--macula-code-size, 14px); }
+      @media (max-width: 767px) {
+        #macula-security-architecture { font-size: var(--macula-body-size, 14px); }
+        #macula-security-architecture .mono { font-size: var(--macula-code-size, 13px); }
+      }
       #macula-security-architecture .box { fill: #fff; stroke: #b5c8db; stroke-width: 1.5; }
       #macula-security-architecture .line { fill: none; stroke: #1672ce; stroke-width: 2; marker-end: url(#security-arrow); }
       #macula-security-architecture .context { fill: none; stroke: #526579; stroke-width: 2; stroke-dasharray: 6 5; marker-end: url(#security-arrow); }

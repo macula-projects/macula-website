@@ -84,6 +84,8 @@ latest 的快速开始仅保留 Boot Examples 的 Gateway / BFF（consumer）/ S
 
 latest 的“平台简介 → 安全架构”用原理图概述网关认证、角色 / URL 规则、内部 JWT 和微服务方法 / 数据授权。原理图由 `assets/diagrams/security-architecture.svg` 与 `security-architecture` 短码直接渲染，支持文字描述、键盘焦点和窄屏横向滚动，不依赖远程绘图库。Gateway 与 Security 两章按固定源码提交人工维护细节，使用 `manual_content: true` 保留说明；其中明确区分 Token、AK/SK、API Key 的实际分支以及 CheckOwner 两种校验时机。
 
+原理图文字使用共享的正文 / 代码字号变量，并保持 720px 原生画布，避免在宽屏随容器拉伸而放大字号。窄屏在图形区域内横向滚动。Web 的“授权列表的资源凭证扩展”归入“核心功能 → 全局返回结构处理”，同步时也保持该归类。
+
 Gateway 组件说明同时覆盖 README 中的完整能力：HTTP / WebSocket 路由、认证授权、内部 JWT、CryptoService 与接口加解密 / 签名、System Redis 扩展、Token 缓存管理、Trace ID 和灰度标签。页面直接介绍组件接入与使用，使用通用服务名和环境变量；协议细节对照 CryptoService、过滤器与配置属性，`source_paths` 记录相应来源。功能覆盖检查用于防止组件页在后续整理中遗漏这些内容。
 
 3.1、4.0 分别独立维护在 `content/zh-cn/docs/3.1/`、`content/zh-cn/docs/4.0/`，保留各自历史目录结构，直接从顶部版本菜单进入，不再嵌套或复制到其他版本中。它们在版本配置中标记为 `archived: true`，同步工具会跳过历史版本。原始 `/docs/98_old/<版本>/` 及曾使用的 `/docs/<5.x|6.0.x|latest>/98_old/<版本>/` 章节地址均跳转到独立历史文档；旧图片地址通过 Hugo 静态挂载保留。原有“历史文档”目录入口跳转到 4.0 首页。
