@@ -407,7 +407,7 @@ button, input, select, textarea { font-family: inherit; }
 .macula-docs .release-entry-heading h2 { margin: 0; padding: 0; border: 0; }
 .release-entry-heading time { margin-left: auto; color: var(--macula-muted); font-size: var(--macula-small-size); }
 .release-badge { padding: 2px 8px; border: 1px solid #bbd8c9; border-radius: 4px; background: #eef7f2; color: #346347; font-size: var(--macula-small-size); }
-.release-badge.is-preview { background: #fff6e8; border-color: #ebd2a7; color: #7c561a; }
+.release-badge.is-preview, .release-badge.is-discouraged { background: #fff6e8; border-color: #ebd2a7; color: #7c561a; }
 .release-detail { display: inline-flex; align-items: center; min-height: 32px; gap: 8px; font-size: var(--macula-ui-size); font-weight: 500; }
 .security-architecture { width: min(100%, 722px); margin: 28px auto; }
 .security-architecture-scroll { overflow-x: auto; border: 1px solid var(--macula-line); border-radius: 8px; background: #fff; }

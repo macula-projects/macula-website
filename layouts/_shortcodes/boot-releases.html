@@ -12,7 +12,11 @@
   <article class="release-entry" aria-labelledby="release-{{ .version | anchorize }}">
     <div class="release-entry-heading">
       <h2 id="release-{{ .version | anchorize }}">{{ .version }}</h2>
+      {{- with index hugo.Data.release_advisories .series }}
+      <span class="release-badge is-discouraged">{{ .label }}</span>
+      {{- else }}
       <span class="release-badge{{ if .prerelease }} is-preview{{ end }}">{{ if .prerelease }}预发布{{ else }}正式发布{{ end }}</span>
+      {{- end }}
       <time datetime="{{ .published_at }}">{{ .date }}</time>
     </div>
     <ul>{{ range .summary }}<li>{{ . }}</li>{{ end }}</ul>

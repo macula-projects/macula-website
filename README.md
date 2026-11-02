@@ -47,6 +47,8 @@ IDE 的启动命令也推荐使用 `npm run dev`，工作目录设置为本仓�
 
 `/releases/` 与文档中的“更新日志”共用 `data/boot_releases.json`，数据来源为 Macula Boot 的 GitHub Releases。latest 展示全部发布记录，5.x 筛选对应系列；版本标签展示时去掉 `v`，详情链接保留 GitHub 原始地址。发布日期按北京时间显示，预发布单独标记。摘要提取发布说明中的主要功能与修复条目，不将 main 的未发布改动冒充正式版本。
 
+6.0 系列历史保留，并显示“不建议使用”标签。人工使用建议独立放在 `data/release_advisories.json`，展示时优先于普通发布状态标签，不改变 Release 原始数据，也不受每日同步影响。
+
 运行 `npm run sync:releases` 更新本地快照；`npm run build` 直接使用快照，离线可构建。GitHub Pages 在构建前刷新 Release 数据，并每天北京时间 10:30 定时更新；Netlify 构建前也会刷新。同步失败不会覆盖上一份快照，CI 会保留已部署的网站。维护同步逻辑后执行 `python3 -m unittest discover -s scripts/tests -v`，覆盖版本筛选、摘要、分页与失败保护。
 
 ## 文档版本
