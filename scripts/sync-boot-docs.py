@@ -172,9 +172,14 @@ def main():
             if version['id'] == 'latest' and source == 'README.md':
                 # Keep migration details in the dedicated, manually maintained guide.
                 content = re.sub(r'(?ms)^## 从 6\.0 升级到 6\.1\n.*?(?=^## |\Z)', '', content)
-                content = content.replace('[统一可观测性迁移指南]', '[从 6.0.x 迁移到 latest 的升级指南]')
+                content = content.replace('从 6.0 迁移请参考', '从 5.x 迁移请参考')
+                content = content.replace('[统一可观测性迁移指南]', '[从 5.x 迁移到 latest 的升级指南]')
                 content = content.replace('## 核心能力',
                     '网关入口认证、内部 JWT 与方法 / 数据授权的分层关系，见[安全架构](/docs/latest/00_introduce/安全架构/)。\n\n## 核心能力', 1)
+
+            if version['id'] == 'latest' and source.endswith('/macula-boot-starter-cache/README.md'):
+                content = re.sub(r'(?m)^(#{2,3}) 从 6\.0 升级到 6\.1$',
+                                 r'\1 从 5.x 迁移到 latest', content)
 
             def rewrite(match):
                 image, label, destination = match.groups()
@@ -268,6 +273,8 @@ def main():
                 # to the module pages; retired integrations belong to the upgrade guide.
                 body = ''
             if path == '_index.md':
+                if version['id'] == 'latest':
+                    header += '\naliases: ["/docs/6.0.x/"]'
                 header = header.replace('docs_version: "5.x"', f'docs_version: "{version["id"]}"')
                 header = header.replace('title: "Macula 5.x 文档"', f'title: "Macula {version["label"]} 文档"')
                 # Retain the 5.x landing-page cards, fixing their obsolete links.

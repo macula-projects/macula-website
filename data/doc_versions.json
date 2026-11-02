@@ -5,11 +5,6 @@
     "branch": "main"
   },
   {
-    "id": "6.0.x",
-    "label": "6.0.x",
-    "branch": "6.0.x"
-  },
-  {
     "id": "5.x",
     "label": "5.x",
     "branch": "5.x"

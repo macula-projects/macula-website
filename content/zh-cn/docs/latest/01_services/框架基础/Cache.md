@@ -102,7 +102,7 @@ public class UserService {
 
 本模块不再提供熔断器，单次 Redis 访问的阻塞时间由 `spring.data.redis.connect-timeout`、`spring.data.redis.timeout` 及客户端连接池配置决定。生产环境需要设置与业务延迟目标匹配的超时。
 
-### 从 6.0 升级到 6.1
+### 从 5.x 迁移到 latest
 
 删除以下配置，它们在 6.1 中不再生效：
 

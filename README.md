@@ -39,13 +39,13 @@ IDE 的启动命令也推荐使用 `npm run dev`，工作目录设置为本仓�
 
 品牌标记使用 `static/img/macula-mark.svg`，保留 M 形结构和蓝、青、白配色。大写 `MACULA` 字标使用 `static/img/macula-wordmark.svg`，按参考图的宽厚几何字形制作成独立矢量路径，避免设备字体不同导致外观变化。`layouts/_partials/brand.html` 统一导航和页脚标识，尺寸在共享样式中维护；浏览器图标复用 M 形标记。字标、页面强调色与主按钮统一使用品牌蓝 `#1672CE`，Logo 底色使用同色系的轻微明暗变化。
 
-修改后运行 `npm run build` 验证构建，并通过 `npm run dev` 检查桌面与手机布局。验收时检查：首页不显示版本菜单、五个文档版本可切换、手机目录可展开、代码和表格不会撑宽页面。版本化 Markdown 正文与同步规则独立维护，不应为样式调整重写各分支内容。
+修改后运行 `npm run build` 验证构建，并通过 `npm run dev` 检查桌面与手机布局。验收时检查：首页不显示版本菜单、四个文档版本可切换、手机目录可展开、代码和表格不会撑宽页面。版本化 Markdown 正文与同步规则独立维护，不应为样式调整重写各分支内容。
 
 全站排版共用 `_styles_project.scss` 中的字体与字号变量：首页段落、文档、博客和变更历史在 PC 使用 `.9375rem`（默认 15px），767px 及以下使用 `.875rem`（默认 14px），阅读行高为 1.75。导航与目录统一为 14px，辅助说明为 PC 13px / 手机 12px，代码为 PC 14px / 手机 13px，表格为 PC 14px / 手机 13px。文档左右导航贴近浏览器两侧，正文居中、随窗口伸缩且最大 960px；窄屏隐藏侧栏。表格首列保留完整标签，宽表在可键盘操作的独立区域滚动。使用相对单位以响应浏览器字体设置。
 
 ## Release 变更历史
 
-`/releases/` 与文档中的“更新日志”共用 `data/boot_releases.json`，数据来源为 Macula Boot 的 GitHub Releases。latest 展示全部发布记录，5.x 与 6.0.x 筛选对应系列；版本标签展示时去掉 `v`，详情链接保留 GitHub 原始地址。发布日期按北京时间显示，预发布单独标记。摘要提取发布说明中的主要功能与修复条目，不将 main 的未发布改动冒充正式版本。
+`/releases/` 与文档中的“更新日志”共用 `data/boot_releases.json`，数据来源为 Macula Boot 的 GitHub Releases。latest 展示全部发布记录，5.x 筛选对应系列；版本标签展示时去掉 `v`，详情链接保留 GitHub 原始地址。发布日期按北京时间显示，预发布单独标记。摘要提取发布说明中的主要功能与修复条目，不将 main 的未发布改动冒充正式版本。
 
 运行 `npm run sync:releases` 更新本地快照；`npm run build` 直接使用快照，离线可构建。GitHub Pages 在构建前刷新 Release 数据，并每天北京时间 10:30 定时更新；Netlify 构建前也会刷新。同步失败不会覆盖上一份快照，CI 会保留已部署的网站。维护同步逻辑后执行 `python3 -m unittest discover -s scripts/tests -v`，覆盖版本筛选、摘要、分页与失败保护。
 
@@ -56,14 +56,15 @@ IDE 的启动命令也推荐使用 `npm run dev`，工作目录设置为本仓�
 | 文档入口 | Macula Boot 分支 | 内容来源 |
 | --- | --- | --- |
 | `/docs/latest/` | `main` | 按 5.x 栏目组织当前分支的 README、模块文档及迁移指南 |
-| `/docs/6.0.x/` | `6.0.x` | 按 5.x 栏目组织 6.0.x 分支的 README 和模块文档 |
 | `/docs/5.x/` | `5.x` | 官网已有的 5.x 文档 |
 | `/docs/4.0/` | 历史归档 | 从 `98_old/v4.0` 独立出的完整文档 |
 | `/docs/3.1/` | 历史归档 | 从 `98_old/v3.1` 独立出的完整文档 |
 
+6.0.x 未正式发布，不作为独立文档版本维护；其原版本首页与升级指南地址分别跳转到 latest 首页和新的 5.x → latest 指南。旧归档资源的兼容路径继续保留。
+
 `/docs/` 默认跳转到 latest。原有 `/docs/<章节>/` 地址跳转到 5.x 的对应页面，避免旧链接指向其他版本。
 
-版本与分支映射统一维护于 `data/doc_versions.json`。更新 6.0.x 和 latest 文档时，先在相邻的 `macula-boot` 仓库更新对应本地分支，再执行：
+版本与分支映射统一维护于 `data/doc_versions.json`。更新 latest 文档时，先在相邻的 `macula-boot` 仓库更新对应本地分支，再执行：
 
 ```bash
 python3 scripts/sync-boot-docs.py
@@ -72,11 +73,11 @@ python3 scripts/sync-boot-docs.py --boot-repo /path/to/macula-boot
 npm run build
 ```
 
-5.x、6.0.x、latest 三个版本保持一致的栏目层级，以 `content/zh-cn/docs/5.x/` 为基准，包括平台简介、平台能力、开发规范、开发指引、运维指引和关于。6.0.x 与 latest 在“框架基础”下额外声明独立的 `Commons.md` 和 `Async.md`，各自同步对应分支的模块 README；栏目 `_index.md` 只保留简介与章节导航。源码模块路径只用于内容映射，不会生成另一套文档目录。
+5.x、latest 两个版本保持一致的栏目层级，以 `content/zh-cn/docs/5.x/` 为基准，包括平台简介、平台能力、开发规范、开发指引、运维指引和关于。latest 在“框架基础”下额外声明独立的 `Commons.md` 和 `Async.md`，各自同步对应分支的模块 README；栏目 `_index.md` 只保留简介与章节导航。源码模块路径只用于内容映射，不会生成另一套文档目录。
 
 latest 的组件章节同时核对 main 中实际存在的 Starter POM（包含 Cloud 下的嵌套模块），缺少显式映射的新模块会使同步失败。已删除模块不再从 5.x 回填；TSF 旧地址跳转至微服务栏目，Loggers、Metrics、Tracing 旧地址跳转至独立的 `生产准备/Observability.md`。生产准备首页只提供分类导览。历史版本继续保留各自内容。仅更新当前版本时运行 `python3 scripts/sync-boot-docs.py --version latest`。
 
-5.x、6.0.x、latest 的组件页统一使用“概览、组件坐标、使用配置、核心功能、依赖引入、版权说明”六个二级标题；版本差异与各自示例保留在对应小节。`scripts/module_docs.py` 在同步时整理 README 层级与合并章节，不改动代码块；缺少的组件坐标和直接依赖从该分支 POM 提取。人工维护的组件页面也遵循这套结构，3.1、4.0 归档文档保持原貌。
+5.x、latest 的组件页统一使用“概览、组件坐标、使用配置、核心功能、依赖引入、版权说明”六个二级标题；版本差异与各自示例保留在对应小节。`scripts/module_docs.py` 在同步时整理 README 层级与合并章节，不改动代码块；缺少的组件坐标和直接依赖从该分支 POM 提取。人工维护的组件页面也遵循这套结构，3.1、4.0 归档文档保持原貌。
 
 Macula Cloud 的管理端与后端同仓，入口为 `macula-cloud/macula-cloud-admin`。首页管理端链接指向该目录。latest 的快速开始、平台部署与 Sentinel 指引设置 `manual_content: true`，按当前源码维护；跨仓库资料使用 `source_repository`、`source_branch`、`source_commit` 和 `source_paths` 记录来源，后续同步不会覆盖这些说明。
 
@@ -96,8 +97,8 @@ Gateway 组件说明同时覆盖 README 中的完整能力：HTTP / WebSocket �
 
 同步工具只读取 Git 已提交内容，不切换或修改 Boot 工作区。`scripts/sync-boot-docs.py` 中的 `MAPPING` 将分支 README 映射到已有章节或 `EXTRA_CHAPTERS` 显式声明的独立组件页；已有章节保留 5.x 的标题、导航名和排序，新增组件页单独维护标题与排序。同步页记录来源分支、提交和文件路径，编辑链接指向对应 Boot 分支。
 
-暂无对应分支资料的章节沿用 5.x 内容并明确标注尚未核对，历史归档保持原文。执行同步会重新生成 6.0.x 和 latest 文档；人工修订应同步维护生成规则。生成器会检查文件路径符合基础章节与显式组件页声明，不会为新模块自动添加新的栏目，也不应将组件说明混入栏目首页。文档快照随官网保存，构建及部署无需再次访问 Boot 仓库。
+暂无对应分支资料的章节沿用 5.x 内容并明确标注尚未核对，历史归档保持原文。执行同步会重新生成 latest 文档；人工修订应同步维护生成规则。生成器会检查文件路径符合基础章节与显式组件页声明，不会为新模块自动添加新的栏目，也不应将组件说明混入栏目首页。文档快照随官网保存，构建及部署无需再次访问 Boot 仓库。
 
-人工编写的版本专属章节可在 Front Matter 中设置 `manual_content: true`，同步工具会完整保留该页面。6.0.x 与 latest 的“运维指引 → 升级指南”分别记录从 5.x、6.0.x 升级的步骤、分支对照提交和参考源码；它们不是某一份 README 的直接副本。latest 概述同步时会移除 README 中“从 6.0 升级到 6.1”的详细迁移章节，仅保留指向统一升级指南的入口。后续分支升级说明变化时，应同步维护对应指南及此提取规则。
+人工编写的版本专属章节可在 Front Matter 中设置 `manual_content: true`，同步工具会完整保留该页面。latest 的“运维指引 → 升级指南”直接记录从 5.x 升级到 main 的步骤、分支对照提交和参考源码，整合 Java/Jakarta、最新技术栈、可观测性和任务等变更，不要求经过未发布的中间版本。latest 概述同步时会移除 README 中“从 6.0 升级到 6.1”的详细迁移章节，仅保留指向统一升级指南的入口。后续分支升级说明变化时，应同步维护对应指南及此提取规则。
 
 历史版本名称与正式路径统一不带 `v` 前缀，原 `/docs/v3.1/`、`/docs/v4.0/` 及其章节地址保留跳转，图片等资源地址继续可用。

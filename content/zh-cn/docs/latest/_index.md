@@ -1,5 +1,6 @@
 ---
 docs_version: "latest"
+aliases: ["/docs/6.0.x/"]
 cascade:
   type: docs
 title: "Macula latest（当前） 文档"

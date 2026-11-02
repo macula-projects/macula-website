@@ -1,5 +1,6 @@
 import sys
 import re
+import json
 import unittest
 from pathlib import Path
 
@@ -45,7 +46,8 @@ class ModuleDocsTest(unittest.TestCase):
 
     def test_maintained_component_pages_use_six_sections(self):
         docs = Path(__file__).resolve().parents[2] / 'content/zh-cn/docs'
-        for version in ('5.x', '6.0.x', 'latest'):
+        versions = json.loads((docs.parents[2] / 'data/doc_versions.json').read_text())
+        for version in (v['id'] for v in versions if not v.get('archived')):
             for page in (docs / version / '01_services').rglob('*.md'):
                 if page.name.startswith('_index'):
                     continue
