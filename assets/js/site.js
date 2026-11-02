@@ -45,7 +45,10 @@
     var toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'section-toggle';
-    toggle.textContent = '›';
+    var arrow = document.createElement('span');
+    arrow.textContent = '›';
+    arrow.setAttribute('aria-hidden', 'true');
+    toggle.appendChild(arrow);
     children.id = checkbox.id + '-children';
     toggle.setAttribute('aria-controls', children.id);
     function refresh() {

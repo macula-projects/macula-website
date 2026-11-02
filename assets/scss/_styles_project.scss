@@ -337,7 +337,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .macula-docs .td-sidebar-nav .has-section-toggle > label::before { display: none; }
 .macula-docs .td-sidebar-nav .section-toggle { position: absolute; left: 0; top: 5px; width: 19px; height: 23px; padding: 0; border: 0; border-radius: 3px; background: transparent; color: #8095a7; font-size: 18px; line-height: 1; cursor: pointer; }
 .macula-docs .td-sidebar-nav .section-toggle:hover { color: var(--macula-blue); background: #e9f0f7; }
-.macula-docs .td-sidebar-nav .section-toggle[aria-expanded="true"] { transform: rotate(90deg); }
+.macula-docs .td-sidebar-nav .section-toggle[aria-expanded="true"] > span { transform: rotate(90deg); }
 
 // Shared geometric wordmark drawn as vectors to keep its shape consistent across devices.
 .brand-logo .brand-lockup { display: inline-flex !important; align-items: center; gap: 10px; vertical-align: middle; }
@@ -391,7 +391,7 @@ button, input, select, textarea { font-family: inherit; }
 .macula-docs .td-sidebar-nav .ul-1 ul > li > label > .td-sidebar-link { padding-left: 24px !important; }
 .macula-docs .td-sidebar-nav .td-sidebar-link__section { font-weight: 550; }
 .macula-docs .td-sidebar-nav label { display: block; width: 100%; }
-.macula-docs .td-sidebar-nav .section-toggle { width: 24px; height: 32px; top: 0; color: var(--macula-muted); }
+.macula-docs .td-sidebar-nav .section-toggle { width: 24px; height: 32px; top: 0; color: var(--macula-muted); display: grid; place-items: center; }
 .code-copy { min-height: 30px; padding: 3px 10px; color: var(--macula-muted); }
 .workbench-code > div { color: #c1d1dd; }
 .ecosystem-card h3 { font-size: var(--macula-h3-size); line-height: 1.5; }
@@ -474,3 +474,7 @@ button, input, select, textarea { font-family: inherit; }
 
 // Top-level categories use the same folding controls without flattening their children.
 .macula-docs .td-sidebar-nav__section-headtitle > label > .td-sidebar-link { padding-left: 24px !important; font-weight: 650; }
+
+// Rotate the chevron only: the rectangular hover/focus target must stay inside its column.
+.macula-docs .td-sidebar-nav .section-toggle > span { display: block; }
+.macula-docs .td-sidebar-nav .section-toggle:focus-visible { outline-offset: -3px; }
