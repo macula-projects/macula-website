@@ -33,6 +33,8 @@ Macula Boot 面向 Java 微服务应用提供统一的依赖管理、自动配�
 
 > Macula Boot 是 Macula 微服务平台的开发框架部分。通用技术服务参见 [Macula Cloud](https://github.com/macula-projects/macula-cloud)，管理端参见 [Macula Cloud Admin](https://github.com/macula-projects/macula-cloud/tree/main/macula-cloud-admin)。
 
+网关入口认证、内部 JWT 与方法 / 数据授权的分层关系，见[安全架构](/docs/latest/00_introduce/安全架构/)。
+
 ## 核心能力
 
 | 分类 | Starter | 能力 |
@@ -80,7 +82,7 @@ macula-boot
 </dependencies>
 ```
 
-将示例版本替换为项目实际采用的 Macula Boot 发布版本。具体属性与扩展点请查看对应 Starter 的 README，完整应用组合可参考 [`macula-boot-examples`](/docs/latest/04_devmanual/运行与测试/)。
+将示例版本替换为项目实际采用的 Macula Boot 发布版本。具体属性与扩展点请查看对应 Starter 的 README，完整应用组合可参考 [`macula-boot-examples`](/docs/latest/00_introduce/快速开始/)。
 
 ## 构建与测试
 

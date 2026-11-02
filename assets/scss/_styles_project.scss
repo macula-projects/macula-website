@@ -400,6 +400,11 @@ button, input, select, textarea { font-family: inherit; }
 .release-badge { padding: 2px 8px; border: 1px solid #bbd8c9; border-radius: 4px; background: #eef7f2; color: #346347; font-size: var(--macula-small-size); }
 .release-badge.is-preview { background: #fff6e8; border-color: #ebd2a7; color: #7c561a; }
 .release-detail { display: inline-flex; align-items: center; min-height: 32px; gap: 8px; font-size: var(--macula-ui-size); font-weight: 500; }
+.security-architecture { margin: 28px 0; }
+.security-architecture-scroll { overflow-x: auto; border: 1px solid var(--macula-line); border-radius: 8px; background: #fff; }
+.security-architecture-scroll svg { display: block; width: 100%; min-width: 640px; height: auto; }
+.security-architecture-scroll:focus-visible { outline: 3px solid var(--macula-blue); outline-offset: 4px; }
+.security-architecture figcaption { margin-top: 10px; font-size: var(--macula-small-size); color: var(--macula-muted); }
 @media (max-width: 767px) {
   :root {
     --macula-body-size: .875rem;

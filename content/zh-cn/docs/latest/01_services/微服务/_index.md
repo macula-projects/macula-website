@@ -41,7 +41,7 @@ Alibaba 网关改选 `macula-boot-starter-cloud-alibaba-scg`；Tencent 同理选
 
 ## 使用配置
 
-聚合模块没有独立配置前缀。配置展示以当前 [Examples](/docs/latest/04_devmanual/运行与测试/) 的 `application.yml` 为准，完整示例与说明如下：
+聚合模块没有独立配置前缀。配置展示以当前 [Examples](/docs/latest/00_introduce/快速开始/) 的 `application.yml` 为准，完整示例与说明如下：
 
 | 配置范围 | 主要属性 | 参考 |
 | --- | --- | --- |
@@ -63,7 +63,7 @@ Alibaba local 的 Nacos 地址为 `127.0.0.1:${NACOS_SERVER_PORT:38848}`，docke
 - 网关：基于 WebFlux 的 HTTP/WebSocket 转发及安全扩展。签名、加解密还需业务提供 `CryptoService`；不要把 Servlet Web Starter 混入 reactive 网关。
 - 灰度：Alibaba 与 Alibaba SCG 已传递引入灰度模块；Tencent 不使用该 Nacos 灰度实现。HTTP 灰度与 RocketMQ 灰度是不同机制，不能互相替代配置。
 
-本模块不部署 Nacos、Polaris、Redis 或身份服务。运行条件、启动顺序和本地容器环境见 [Examples](/docs/latest/04_devmanual/运行与测试/)；构建、测试规范见[仓库根 README](/docs/latest/00_introduce/概述/)。
+本模块不部署 Nacos、Polaris、Redis 或身份服务。运行条件、启动顺序和本地容器环境见 [Examples](/docs/latest/00_introduce/快速开始/)；构建、测试规范见[仓库根 README](/docs/latest/00_introduce/概述/)。
 
 ## 依赖引入
 

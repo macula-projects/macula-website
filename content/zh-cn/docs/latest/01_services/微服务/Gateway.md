@@ -1,406 +1,148 @@
 ---
-title: "Macula Boot Starter Cloud Gateway"
+title: "Gateway：入口认证与访问控制"
 linkTitle: "Gateway"
 weight: 3
-source_path: "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md"
-source_paths: ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md"]
+manual_content: true
+source_repository: "https://github.com/macula-projects/macula-boot"
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
+source_paths: ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java"]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "3fbd28dc74d683055d27b81929971c0e45047878", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java"]}]
 ---
 
-## 概述
+## 职责与接入
 
-网关服务模块，给每个平台应用依赖用的。主要提供token认证、鉴权、接口加解密等功能。
+Gateway 是外层入口，处理 Token、AK/SK、API Key 认证及对应的访问规则，并把可信身份转为内部 JWT。下游 BFF / Service 继续使用 Security Starter 做 JWT 验签与方法、数据权限控制。整体原理见[安全架构](/docs/latest/00_introduce/安全架构/)。
 
-## 组件坐标
+按云平台选择 `macula-boot-starter-cloud-alibaba-scg` 或 `macula-boot-starter-cloud-tencent-scg`，组合中包含共享 Gateway 模块，版本由 Parent 管理。
 
 ```xml
-
 <dependency>
     <groupId>dev.macula.boot</groupId>
-    <artifactId>macula-boot-starter-cloud-alibaba</artifactId>
-    <version>${macula.version}</version>
-</dependency>
-
-<dependency>
-<groupId>dev.macula.boot</groupId>
-<artifactId>macula-boot-starter-cloud-alibaba-scg</artifactId>
-<version>${macula.version}</version>
+    <artifactId>macula-boot-starter-cloud-alibaba-scg</artifactId>
 </dependency>
 ```
 
-## 使用配置
+## Token：对接 IAM
 
-下面摘取当前 [Alibaba Gateway application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml) 的 local 网关配置，需与 [Alibaba 配置](/docs/latest/01_services/微服务/alibaba/) 的公共及 profile 段合并，不是完整启动文件。Tencent 对应配置见 [Tencent Gateway application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-tencent-gateway/src/main/resources/application.yml)。
+客户端携带 `Authorization: Bearer <access_token>`。网关通过 IAM introspection 验证 Token，读取身份、角色等声明，并按有效期缓存认证信息。
 
 ```yaml
 spring:
-  config:
-    activate:
-      on-profile: local
-  data:
-    redis:
-      host: 127.0.0.1
-      port: ${REDIS_PORT:36379}
-      password: ${REDIS_PASSWORD:redis}
-  cloud:
-    gateway:
-      server:
-        webflux:
-          routes:
-            - id: macula-example-alibaba-consumer
-              uri: lb://macula-example-alibaba-consumer
-              predicates:
-                - Path=/consumer/**
-              filters:
-                - StripPrefix=1
-            - id: macula-example-alibaba-consumer-ws
-              uri: lb:ws://macula-example-alibaba-consumer
-              predicates:
-                - Path=/websocket/**
-              filters:
-                - StripPrefix=1
   security:
     oauth2:
       resourceserver:
         opaquetoken:
-          client-id: e4da4a32-592b-46f0-ae1d-784310e88423
-          client-secret: secret # 仅为 samples 演示值，部署时替换
+          client-id: ${IAM_CLIENT_ID}
+          client-secret: ${IAM_CLIENT_SECRET}
           introspection-uri: ${OAUTH2_INTROSPECTION_URI:http://127.0.0.1:9010/oauth2/introspect}
-  reactor:
-    context-propagation: auto
+```
+
+地址指向 Macula Cloud IAM，Client 与凭据先在平台登记。网关还需要可用的缓存 Redis；菜单 / 角色 / 应用规则通过 System Redis 提供。
+
+## Token 的角色、菜单与 URL 权限
+
+System 维护角色、菜单、按钮与接口关联；网关读取 System Redis 中的 URL 角色规则。当前实现用 `spring.application.name:HTTP方法:请求路径` 匹配规则，再与认证身份的角色比较。
+
+```yaml
 macula:
   gateway:
     security:
-      ignore-urls: /consumer/hello2/**,/consumer/api/v1/consumer/echo/**
-      only-auth-urls: /api/**, /websocket/**
+      ignore-urls: []
+      only-auth-urls: []
+      default-url-require-check: true
 ```
 
-| samples 配置 | 说明 |
-| --- | --- |
-| `server.port` / `server.http.port` | Alibaba 为 HTTPS `5443` / HTTP `5000`，分别由 `SERVER_PORT` / `SERVER_HTTP_PORT` 覆盖；HTTP 扩展端口需示例中的配套 Java 配置 |
-| `server.ssl.*` | Alibaba 示例使用 classpath 证书；生产替换证书及口令 |
-| `spring.cloud.gateway.server.webflux.routes` | HTTP / WebSocket 路由；Tencent 示例转发到 `macula-example-tencent-consumer`，端口为 HTTP `4000` |
-| `spring.cloud.gateway.server.webflux.globalcors` | Alibaba 示例提供全局 CORS；生产应收窄来源，不照搬通配规则 |
-| `spring.data.redis.*` | samples 使用标准单 Redis 配置；独立 System Redis 见下文扩展 |
-| `spring.security.oauth2.resourceserver.opaquetoken.*` | Token introspection 地址及调用凭证 |
-| `spring.reactor.context-propagation` | `auto`，跨 Reactor 线程传播上下文 |
+上例显式选择严格的未匹配 URL 策略。启用前先在 System 中维护与应用名、请求方法、路径对应的 URL 角色规则。配置项含义与默认值为：
 
-示例普通环境关闭 OTLP 网络导出；`observability` profile 开启三类导出并指向 `otel-collector:4318`，适用于对应 Docker 网络。完整配置以源文件为准。
-
-下列属性前缀为 `macula.gateway`：
-
-| 属性 | 默认值 | 说明 |
+| 配置 | 默认值 | 含义 |
 | --- | --- | --- |
-| `sign-switch` / `crypto-switch` | `true` / `true` | 签名 / 加解密全局开关；对应过滤器还需 CryptoService Bean |
-| `force-sign` / `force-crypto` | `true` / `false` | 是否强制校验已配置的受保护接口 |
-| `protect-urls.sign` / `protect-urls.crypto` | 空列表 | 需签名 / 加密的路径 |
-| `trace-id-response-header-enabled` | `true` | 有有效 Span 时输出 `x-traceId` |
-| `gray.enabled` | `false` | 启用网关灰度路由处理 |
-| `apikey.enabled` | `true` | 创建 API Key 认证过滤器 |
-| `rm-opaque-token.enabled` | `true` | 创建 Token 缓存移除端点过滤器 |
-| `rm-opaque-token-endpoint` | `/gateway/rm/opaqueToken` | 缓存移除路径 |
-| `force-hmac-rm-opaque-token-endpoint` | `true` | 移除 Token 缓存时强制 HMAC 校验 |
-| `security.ignore-urls` | 空列表并合并内置白名单 | 放行认证的路径 |
-| `security.only-auth-urls` | 空列表 | 只认证、不检查 URL 角色权限的路径 |
-| `security.default-url-require-check` | `false` | 未配置 URL 权限时是否要求鉴权，生产需明确评估 |
+| `security.ignore-urls` | 空列表，合并内置白名单 | 入口放行路径，不走常规认证与 URL 角色检查 |
+| `security.only-auth-urls` | 空列表 | Token 有效即可，不执行该路径的 URL 角色匹配 |
+| `security.default-url-require-check` | `false` | 未匹配 URL 规则时是否仍要求角色授权；默认并非所有路径严格拦截 |
 
-灰度过滤器的创建另受 `macula.cloud.gray.enabled` 控制（默认 `true`），与 `macula.gateway.gray.enabled` 的运行开关不同。应用还需提供 `spring.application.name`，OAuth2 凭证和签名材料须由部署环境注入。
+配置前缀均为 `macula.gateway`。仅认证路径要有明确用途；具体业务操作仍由服务端注解控制。
 
-## 核心功能
+当前 URL 角色匹配要求命中允许的正向角色且不命中反向角色；网关的 ROOT 角色有专门的放行逻辑。这不表示内层的所有注解也自动豁免 ROOT。
 
-### Trace ID 响应头
+## AK/SK：应用 HMAC 认证
 
-网关通过 Micrometer `Tracer` 读取当前 Span，并在有效上下文中返回兼容的 `x-traceId` 响应头。
-无 Tracer、无当前 Span或关闭以下开关时不会产生空响应头：
+系统调用通过 HMAC Authorization Header 表明应用并提交签名：
+
+```http
+Authorization: hmac username="<AK>", algorithm="hmac-sha256", signature="<Base64签名>"
+Date: <当前请求的 HTTP-date>
+```
+
+这是协议结构示意，签名必须根据本次请求生成。SK 只用于生成签名，不随请求发送。
+
+网关的 `KongApiGlobalFilter` / `KongApiUtils` 会：
+
+1. 根据应用标识读取 System Redis 中的密钥、租户和应用允许 URL。
+2. 如果配置了 `permitUrls`，使用 `HTTP方法:请求路径` 匹配；未配置时该项不限制 URL。
+3. 校验 Date 的时间窗口（当前为 5 分钟）和 HMAC 签名。
+4. 将通过校验的应用身份、可用租户信息交给 JWT 转换。
+
+GET / DELETE 的签名串包含 `date`、方法、路径及原始 Query；其他请求追加原始请求体的 SHA-256 摘要。Query 的编码、顺序和 body 字节应与实际发送内容一致。
+
+AK/SK 的应用 URL 范围与 Token 的角色 URL 规则是两套不同判断，不能把 HMAC 认证成功理解为获得登录用户角色。
+
+## API Key：平台应用身份
+
+当前识别方式为：
+
+```http
+Authorization: Bearer sk-<平台签发的APIKey>
+```
+
+`ApiKeyAuthenticationFilter` 在 System Redis 查找 `macula:cloud:system:application:apikey:<完整APIKey>` 对应的 Hash 记录，读取 `applicationCode`、`applicationId` 和可选 `tenantId`。校验成功后建立 `authType=apikey` 的认证上下文，再由 JWT 过滤器向下游传递内部 Token。
 
 ```yaml
 macula:
   gateway:
-    trace-id-response-header-enabled: true
+    apikey:
+      enabled: true
 ```
 
-### Token认证
+该开关默认 `true`，控制默认过滤器是否创建。API Key 需由平台维护有效应用记录，任意 `sk-` 字符串不会通过认证。
 
-`spring.security.oauth2.resourceserver.jwt.issuer-uri` 用于下游 JWT 的签发者标识，默认 `http://127.0.0.1:9010`。默认签名密钥从 `jwk/jose.jks` 加载，目前没有对应的 YAML 密钥配置项；生产应用应提供自己的 `JWKSource<SecurityContext>` Bean 替换内置实现。
+当前 API Key 使用应用身份，默认没有用户角色，不走 Token 的菜单 / URL 角色匹配分支；所需的应用操作限制应明确落实在服务端授权规则中。
 
-将oauth2的token转换为JWT传递给微服务，微服务通过JWT获取用户信息和角色信息。
+## 转换为内部 JWT
 
-1. 前端访问gateway接口，在HTTP请求头添加`Authorization: Bearer xxxxx`
-2. gateway收到token后，调用iam服务器的introspect url返回用户信息和角色信息（同时会以token有效期来缓存用户信息）
-3. 通过AddJwtFilter将用户信息和角色信息转为JWT Token放入请求头给后续的微服务的安全模块校验认证（JWT也会缓存）
+三种入口使用各自的认证和访问控制路径，通过后由 `AddJwtGlobalFilter` 写入：
 
-### AK/SK认证
-
-将hmac的签名等信息转为JWT传递给微服务，微服务通过JWT获取用户信息和角色信息。
-
-1. 如果请求携带hmac信息，则校验签名，根据appId检查应用，如果应用有租户ID，则设置到租户上下文
-2. 通过AddJwtFilter生成JWT，具体同上
-
-### URL安全
-
-根据用户的角色和URL所需角色对比，控制URL权限。
-
-1. macula-cloud-system模块在维护菜单、角色等信息后会定时将URL和角色关系缓存到redis
-
-2. gateway根据请求URL匹配redis中的URL角色关系找出访问该URL所需角色
-
-3. 根据当前用户的角色列表是否满足上一步的角色要求决定是否放行
-
-{{% alert title="提示" color="primary" %}}
-
-可以配置URL是否认证或者鉴权
-
-{{% /alert %}}
-
-### 接口的加解密和签名
-
-网关要支持接口加解密和签名的话，首先要实现CryptoService，加解密所需方法。比如接入密钥服务系统。
-
-```java
-/**
- * {@code CryptoService} 接口加解密服务
- *
- * @author rain
- * @since 2023/3/22 19:36
- */
-public interface CryptoService {
-
-    /**
-     * 获取用于加密前端生成的SM4Key的公钥
-     *
-     * @return 公钥
-     */
-    String getSm2PublicKey();
-
-    /**
-     * 解密前端传过来经过非对称加密的SM4 KEY
-     *
-     * @param key 加密过的sm4 key
-     * @return SM4KEY明文
-     */
-    String decryptSm4Key(String key);
-
-    /**
-     * 加密数据
-     *
-     * @param plainText 明文
-     * @param sm4Key    加密的密钥
-     * @return base64密文
-     */
-    String encrypt(String plainText, String sm4Key);
-
-    /**
-     * 解密数据
-     *
-     * @param secretText base64密文
-     * @param sm4Key     解密的密钥
-     * @return 明文
-     */
-    String decrypt(String secretText, String sm4Key);
-
-}
+```http
+Authorization: Bearer <网关签发的JWT>
 ```
 
-本地加解密实现示例如下：
+JWT 携带对应 Principal 的可信声明；Token 可带用户角色 / scope，AK/SK 和 API Key 则以应用身份为主。应用身份不能假定具有用户角色，额外声明可通过 `JwtClaimsCustomizer` 定制。
 
-```java
-/**
- * {@code CryptoLocaleServiceImpl} 本地加解密服务
- *
- * @author rain
- * @since 2023/3/23 22:01
- */
-@Component
-@Slf4j
-public class CryptoLocaleServiceImpl implements CryptoService, InitializingBean {
-    private SM2 sm2;
-
-    @Override
-    public String getSm2PublicKey() {
-        return HexUtil.encodeHexStr(sm2.getPublicKey().getEncoded());
-    }
-
-    @Override
-    public String decryptSm4Key(String key) {
-        return sm2.decryptStr(key, KeyType.PrivateKey);
-    }
-
-    @Override
-    public String encrypt(String plainText, String sm4Key) {
-        return SmUtil.sm4(sm4Key.getBytes(StandardCharsets.UTF_8)).encryptBase64(plainText);
-    }
-
-    @Override
-    public String decrypt(String secretText, String sm4Key) {
-        return SmUtil.sm4(sm4Key.getBytes(StandardCharsets.UTF_8)).decryptStr(secretText);
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        KeyPair pair = SecureUtil.generateKeyPair("SM2");
-        sm2 = SmUtil.sm2(pair.getPrivate(), pair.getPublic());
-        if (log.isDebugEnabled()) {
-            log.debug("sm2 public key: {}", HexUtil.encodeHexStr(sm2.getPublicKey().getEncoded()));
-            log.debug("sm2 private key: {}", HexUtil.encodeHexStr(sm2.getPrivateKey().getEncoded()));
-            log.debug("sm4 encrypted key: {}", sm2.encryptBase64("1234567890abcdef", KeyType.PublicKey));
-        }
-    }
-}
-```
-
-#### 前端流程
-
-- 密钥协商
-    - 前端获取需要加密或者签名的接口：/gateway/protect/urls，返回{ crypto: [], sign: [] }，如果与当前请求匹配，则执行下述流程
-    - 前端获取公钥：/gateway/protect/key
-    - 前端根据URL规则判断是否要加密和签名
-    - 前端随机产生一串密钥key并使用SM4公钥加密，将该密钥放入HTTP请求头`sm4-key`
-- 请求加密
-  - 前端对GET的Query参数param1=value1&param2=value2用上述随机串key进行SM4加密（注意param要排序）
-  - 前端对POST的JSON Body用上述key进行SM4加密
-    - 前端GET请求的加密参数附加在URL?data=xxx中，POST请求的加密参数也是以JSON格式放在data这个key中
-  - 加密后以Base64编码（GET请求要encodeURI，Base64含有+=/等符号）
-  - 请求头添加sym-alg，标识加密算法SM4
-- 请求签名（加密后的，非空参数值才参与签名）
-    - 生成当前时间戳，为UTC 1970年1月1日0时开始的毫秒数(Unix 时间戳)
-    - 随机生成nonce随机串，注意要保证随机唯一性
-    - GET请求签名sha256(path+param1=value1&param2=value2...+key+timestamp+nonce)
-    - POST请求签名sha256(POST签名体 = path+param1=value1&param2=value2...+SHA-256=sha256(body))
-      +key+timestamp+nonce)
-    - SHA256是16进制字符串格式
-    - timestamp、signature、nonce、algorithm（默认SHA-256）放入Header
-    - 签名算法支持MD2、MD5、SHA-1、SHA-256
-- 响应解密
-  - 响应体的加密内容在JSON串的data这个key中，使用SM4解密
-
-#### 后端流程
-
-- 验证签名
-    - 后端根据URL规则和macula.gateway.force-sign判断是否强制验证签名
-    - 后端根据验签规则验证签名，不通过则返回错误
-- 请求解密
-    - 后端根据macula.gateway.force-crypto判断是否强制加解密，如果请求URL在列表中但是没有携带sm4-key则返回错误
-    - 后端解密请求数据，然后将加密的返回数据替换Result的data
-- 响应加密
-    - 根据需要对响应加密，放入Result的data字段中
-
-### 配置System的Redis
-
-最新 samples 使用 `spring.data.redis.*` 配置单个 Redis，没有额外声明 System Redis 连接。若业务需要访问独立的 macula-cloud-system Redis，可按以下方式扩展；`spring.data.redis.system.*` 是此示例手动绑定的自定义前缀，并非 Boot 自带的第二数据源配置。
+网关公开 `/oauth2/jwks` 供下游验签。Samples 的非网关服务配置：
 
 ```yaml
 spring:
-  data:
-    redis:
-      host: 127.0.0.1
-      port: ${REDIS_PORT:36379}
-      password: ${REDIS_PASSWORD:redis}
-      system:
-        host: ${SYSTEM_REDIS_HOST:127.0.0.1}
-        port: ${SYSTEM_REDIS_PORT:6379}
-        password: ${SYSTEM_REDIS_PASSWORD}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://127.0.0.1:6000/oauth2/jwks
 ```
 
-此扩展示例新增的 `SYSTEM_REDIS_*` 变量需自行提供，最新 samples 中未定义这些变量。
+这里指向 Samples Gateway，既不是 IAM introspection 地址，也不是 BFF 的 Cloud endpoint。Boot Examples 的 Alibaba 网关 HTTP 端口为 `5000`，应使用对应端口。
 
-```java
-/**
- * {@code RedisConfiguration} Redis配置
- *
- * @author rain
- * @since 2023/4/21 11:50
- */
-@Configuration
-public class RedisConfiguration {
-    @Bean
-    @Primary
-    @ConfigurationProperties(prefix = "spring.data.redis")
-    public DataRedisProperties redisProperties() {
-        return new DataRedisProperties();
-    }
+当前 `JwtConfiguration` 从 `jwk/jose.jks` 加载 RSA 签名材料，可通过自定义 `JWKSource<SecurityContext>` Bean 覆盖；没有单独的 YAML key-store 配置项。部署时提供目标环境的签名材料，使网关签发与下游验签保持一致。
 
-    @Bean
-    @ConfigurationProperties(prefix = "spring.data.redis.system")
-    public DataRedisProperties sysRedisProperties() {
-        return new DataRedisProperties();
-    }
+## 路由、Redis 与其他保护
 
-    @Primary
-    @Bean(destroyMethod = "shutdown")
-    public RedissonClient redissonClient(ApplicationContext ctx, DataRedisProperties redisProperties) throws Exception {
-        Config config = RedissonConfigBuilder.create().build(ctx, redisProperties, new RedissonProperties());
-        return Redisson.create(config);
-    }
+| 范围 | 配置 / 接入点 |
+| --- | --- |
+| 路由 | `spring.cloud.gateway.server.webflux.routes`，Samples 通过 `/admin/**`、`/openapi/**` 转发 |
+| Token / JWT 缓存 | 网关自身 Redis |
+| URL 角色、应用密钥、API Key | System Redis，默认相关 Bean 使用 `sysRedisTemplate` |
+| 接口签名 / 加解密 | `macula.gateway.sign-switch`、`crypto-switch`、`force-sign`、`force-crypto`、`protect-urls.*`，相关过滤器还需 CryptoService Bean |
+| Trace ID | `macula.gateway.trace-id-response-header-enabled`，有有效 Span 时返回 `x-traceId` |
 
-    @Bean(destroyMethod = "shutdown")
-    public RedissonClient sysRedissonClient(ApplicationContext ctx, DataRedisProperties sysRedisProperties)
-        throws Exception {
-        Config config = RedissonConfigBuilder.create().build(ctx, sysRedisProperties, new RedissonProperties());
-        return Redisson.create(config);
-    }
+接口签名 / 加解密的开关与 AK/SK 的 HMAC 应用认证不是同一组机制。Samples Gateway 的双 Redis 前缀和 profile 配置见[配置规范](/docs/latest/04_devmanual/应用配置/)。
 
-    @Bean(name = "sysRedisTemplate")
-    public RedisTemplate<String, Object> sysRedisTemplate(
-        @Qualifier("sysRedissonClient") RedissonClient sysRedissonClient) {
-        //数据泛型类型
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        //设置连接工厂（Jedis或Lettuce）
-        template.setConnectionFactory(new RedissonConnectionFactory(sysRedissonClient));
-
-        //设置key的序列化方式---String
-        template.setKeySerializer(RedisSerializer.string());
-        template.setHashKeySerializer(RedisSerializer.string());
-        //初始化RedisTemplate的参数设置
-        template.afterPropertiesSet();
-        return template;
-    }
-}
-```
-
-## 依赖引入
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>dev.macula.boot</groupId>
-        <artifactId>macula-boot-starter-redis</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>dev.macula.boot</groupId>
-        <artifactId>macula-boot-commons</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>com.nimbusds</groupId>
-        <artifactId>oauth2-oidc-sdk</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>com.github.ben-manes.caffeine</groupId>
-        <artifactId>caffeine</artifactId>
-    </dependency>
-</dependencies>
-```
-
-## 版权说明
-
-- oauth2-oidc-sdk：https://github.com/hidglobal/oauth-2.0-sdk-with-openid-connect-extensions/blob/master/LICENSE.txt
-- caffeine：https://github.com/ben-manes/caffeine/blob/master/LICENSE
-- spring-cloud-gateway：https://github.com/spring-cloud/spring-cloud-gateway/blob/main/LICENSE.txt
+详细源码：[Gateway 模块](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway)。方法和数据授权继续阅读 [Security](/docs/latest/01_services/框架基础/security/)。

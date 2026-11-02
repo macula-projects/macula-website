@@ -74,6 +74,12 @@ latest 的组件章节同时核对 main 中实际存在的 Starter POM（包含 
 
 Macula Cloud 的管理端与后端同仓，入口为 `macula-cloud/macula-cloud-admin`。首页管理端链接指向该目录。latest 的快速开始、平台部署与 Sentinel 指引设置 `manual_content: true`，按当前源码维护；跨仓库资料使用 `source_repository`、`source_branch`、`source_commit` 和 `source_paths` 记录来源，后续同步不会覆盖这些说明。
 
+latest 的快速开始仅保留 Boot Examples 的 Gateway / BFF（consumer）/ Service（provider）接入概述，明确 IAM introspection、Cloud endpoint 与应用网关 JWK 三类地址。Samples 开发指引按独立仓库的已提交源码整理，包含环境准备、项目组织、模块说明、application.yml 规范、业务开发、运行测试与部署；全部使用 `manual_content: true`，通过 `source_refs` 补充跨仓库的提交与文件。`LATEST_CHAPTERS` 显式声明新增的模块说明、配置规范两页，历史版本保持各自内容。
+
+同步 latest 时，普通 Examples 文档链接进入快速开始，专项 Docker / 可观测性说明链接回 Boot 源码中的完整 README；不会再将 Examples 全文覆盖到 Samples 的“运行与测试”或“打包部署”中。核对 Samples 时只读取固定提交，不使用其工作区中尚未提交的业务扩展作为文档依据。
+
+latest 的“平台简介 → 安全架构”用原理图概述网关认证、角色 / URL 规则、内部 JWT 和微服务方法 / 数据授权。原理图由 `assets/diagrams/security-architecture.svg` 与 `security-architecture` 短码直接渲染，支持文字描述、键盘焦点和窄屏横向滚动，不依赖远程绘图库。Gateway 与 Security 两章按固定源码提交人工维护细节，使用 `manual_content: true` 保留说明；其中明确区分 Token、AK/SK、API Key 的实际分支以及 CheckOwner 两种校验时机。
+
 3.1、4.0 分别独立维护在 `content/zh-cn/docs/3.1/`、`content/zh-cn/docs/4.0/`，保留各自历史目录结构，直接从顶部版本菜单进入，不再嵌套或复制到其他版本中。它们在版本配置中标记为 `archived: true`，同步工具会跳过历史版本。原始 `/docs/98_old/<版本>/` 及曾使用的 `/docs/<5.x|6.0.x|latest>/98_old/<版本>/` 章节地址均跳转到独立历史文档；旧图片地址通过 Hugo 静态挂载保留。原有“历史文档”目录入口跳转到 4.0 首页。
 
 同步工具只读取 Git 已提交内容，不切换或修改 Boot 工作区。`scripts/sync-boot-docs.py` 中的 `MAPPING` 将分支 README 映射到已有章节或 `EXTRA_CHAPTERS` 显式声明的独立组件页；已有章节保留 5.x 的标题、导航名和排序，新增组件页单独维护标题与排序。同步页记录来源分支、提交和文件路径，编辑链接指向对应 Boot 分支。

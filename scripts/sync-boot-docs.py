@@ -24,6 +24,18 @@ EXTRA_CHAPTERS = {
     },
 }
 
+LATEST_CHAPTERS = {
+    '00_introduce/安全架构.md': {
+        'title': '安全架构', 'linkTitle': '安全架构', 'weight': 3,
+    },
+    '04_devmanual/模块说明.md': {
+        'title': 'Samples 模块说明', 'linkTitle': '模块说明', 'weight': 3,
+    },
+    '04_devmanual/应用配置.md': {
+        'title': 'application.yml 配置规范', 'linkTitle': '配置规范', 'weight': 4,
+    },
+}
+
 MAPPING = {
     'README.md': '00_introduce/概述/_index.md',
     'macula-boot-archetype': '04_devmanual/创建应用平台.md',
@@ -104,7 +116,8 @@ def main():
                     owners[Path(chapter)].add(module)
             removed_chapters = {chapter for chapter, modules in owners.items()
                                 if not chapter.name.startswith('_index') and not modules & starter_modules}
-        expected_files = (template_files | {Path(path) for path in EXTRA_CHAPTERS}) - removed_chapters
+        additions = EXTRA_CHAPTERS | (LATEST_CHAPTERS if version['id'] == 'latest' else {})
+        expected_files = (template_files | {Path(path) for path in additions}) - removed_chapters
         retired_aliases = defaultdict(list)
         for chapter in sorted(removed_chapters):
             retired_aliases[(chapter.parent / '_index.md').as_posix()].append(url(version['id'], chapter.as_posix()))
@@ -113,6 +126,10 @@ def main():
                    or (p.startswith('docs/') and p.endswith('.md'))]
 
         def chapter_for(source):
+            if version['id'] == 'latest' and source.startswith('macula-boot-examples/'):
+                module = Path(source).parent.name
+                if module not in {'macula-example-binlog4j', 'macula-example-task'}:
+                    return '00_introduce/快速开始/_index.md'
             if source == 'README.md' or source.startswith('docs/'):
                 return MAPPING[source]
             module = Path(source).parent.name
@@ -135,6 +152,11 @@ def main():
             for name in ['Loggers', 'Metrics', 'Tracing']:
                 chapters[f'01_services/生产准备/{name}.md'].append(observability)
         routes = {p: url(version['id'], chapter_for(p)) for p in sources}
+        if version['id'] == 'latest':
+            # Keep specialist Docker/observability instructions linked to their full source.
+            for source in sources:
+                if source == 'macula-boot-examples/docker/README.md':
+                    routes[source] = f'{REMOTE}/blob/{commit}/{source}'
         routes.update({posixpath.dirname(p): routes[p] for p in sources if p.endswith('/README.md')})
 
         def render(source):
@@ -143,6 +165,8 @@ def main():
                 # Keep migration details in the dedicated, manually maintained guide.
                 content = re.sub(r'(?ms)^## 从 6\.0 升级到 6\.1\n.*?(?=^## |\Z)', '', content)
                 content = content.replace('[统一可观测性迁移指南]', '[从 6.0.x 迁移到 latest 的升级指南]')
+                content = content.replace('## 核心能力',
+                    '网关入口认证、内部 JWT 与方法 / 数据授权的分层关系，见[安全架构](/docs/latest/00_introduce/安全架构/)。\n\n## 核心能力', 1)
 
             def rewrite(match):
                 image, label, destination = match.groups()
@@ -198,9 +222,9 @@ def main():
                 shutil.copyfile(template / relative, target)
                 continue
             path = relative.as_posix()
-            if path in EXTRA_CHAPTERS:
+            if path in additions:
                 header = '\n'.join(f'{key}: {json.dumps(value, ensure_ascii=False)}'
-                                   for key, value in EXTRA_CHAPTERS[path].items())
+                                   for key, value in additions[path].items())
                 body = ''
             else:
                 header, body = split_page((template / relative).read_text())
@@ -241,7 +265,7 @@ def main():
         actual = {p.relative_to(root) for p in root.rglob('*') if p.is_file() and not p.name.startswith('.')}
         if actual != expected_files:
             raise ValueError(f'Layout differs from the declared chapters: {actual ^ expected_files}')
-        print(f"{version['id']}: {len(template_files)} base files and {len(EXTRA_CHAPTERS)} component pages; "
+        print(f"{version['id']}: {len(template_files)} base files and {len(additions)} explicit additions; "
               f'{len(removed_chapters)} retired chapters omitted; '
               f'{len(sources)} source documents mapped into {len(chapters)} chapters')
 

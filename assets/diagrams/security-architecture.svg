@@ -1,0 +1,85 @@
+<svg id="macula-security-architecture" xmlns="http://www.w3.org/2000/svg" width="720" height="1380" viewBox="0 0 720 1380" role="img" aria-labelledby="security-title security-desc">
+  <title id="security-title">Macula 外层网关与内层微服务安全架构</title>
+  <desc id="security-desc">客户端以 Token、AK/SK 或 API Key 进入网关。Token 经 IAM 认证与角色 URL 规则授权；AK/SK 经签名和应用 URL 范围检查；API Key 校验应用身份。网关生成内部 JWT，BFF 和业务服务使用网关 JWK 验签。认证上下文可由 SecurityUtils 读取。执行前进行 PreAuthorize 和 CheckOwner 入参资源校验，业务查询落实数据范围，返回后进行 PostAuthorize 或 CheckOwner 结果归属校验。</desc>
+  <defs>
+    <marker id="security-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="#1672ce"/></marker>
+    <style>
+      #macula-security-architecture text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #172839; font-size: 18px; }
+      #macula-security-architecture .heading { font-size: 22px; font-weight: 600; }
+      #macula-security-architecture .strong { font-weight: 600; }
+      #macula-security-architecture .muted { fill: #526579; }
+      #macula-security-architecture .blue { fill: #145ca8; }
+      #macula-security-architecture .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; }
+      #macula-security-architecture .box { fill: #fff; stroke: #b5c8db; stroke-width: 1.5; }
+      #macula-security-architecture .line { fill: none; stroke: #1672ce; stroke-width: 2; marker-end: url(#security-arrow); }
+      #macula-security-architecture .context { fill: none; stroke: #526579; stroke-width: 2; stroke-dasharray: 6 5; marker-end: url(#security-arrow); }
+    </style>
+  </defs>
+  <rect width="720" height="1380" rx="12" fill="#fff"/>
+  <rect class="box" x="24" y="20" width="208" height="84" rx="8"/>
+  <text x="128" y="54" text-anchor="middle" class="strong">浏览器 / OAuth2 调用方</text>
+  <text x="128" y="83" text-anchor="middle" class="muted">Bearer Token</text>
+  <rect class="box" x="256" y="20" width="208" height="84" rx="8"/>
+  <text x="360" y="54" text-anchor="middle" class="strong">系统调用方</text>
+  <text x="360" y="83" text-anchor="middle" class="muted">AK/SK · HMAC 签名</text>
+  <rect class="box" x="488" y="20" width="208" height="84" rx="8"/>
+  <text x="592" y="54" text-anchor="middle" class="strong">应用调用方</text>
+  <text x="592" y="83" text-anchor="middle" class="muted">API Key</text>
+  <path class="line" d="M128 104V122"/><path class="line" d="M360 104V122"/><path class="line" d="M592 104V122"/>
+  <rect x="16" y="130" width="688" height="478" rx="12" fill="#f4f8fd" stroke="#b5c8db"/>
+  <text x="36" y="164" class="heading">外层 · Gateway</text>
+  <text x="36" y="190" class="muted">IAM 提供身份，System / Redis 提供权限与应用信息</text>
+  <rect class="box" x="32" y="208" width="192" height="104" rx="8"/>
+  <text x="128" y="239" text-anchor="middle" class="strong blue">Token 认证</text>
+  <text x="128" y="270" text-anchor="middle">IAM introspection</text>
+  <text x="128" y="297" text-anchor="middle" class="muted">读取用户 / 角色声明</text>
+  <rect class="box" x="264" y="208" width="192" height="104" rx="8"/>
+  <text x="360" y="239" text-anchor="middle" class="strong blue">AK/SK 认证</text>
+  <text x="360" y="270" text-anchor="middle">HMAC 签名、Date</text>
+  <text x="360" y="297" text-anchor="middle" class="muted">应用允许的 URL 范围</text>
+  <rect class="box" x="496" y="208" width="192" height="104" rx="8"/>
+  <text x="592" y="239" text-anchor="middle" class="strong blue">API Key 认证</text>
+  <text x="592" y="270" text-anchor="middle">Bearer sk-...</text>
+  <text x="592" y="297" text-anchor="middle" class="muted">校验 Redis 应用记录</text>
+  <path class="line" d="M128 312V344"/><path class="line" d="M360 312V344"/><path class="line" d="M592 312V344"/>
+  <rect class="box" x="32" y="352" width="192" height="80" rx="8"/>
+  <text x="128" y="384" text-anchor="middle" class="strong">URL 角色授权</text>
+  <text x="128" y="412" text-anchor="middle" class="muted">菜单 / 角色 / URL 规则</text>
+  <rect class="box" x="264" y="352" width="424" height="80" rx="8"/>
+  <text x="476" y="384" text-anchor="middle" class="strong">系统调用通道</text>
+  <text x="476" y="412" text-anchor="middle" class="muted">保留应用身份，不自动赋予登录用户角色</text>
+  <path class="line" d="M128 432V450H256V470"/><path class="line" d="M476 432V450H464V470"/>
+  <rect x="112" y="478" width="496" height="100" rx="8" fill="#e8f2fd" stroke="#1672ce" stroke-width="1.5"/>
+  <text x="360" y="508" text-anchor="middle" class="strong blue">网关签发内部 JWT</text>
+  <text x="360" y="538" text-anchor="middle" class="muted">身份、角色 / scope、租户：按认证方式提供</text>
+  <text x="360" y="565" text-anchor="middle" class="mono">Authorization: Bearer &lt;JWT&gt;</text>
+  <path class="line" d="M360 578V650"/>
+  <text x="379" y="638" class="blue">网关 JWK 公钥验签</text>
+  <rect x="16" y="660" width="688" height="666" rx="12" fill="#f6faf8" stroke="#b7cfc2"/>
+  <text x="36" y="695" class="heading">内层 · BFF / 业务微服务</text>
+  <rect class="box" x="112" y="716" width="496" height="96" rx="8"/>
+  <text x="360" y="750" text-anchor="middle" class="strong">Security Starter 验证网关 JWT</text>
+  <text x="360" y="783" text-anchor="middle" class="muted">建立 SecurityContext 认证上下文</text>
+  <path class="line" d="M264 812V834H192V858"/>
+  <path class="context" d="M464 812V834H536V858"/>
+  <rect class="box" x="32" y="866" width="320" height="120" rx="8"/>
+  <text x="192" y="898" text-anchor="middle" class="strong">执行前授权（按业务注解）</text>
+  <text x="192" y="928" text-anchor="middle" class="mono">@PreAuthorize</text>
+  <text x="192" y="957" text-anchor="middle" class="mono">@CheckOwner("#p0")</text>
+  <text x="192" y="979" text-anchor="middle" class="muted">操作权限 / 资源 Passkey</text>
+  <rect class="box" x="384" y="866" width="304" height="120" rx="8"/>
+  <text x="536" y="898" text-anchor="middle" class="strong">SecurityUtils</text>
+  <text x="536" y="930" text-anchor="middle">读取身份、角色、租户</text>
+  <text x="536" y="961" text-anchor="middle" class="muted">辅助业务判断，读取不等于鉴权</text>
+  <path class="line" d="M192 986V1008H264V1032"/>
+  <path class="context" d="M536 986V1008H464V1032"/>
+  <rect class="box" x="112" y="1040" width="496" height="90" rx="8"/>
+  <text x="360" y="1074" text-anchor="middle" class="strong">执行业务方法</text>
+  <text x="360" y="1107" text-anchor="middle" class="muted">查询 / 写操作落实数据范围与业务条件</text>
+  <path class="line" d="M360 1130V1162"/><text x="380" y="1153" class="muted">查询返回时</text>
+  <rect class="box" x="80" y="1170" width="560" height="124" rx="8"/>
+  <text x="360" y="1204" text-anchor="middle" class="strong">返回后校验 · 用于无副作用的查询</text>
+  <text x="360" y="1237" text-anchor="middle" class="mono">@PostAuthorize</text>
+  <text x="360" y="1268" text-anchor="middle" class="mono">@CheckOwner("returnObject.ownerUsername")</text>
+  <text x="360" y="1358" text-anchor="middle" class="muted">外层与内层共同生效；列表范围与租户边界仍由业务落实</text>
+</svg>

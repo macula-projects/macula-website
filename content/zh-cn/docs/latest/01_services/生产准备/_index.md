@@ -158,7 +158,7 @@ spring:
 - 旧 Starter、配置键、Logback include 和 Alibaba TTL 的迁移方式参见
   [统一可观测性迁移指南](/docs/latest/05_ops/升级指南/)
 - OpenTelemetry Collector、Prometheus、Loki、Tempo 的本地验证环境参见
-  [示例 Docker 使用说明](/docs/latest/04_devmanual/打包部署/)
+  [示例 Docker 使用说明](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/docker/README.md)
 
 ## 版权说明
 
