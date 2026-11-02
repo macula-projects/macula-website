@@ -56,6 +56,7 @@
 ### 开发指引
 
 - 主线以 [GitHub macula-samples](https://github.com/macula-projects/macula-samples) 的**单仓模式**为准，模块是同一仓库内的目录。
+- “开发环境准备 → 获取源码”同时简要提及可用 Archetype 创建自己的项目，生成命令统一链接到快速开始的 Archetype 小节。
 - 多仓模式只在“开发环境准备 → 获取源码”附近简要提及，并链接 [macula-samples-workspace](https://cnb.cool/macula-projects/macula-samples-workspace)。不要放在开发指引首页，也不展开多仓管理教程。
 - 获取源码、模块结构、运行测试和部署步骤统一使用单仓的真实文件与命令。不要混入多仓 `repo.sh` 流程。
 - “运行与测试”介绍 Samples；Examples 的启动说明放在快速开始，不能用 Examples README 覆盖 Samples 指引。
