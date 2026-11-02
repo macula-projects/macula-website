@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 Spring Retry用于解决分布式系统中的网络抖动、连接超时、服务端不可用等网络问题，通过重试机制来保证服务的可用性。在macula中，我们使用了Spring
 Retry来实现重试机制，通过配置retry策略来达到重试的目的。
@@ -111,7 +111,6 @@ public void handleRecovery(MyCustomException exception) {
     </dependency>
 </dependencies>
 ```
-
 
 ## 版权说明
 

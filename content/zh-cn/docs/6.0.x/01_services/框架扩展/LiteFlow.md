@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 该模块基于[LiteFlow](https://liteflow.yomahub.com/)，是一个轻量，快速，稳定可编排的组件式规则引擎。
 

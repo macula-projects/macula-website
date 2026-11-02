@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 微信Java开发工具包，支持包括微信支付、开放平台、公众号、企业微信、视频号、小程序等微信功能模块的后端开发。
 
@@ -430,6 +430,6 @@ wx:
 </dependencies>
 ```
 
-## 版本说明
+## 版权说明
 
 - WxJava: https://github.com/Wechat-Group/WxJava/blob/develop/LICENSE

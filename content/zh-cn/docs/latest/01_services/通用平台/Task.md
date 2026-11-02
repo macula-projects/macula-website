@@ -8,11 +8,29 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-# Task 示例
+## 概览
 
 该模块只连接 SnailJob Server，同时演示原生 SnailJob Handler 与保持源码不变的 `@XxlJob` Handler。`macula-boot-starter-task` 会自动启用 SnailJob，启动类不需要 `@EnableSnailJob`，模块也不直接依赖 SnailJob 或官方 XXL-JOB 客户端。
 
-## 前置条件
+
+`macula-boot-starter-task` 以 SnailJob Server 作为唯一调度服务端，同时支持两种客户端写法：SnailJob 原生 `@JobExecutor` / `@Retryable`，以及历史 XXL-JOB Bean Handler 的 `@XxlJob`。旧 Handler 由兼容桥注册为 SnailJob executor，不需要 XXL-JOB Admin，也不会启动 XXL executor、回调或日志拉取通信。
+
+当前固定使用 SnailJob `1.9.0`，保持 Java 17 兼容。SnailJob 2.x 要求更高 JDK，本 Starter 不升级到 2.x。
+
+## 组件坐标
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-task</artifactId>
+</dependency>
+```
+
+Starter 会传递提供 SnailJob starter、Job Core、Retry Core，以及旧 Handler 编译所需的最小 XXL 兼容 API。应用不要再引入 `com.xuxueli:xxl-job-core`；检测到官方客户端的 `XxlJobExecutor` 时，应用会启动失败并提示移除冲突依赖。
+
+## 使用配置
+
+### 前置条件
 
 - JDK 17。
 - Nacos，默认 `127.0.0.1:38848`。
@@ -20,7 +38,7 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 
 不需要部署 XXL-JOB Admin。
 
-## 启动
+### 启动
 
 ```bash
 export SNAIL_JOB_NAMESPACE=example
@@ -32,39 +50,6 @@ mvn -f macula-boot-examples/macula-example-task/pom.xml spring-boot:run
 
 默认应用端口为 `7099`，SnailJob 客户端通信端口为 `17889`。可通过 `SNAIL_JOB_SERVER_HOST`、`SNAIL_JOB_SERVER_PORT`、`SNAIL_JOB_PORT`、`NACOS_SERVER_ADDR`、`NACOS_NAMESPACE`、`NACOS_USERNAME` 和 `NACOS_PASSWORD` 覆盖。
 
-## 执行器
-
-| 代码写法 | SnailJob executor name | 说明 |
-| --- | --- | --- |
-| `@XxlJob` | `demoJobHandler` | 旧 XXL Handler 原样保留，由 SnailJob 执行并连续输出日志 |
-| `@XxlJob` | `commandJobHandler` | 由 SnailJob 执行调度参数指定的单一命令，仅限受信任本地演示 |
-| `@JobExecutor` | `snailDemoJobHandler` | SnailJob 原生 Handler，记录参数并返回成功 |
-
-在 SnailJob 控制台使用表中的 executor name 创建任务。旧 XXL-JOB 控制台中的任务定义和执行历史不会自动迁移。
-
-示例已在 `logback-spring.xml` 中配置 SnailJob 官方 Logback appender，因此 `XxlJobHelper.log(...)` 与原生 SnailJob 日志都可进入 SnailJob 日志链路。生产环境不得开放通用命令执行器，也不得使用 README 中的占位 token。
-
-
----
-
-# Macula Boot Task Starter
-
-`macula-boot-starter-task` 以 SnailJob Server 作为唯一调度服务端，同时支持两种客户端写法：SnailJob 原生 `@JobExecutor` / `@Retryable`，以及历史 XXL-JOB Bean Handler 的 `@XxlJob`。旧 Handler 由兼容桥注册为 SnailJob executor，不需要 XXL-JOB Admin，也不会启动 XXL executor、回调或日志拉取通信。
-
-当前固定使用 SnailJob `1.9.0`，保持 Java 17 兼容。SnailJob 2.x 要求更高 JDK，本 Starter 不升级到 2.x。
-
-## 引入依赖
-
-```xml
-<dependency>
-    <groupId>dev.macula.boot</groupId>
-    <artifactId>macula-boot-starter-task</artifactId>
-</dependency>
-```
-
-Starter 会传递提供 SnailJob starter、Job Core、Retry Core，以及旧 Handler 编译所需的最小 XXL 兼容 API。应用不要再引入 `com.xuxueli:xxl-job-core`；检测到官方客户端的 `XxlJobExecutor` 时，应用会启动失败并提示移除冲突依赖。
-
-## 自动启用与配置
 
 | 属性 | 默认值 / 要求 | 说明 |
 | --- | --- | --- |
@@ -103,7 +88,23 @@ snail-job:
   enabled: true                   # 显式 false 优先，关闭 SnailJob 客户端和兼容桥
 ```
 
-## SnailJob 原生任务
+## 核心功能
+
+### 执行器
+
+| 代码写法 | SnailJob executor name | 说明 |
+| --- | --- | --- |
+| `@XxlJob` | `demoJobHandler` | 旧 XXL Handler 原样保留，由 SnailJob 执行并连续输出日志 |
+| `@XxlJob` | `commandJobHandler` | 由 SnailJob 执行调度参数指定的单一命令，仅限受信任本地演示 |
+| `@JobExecutor` | `snailDemoJobHandler` | SnailJob 原生 Handler，记录参数并返回成功 |
+
+在 SnailJob 控制台使用表中的 executor name 创建任务。旧 XXL-JOB 控制台中的任务定义和执行历史不会自动迁移。
+
+示例已在 `logback-spring.xml` 中配置 SnailJob 官方 Logback appender，因此 `XxlJobHelper.log(...)` 与原生 SnailJob 日志都可进入 SnailJob 日志链路。生产环境不得开放通用命令执行器，也不得使用 README 中的占位 token。
+
+
+
+### SnailJob 原生任务
 
 ```java
 @Component
@@ -118,7 +119,7 @@ public class ReportJob {
 
 SnailJob 1.9.0 的 `JobArgs`、`ExecuteResult`、`@JobExecutor` 和 `@Retryable` 均按原生语义使用。
 
-## 兼容旧 XXL Handler
+### 兼容旧 XXL Handler
 
 旧代码可保持原 import、注解和方法体：
 
@@ -143,7 +144,7 @@ Starter 只实现常用的最小兼容面：`@XxlJob`、`XxlJobContext`、`XxlJo
 
 Handler 支持无参数方法；引用类型参数按旧 Bean Handler 兼容行为传入 `null`；primitive 参数会在启动扫描时被拒绝。`init` 在注册前调用，初始化失败会阻止注册；`destroy` 在上下文关闭时调用。
 
-### 上下文与结果映射
+#### 上下文与结果映射
 
 | SnailJob | XXL 兼容上下文 |
 | --- | --- |
@@ -158,7 +159,7 @@ Handler 支持无参数方法；引用类型参数按旧 Bean Handler 兼容行�
 
 `@XxlJob.value` 与原生 `@JobExecutor.name` 共用 SnailJob executor 名称空间。空名称、重复名称或两种注解重名都会使应用启动失败，不会静默覆盖。
 
-## 日志
+### 日志
 
 `XxlJobHelper.log(...)` 写入 SLF4J 的 `xxl-job logger`。要把任务日志上报到 SnailJob Server，请在 Logback 配置中挂载官方 appender：
 
@@ -173,7 +174,7 @@ Handler 支持无参数方法；引用类型参数按旧 Bean Handler 兼容行�
 
 这里不再生成供 XXL-JOB Admin 拉取的专用日志文件。
 
-## 迁移边界
+### 迁移边界
 
 - SnailJob Server 是唯一服务端；原 XXL-JOB Admin 中的 Cron、路由、阻塞、超时、重试、历史、告警和用户数据需要在 SnailJob 中重新建立或导入。
 - 两个平台的高级策略不保证一一等价，最终以 SnailJob 1.9 Server 配置为准。
@@ -181,3 +182,60 @@ Handler 支持无参数方法；引用类型参数按旧 Bean Handler 兼容行�
 - token 必须通过环境变量或安全配置中心注入，不要提交真实凭据。
 
 SnailJob 及其客户端使用其项目声明的开源许可证；Macula 提供的最小 XXL 兼容层是独立实现的 Apache License 2.0 代码，不包含官方 XXL-JOB 客户端源码。
+
+## 依赖引入
+
+以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.aizuda</groupId>
+    <artifactId>snail-job-client-starter</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.aizuda</groupId>
+    <artifactId>snail-job-client-retry-core</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.aizuda</groupId>
+    <artifactId>snail-job-client-job-core</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.datatype</groupId>
+    <artifactId>jackson-datatype-jsr310</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-commons</artifactId>
+</dependency>
+```
+
+## 版权说明
+
+Macula Boot 使用 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/main/LICENSE)。第三方组件遵循各自许可证。

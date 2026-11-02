@@ -5,7 +5,7 @@ linkTitle: "Loggers"
 weight: 1
 ---
 
-## 概述
+## 概览
 
 本模块主要提供默认的日志格式配置、日志发送等功能，由多个子模块组成。包括：
 
@@ -22,7 +22,7 @@ weight: 1
 </dependency>
 ```
 
-## 使用说明
+## 使用配置
 
 ### 日志默认配置
 
@@ -166,6 +166,9 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
 </included>
 ```
 
+## 核心功能
+
+通过 Logback 配置日志输出和 Logstash 集成；格式、输出位置与 Appender 配置见“使用配置”。
 
 ## 依赖引入
 
@@ -179,8 +182,6 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

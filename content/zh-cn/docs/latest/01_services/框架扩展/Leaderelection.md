@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 *通过**redis**的**lock**做领导选举*。
 

@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 该模块为安全模块，以资源服务器的角色和网关交互。
 
@@ -204,6 +204,6 @@ public class TestController {
 </dependencies>
 ```
 
-## 版本说明
+## 版权说明
 
 - oauth2-oidc-sdk：https://github.com/hidglobal/oauth-2.0-sdk-with-openid-connect-extensions/blob/master/LICENSE.txt

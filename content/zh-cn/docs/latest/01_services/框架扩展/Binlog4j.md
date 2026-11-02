@@ -8,18 +8,34 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-# Binlog4j 示例
+## 概览
 
 该模块演示 `macula-boot-starter-binlog4j` 的 MySQL binlog 订阅。`UserEventHandler` 监听 `macula-system.sys_user` 表的新增、修改和删除事件，并将解析后的数据输出到控制台。
 
-## 前置条件
+
+binlog4j是一个读取MySQL binlog的组件，以slave的方式接入mysql，将binlog转为事件。
+
+## 组件坐标
+
+```xml
+
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-binlog4j</artifactId>
+    <version>${macula.version}</version>
+</dependency>
+```
+
+## 使用配置
+
+### 前置条件
 
 - MySQL `127.0.0.1:33306`，开启 binlog，建议使用 `ROW` 格式。
 - 订阅账号具有 replication 权限。
 - Redis `127.0.0.1:36379`，用于集群模式的状态协调。
 - 数据库 `macula-system` 中存在 `sys_user` 表。
 
-## 配置与启动
+### 配置与启动
 
 配置前缀 `binlog4j.client-configs.master` 定义 MySQL 连接，默认用户 `root`、密码为空，必须按实际环境覆盖。
 
@@ -43,24 +59,7 @@ mvn -f macula-boot-examples/macula-example-binlog4j/pom.xml spring-boot:run
 启动后对 `sys_user` 执行 `INSERT`、`UPDATE` 或 `DELETE`，控制台应输出对应事件。如果复制示例监听其他表，同步修改 `@BinlogSubscriber` 的 `database` / `table` 和事件实体字段。
 
 
----
 
-## 概述
-
-binlog4j是一个读取MySQL binlog的组件，以slave的方式接入mysql，将binlog转为事件。
-
-## 组件坐标
-
-```xml
-
-<dependency>
-    <groupId>dev.macula.boot</groupId>
-    <artifactId>macula-boot-starter-binlog4j</artifactId>
-    <version>${macula.version}</version>
-</dependency>
-```
-
-## 使用配置
 
 先开启 MySQL ROW 格式 binlog 并授予专用账号必要的复制权限；使用持久化或集群选举时还需可用的 Redis。
 

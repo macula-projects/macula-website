@@ -5,11 +5,9 @@ linkTitle: "RocketMQ"
 weight: 6
 ---
 
-## 概述
+## 概览
 
 该模块主要依赖阿里开源的RocketMQ。[RocketMQ](https://github.com/apache/rocketmq-spring/wiki/%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C)支持同步、异步发送消息，半事务消息等，具体可以参考官方文档。
-
-
 
 ## 组件坐标
 
@@ -21,17 +19,7 @@ weight: 6
 </dependency>
 ```
 
-
-
-## 核心功能
-
-### RocketMQ最佳实践
-
-{{% alert title="提示" color="primary" %}}
-
-[最佳实践](https://mp.weixin.qq.com/s/Rxzo584le5XzUuI71S9nJg)
-
-{{% /alert %}}
+## 使用配置
 
 ### 生产者配置建议
 ```yaml
@@ -192,7 +180,17 @@ public class ExtRocketMQTemplate extends RocketMQTemplate {
 
 {{% /alert %}}
 
-#### Macula 额外扩展
+## 核心功能
+
+### RocketMQ最佳实践
+
+{{% alert title="提示" color="primary" %}}
+
+[最佳实践](https://mp.weixin.qq.com/s/Rxzo584le5XzUuI71S9nJg)
+
+{{% /alert %}}
+
+### Macula 额外扩展
 
 - 引入TxMqMessage，通过发送TxMqMessage执行业务方法和检查方法
 - 引入@TxMqExecute和@TxMqCheck标识业务方法和检查方法
@@ -345,8 +343,6 @@ public class ExtTransactionListenerImpl implements RocketMQLocalTransactionListe
 }
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -361,8 +357,6 @@ public class ExtTransactionListenerImpl implements RocketMQLocalTransactionListe
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

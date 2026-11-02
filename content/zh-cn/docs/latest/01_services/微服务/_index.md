@@ -51,7 +51,7 @@ Alibaba 网关改选 `macula-boot-starter-cloud-alibaba-scg`；Tencent 同理选
 | 网关 | `spring.cloud.gateway.server.webflux.*`、`spring.security.oauth2.resourceserver.opaquetoken.*`、`macula.gateway.*` | [Alibaba Gateway](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml)、[Tencent Gateway](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-tencent-gateway/src/main/resources/application.yml) |
 | Redis | `spring.data.redis.*` | [Redis 配置说明](/docs/latest/01_services/框架基础/redis/) |
 | 灰度 | `spring.cloud.nacos.discovery.metadata.grayversion`、请求头 `grayversion` | [灰度规则与开关边界](/docs/latest/01_services/微服务/alibaba/) |
-| 可观测性 | `management.*` 导出配置、`spring.reactor.context-propagation` | [Observability](/docs/latest/01_services/生产准备/) |
+| 可观测性 | `management.*` 导出配置、`spring.reactor.context-propagation` | [Observability](/docs/latest/01_services/生产准备/observability/) |
 
 示例按 profile 分层：公共段定义应用名和 Config Data 导入；`local` 提供本地默认值；`docker` 通过 `spring.profiles.group.docker=local` 复用并覆盖连接信息；`dev/stg/pet/prd` 主要保留配置中心连接信息。`observability` 额外开启 OTLP 网络导出，普通环境默认关闭。
 

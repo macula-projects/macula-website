@@ -4,11 +4,10 @@ title: "Macula Boot Starter Crypto"
 linkTitle: "Crypto"
 weight: 8
 ---
-## 概述
+
+## 概览
 
 该模块提供数据加解密的能力。
-
-
 
 ## 组件坐标
 
@@ -19,8 +18,6 @@ weight: 8
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -34,8 +31,6 @@ macula:
     publicKey: xxx  # 非对称加密公钥
     privateKey: xxx # 非对称解密私钥
 ```
-
-
 
 ## 核心功能
 
@@ -163,8 +158,6 @@ User selectByPrimaryKey(Long id);
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

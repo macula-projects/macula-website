@@ -5,11 +5,9 @@ linkTitle: "WEB"
 weight: 1
 ---
 
-## 概述
+## 概览
 
 该模块为web开发所需的基本依赖包。是对spring-boot-starter-web模块的扩展，并且使用undertow替换了tomcat作为WEB服务器。有兴趣可以阅读[优雅的写Controller](https://mp.weixin.qq.com/s/i1iCiwhTxQRMqIQj6QzbiQ)。
-
-
 
 ## 组件坐标
 
@@ -20,8 +18,6 @@ weight: 1
     <version>${macula.version}</version>
 </dependency> 
 ```
-
-
 
 ## 使用配置
 
@@ -37,8 +33,6 @@ macula:
     exception-advie: true   # 统一异常处理器，默认true
     response-advice: true   # 统一响应处理器，默认true
 ```
-
-
 
 ## 核心功能
 
@@ -636,8 +630,6 @@ public Jackson2ObjectMapperBuilderCustomizer customizer() {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

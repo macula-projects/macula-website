@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 基于[Spring Cloud Tencent](https://github.com/tencent/spring-cloud-tencent)
 的微服务开源套件[Polarismesh](https://polarismesh.cn/)搭建微服务平台。

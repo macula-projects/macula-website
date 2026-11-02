@@ -5,7 +5,7 @@ linkTitle: "Dubbo"
 weight: 1
 ---
 
-## 概述
+## 概览
 
 引入基于Dubbo的微服务框架。
 
@@ -19,13 +19,13 @@ weight: 1
 </dependency>
 ```
 
-
-
-## 核心功能
+## 使用配置
 
 ### 基于springboot使用dubbo
 
 请参考[官方文档](https://cn.dubbo.apache.org/zh-cn/overview/mannual/java-sdk/quick-start/spring-boot/)
+
+## 核心功能
 
 ### dubbo与spring cloud互通
 
@@ -41,8 +41,6 @@ TODO
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

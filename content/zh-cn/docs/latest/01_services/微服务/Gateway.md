@@ -10,11 +10,13 @@ source_paths: ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-start
 source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "3fbd28dc74d683055d27b81929971c0e45047878", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java"]}]
 ---
 
-## 职责与接入
+## 概览
 
 Gateway 是外层入口，处理 Token、AK/SK、API Key 认证及对应的访问规则，并把可信身份转为内部 JWT。下游 BFF / Service 继续使用 Security Starter 做 JWT 验签与方法、数据权限控制。整体原理见[安全架构](/docs/latest/00_introduce/安全架构/)。
 
 按云平台选择 `macula-boot-starter-cloud-alibaba-scg` 或 `macula-boot-starter-cloud-tencent-scg`，组合中包含共享 Gateway 模块，版本由 Parent 管理。
+
+## 组件坐标
 
 ```xml
 <dependency>
@@ -23,7 +25,9 @@ Gateway 是外层入口，处理 Token、AK/SK、API Key 认证及对应的访�
 </dependency>
 ```
 
-## Token：对接 IAM
+## 使用配置
+
+### Token：对接 IAM
 
 客户端携带 `Authorization: Bearer <access_token>`。网关通过 IAM introspection 验证 Token，读取身份、角色等声明，并按有效期缓存认证信息。
 
@@ -40,7 +44,9 @@ spring:
 
 地址指向 Macula Cloud IAM，Client 与凭据先在平台登记。网关还需要可用的缓存 Redis；菜单 / 角色 / 应用规则通过 System Redis 提供。
 
-## Token 的角色、菜单与 URL 权限
+## 核心功能
+
+### Token 的角色、菜单与 URL 权限
 
 System 维护角色、菜单、按钮与接口关联；网关读取 System Redis 中的 URL 角色规则。当前实现用 `spring.application.name:HTTP方法:请求路径` 匹配规则，再与认证身份的角色比较。
 
@@ -65,7 +71,8 @@ macula:
 
 当前 URL 角色匹配要求命中允许的正向角色且不命中反向角色；网关的 ROOT 角色有专门的放行逻辑。这不表示内层的所有注解也自动豁免 ROOT。
 
-## AK/SK：应用 HMAC 认证
+
+### AK/SK：应用 HMAC 认证
 
 系统调用通过 HMAC Authorization Header 表明应用并提交签名：
 
@@ -87,7 +94,7 @@ GET / DELETE 的签名串包含 `date`、方法、路径及原始 Query；其他
 
 AK/SK 的应用 URL 范围与 Token 的角色 URL 规则是两套不同判断，不能把 HMAC 认证成功理解为获得登录用户角色。
 
-## API Key：平台应用身份
+### API Key：平台应用身份
 
 当前识别方式为：
 
@@ -108,7 +115,7 @@ macula:
 
 当前 API Key 使用应用身份，默认没有用户角色，不走 Token 的菜单 / URL 角色匹配分支；所需的应用操作限制应明确落实在服务端授权规则中。
 
-## 转换为内部 JWT
+### 转换为内部 JWT
 
 三种入口使用各自的认证和访问控制路径，通过后由 `AddJwtGlobalFilter` 写入：
 
@@ -133,7 +140,7 @@ spring:
 
 当前 `JwtConfiguration` 从 `jwk/jose.jks` 加载 RSA 签名材料，可通过自定义 `JWKSource<SecurityContext>` Bean 覆盖；没有单独的 YAML key-store 配置项。部署时提供目标环境的签名材料，使网关签发与下游验签保持一致。
 
-## 路由、Redis 与其他保护
+### 路由、Redis 与其他保护
 
 | 范围 | 配置 / 接入点 |
 | --- | --- |
@@ -146,3 +153,67 @@ spring:
 接口签名 / 加解密的开关与 AK/SK 的 HMAC 应用认证不是同一组机制。Samples Gateway 的双 Redis 前缀和 profile 配置见[配置规范](/docs/latest/04_devmanual/应用配置/)。
 
 详细源码：[Gateway 模块](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway)。方法和数据授权继续阅读 [Security](/docs/latest/01_services/框架基础/security/)。
+
+## 依赖引入
+
+以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-redis</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-commons</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.nimbusds</groupId>
+    <artifactId>oauth2-oidc-sdk</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.github.ben-manes.caffeine</groupId>
+    <artifactId>caffeine</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-tracing</artifactId>
+</dependency>
+```
+
+## 版权说明
+
+Macula Boot 使用 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/main/LICENSE)。第三方组件遵循各自许可证。

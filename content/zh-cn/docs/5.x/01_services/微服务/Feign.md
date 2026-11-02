@@ -5,11 +5,9 @@ linkTitle: "Feign"
 weight: 2
 ---
 
-## 概述
+## 概览
 
 引入spring-cloud-openfeign并添加了HMAC拦截器、请求头传递等功能。
-
-
 
 ## 组件坐标
 
@@ -20,8 +18,6 @@ weight: 2
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -41,8 +37,6 @@ feign:
   okhttp:
     enabled: true
 ```
-
-
 
 ## 核心功能
 
@@ -291,8 +285,6 @@ public class UserFallbackFactory extends AbstractProviderFallbackFactory {
 }
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -319,8 +311,6 @@ public class UserFallbackFactory extends AbstractProviderFallbackFactory {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

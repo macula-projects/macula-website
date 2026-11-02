@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 该模块提供连接Redis的相关配置，使用了[redisson库](https://redisson.pro/)
 

@@ -5,7 +5,7 @@ linkTitle: "Tencent"
 weight: 20
 ---
 
-## 概述
+## 概览
 
 基于[Spring Cloud Tencent](https://github.com/tencent/spring-cloud-tencent)的微服务开源套件[Polarismesh](https://polarismesh.cn/)搭建微服务平台。
 
@@ -27,8 +27,6 @@ weight: 20
 </dependency>
 ```
 
-
-
 ## 使用配置
 
 在bootstrap.yml中如下配置，主要是配置中心的相关配置
@@ -43,13 +41,9 @@ TODO
 TODO
 ```
 
-
-
 ## 核心功能
 
 请参考[官方文档](https://github.com/tencent/spring-cloud-tencent)
-
-
 
 ## 依赖引入
 
@@ -141,8 +135,6 @@ TODO
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

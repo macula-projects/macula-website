@@ -5,15 +5,11 @@ linkTitle: "系统管理"
 weight: 2
 ---
 
-## 概述
+## 概览
 
 macula-cloud-system主要提供系统管理、权限、角色等功能，并提供连接macula-cloud-system应用的能力，生成获取菜单、获取当前用户的Controller。
 
-
-
-## 客户端接入
-
-### 组件坐标
+## 组件坐标
 
 ```xml
 <dependency>
@@ -23,9 +19,7 @@ macula-cloud-system主要提供系统管理、权限、角色等功能，并提�
 </dependency>
 ```
 
-
-
-### 使用配置
+## 使用配置
 
 ```yaml
 macula:
@@ -35,11 +29,9 @@ macula:
     secret-key: example
 ```
 
+## 核心功能
 
-
-### 核心功能
-
-#### 对接macula-cloud-system
+### 对接macula-cloud-system
 
 根据app-key对应的应用获取菜单和用户信息。SystemService是通过远程RPC访问macula-cloud-system。具体的controller如下：
 
@@ -68,7 +60,7 @@ public class SystemController {
 }
 ```
 
-#### 提供按钮权限注解鉴权
+### 提供按钮权限注解鉴权
 
 ```java
 @PreAuthorize("@pms.hasPermission('sys:user:del')")
@@ -76,7 +68,9 @@ public class SystemController {
 
 
 
-### 依赖引入
+### 服务端介绍
+
+## 依赖引入
 
 ```xml
 <dependencies>
@@ -98,12 +92,6 @@ public class SystemController {
     </dependency>
 </dependencies>
 ```
-
-
-
-## 服务端介绍
-
-
 
 ## 版权说明
 

@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 本模块主要提供默认的日志格式配置、日志发送、日志审计等功能，由多个子模块组成。包括：
 
@@ -26,7 +26,7 @@ source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 </dependency>
 ```
 
-## 使用说明
+## 使用配置
 
 ### 日志默认配置
 
@@ -170,6 +170,10 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
     </root>
 </included>
 ```
+
+## 核心功能
+
+通过 Logback 配置日志输出和 Logstash 集成；格式、输出位置与 Appender 配置见“使用配置”。
 
 ## 依赖引入
 

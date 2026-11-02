@@ -4,10 +4,10 @@ title: "Macula Boot Starter MyBatis Plus"
 linkTitle: "MyBatisPlus"
 weight: 3
 ---
-## 概述
+
+## 概览
+
 该模块主要使用alibaba druid作为数据源工具，mybatis-plus作为数据库操作框架
-
-
 
 ## 组件坐标
 
@@ -18,8 +18,6 @@ weight: 3
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -37,8 +35,6 @@ macula:
       last-update-by-name: lastUpdateBy       # 最后更新人，默认lastUpdateBy
       last-update-time-name: lastUpdateTime   # 最后更新时间，默认lastUpdateTime
 ```
-
-
 
 ## 核心功能
 
@@ -309,8 +305,6 @@ public IPage<UserVO> listUserPages(UserPageQuery queryParams) {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

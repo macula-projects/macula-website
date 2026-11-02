@@ -49,7 +49,7 @@ Macula Boot 面向 Java 微服务应用提供统一的依赖管理、自动配�
 | 业务集成 | `oss`、`tinyid`、`binlog4j`、`websocket`、`wechat` | 对象存储、ID、Binlog、WebSocket、微信生态 |
 
 完整模块位于 [`macula-boot-starters`](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-starters)，每个主要 Starter 的目录中均提供独立 README 和配置示例。
-统一可观测性接入见 [`macula-boot-starter-observability`](/docs/latest/01_services/生产准备/)，
+统一可观测性接入见 [`macula-boot-starter-observability`](/docs/latest/01_services/生产准备/observability/)，
 从 6.0 迁移请参考[从 6.0.x 迁移到 latest 的升级指南](/docs/latest/05_ops/升级指南/)。
 
 ## 项目结构

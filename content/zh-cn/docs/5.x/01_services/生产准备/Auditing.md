@@ -6,7 +6,7 @@ weight: 4
 
 ---
 
-## 概述
+## 概览
 
 本模块主要提供日志审计等功能，由多个子模块组成。包括：
 
@@ -23,7 +23,7 @@ weight: 4
 </dependency>
 ```
 
-## 使用说明
+## 使用配置
 
 ### AuditLog
 
@@ -117,7 +117,69 @@ public class AuditLogEventListener {
 }
 ```
 
+## 核心功能
 
+通过审计注解触发日志事件，应用可监听事件并保存审计记录，具体示例见“使用配置”。
+
+## 依赖引入
+
+以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-aspects</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-security</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>cn.hutool</groupId>
+    <artifactId>hutool-all</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+</dependency>
+```
 
 ## 版权说明
 

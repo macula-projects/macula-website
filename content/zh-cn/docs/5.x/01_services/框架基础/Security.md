@@ -4,7 +4,8 @@ title: "Macula Boot Starter Security"
 linkTitle: "Security"
 weight: 10
 ---
-## 概述
+
+## 概览
 
 该模块为安全模块，以资源服务器的角色和网关交互。
 
@@ -12,8 +13,6 @@ weight: 10
 2. 内部REST服务依赖该模块，通过JWT来获取用户信息；
 3. 网关或者直接对外的REST服务通过OpaqueToken验证登陆信息
 4. 该模块只是验证用户，没有处理权限信息。Token验证后的角色信息是有的。通常情况下，网关使用OpaqueToken，然后获取用户角色，验证是否通过权限校验，生成JWT给后续的微服务识别身份
-
-
 
 ## 组件坐标
 
@@ -24,8 +23,6 @@ weight: 10
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -44,8 +41,6 @@ macula:
       - /swagger-ui/index.html
       - /v3/api-docs/swagger-config
 ```
-
-
 
 ## 核心功能
 
@@ -181,8 +176,6 @@ public class TestController {
 }
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -207,8 +200,6 @@ public class TestController {
 </dependencies>
 ```
 
-
-
-## 版本说明
+## 版权说明
 
 - oauth2-oidc-sdk：https://github.com/hidglobal/oauth-2.0-sdk-with-openid-connect-extensions/blob/master/LICENSE.txt

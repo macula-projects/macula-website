@@ -8,11 +8,9 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 该模块基于[Spring Boot Websocket](https://docs.spring.io/spring-boot/docs/current/reference/html/messaging.html#messaging.websockets)搭建，支持基于[STOMP协议](https://docs.spring.io/spring-framework/reference/web/websocket.html)的Websocket通讯，通过Redis Pub/Sub实现Websocket跨实例通讯。支持微服务调用统一登录上下文获取。
-
-
 
 ## 组件坐标
 
@@ -23,8 +21,6 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -75,15 +71,14 @@ macula:
       only-auth-urls: [/websocket/**]
 ```
 
+## 核心功能
 
-
-## Spring Websocket核心流程
+### Spring Websocket核心流程
 
 客户端完成 WebSocket/STOMP 连接后，发送到 `/app` 的消息由应用处理，发往 `/topic`、`/queue` 的消息由代理路由给订阅者；`/user` 用于用户定向消息。
 
 具体见[详细介绍](https://www.tony-bro.com/posts/3568303861/index.html)
 
-## 核心功能
 
 {{% alert title="提示" color="primary" %}}
 
@@ -657,8 +652,6 @@ MessageSecurityMetaSourceCustomizer messageSecurityCustomizer() {
 接口参数已改为 Spring Security 7 的 `MessageMatcherDelegatingAuthorizationManager.Builder`。自定义规则在内置测试放行之后、`anyMessage().authenticated()` 兜底之前执行。
 
 `permit-test=true` 时放行无目标消息、`/app/test/**` 发送及 `/user/queue/test/**`、`/topic/test/**` 订阅。当前实现以空的 `csrfChannelInterceptor` 替代默认拦截器，不执行 STOMP CONNECT CSRF 校验；生产部署需结合 HTTP 握手认证、来源限制和消息授权评估安全边界。
-
-
 
 ## 依赖引入
 

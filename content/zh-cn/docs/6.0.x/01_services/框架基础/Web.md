@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 该模块为web开发所需的基本依赖包。是对spring-boot-starter-web模块的扩展，并且使用undertow替换了tomcat作为WEB服务器。有兴趣可以阅读[优雅的写Controller](https://mp.weixin.qq.com/s/i1iCiwhTxQRMqIQj6QzbiQ)。
 

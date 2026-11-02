@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 基于[alibab cola statemachine](https://github.com/alibaba/COLA/tree/master/cola-components/cola-component-statemachine)
 的状态机模块，cola statemachine是简单、轻量、性能极高的状态机DSL实现，解决业务中的状态流转问题。
@@ -23,6 +23,10 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
     <version>${macula.version}</version>
 </dependency>
 ```
+
+## 使用配置
+
+状态流转通过 Java DSL 定义，无独立 YAML 配置项。业务负责状态持久化、事务与并发控制，规则定义见“核心功能”。
 
 ## 核心功能
 

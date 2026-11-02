@@ -4,11 +4,10 @@ title: "Macula Boot Starter Sender"
 linkTitle: "消息发送"
 weight: 8
 ---
-## 概述
+
+## 概览
 
 该模块实现了通过本地表发送事务消息到RocketMQ的功能。
-
-
 
 ## 组件坐标
 
@@ -20,8 +19,6 @@ weight: 8
 </dependency>
 ```
 
-
-
 ## 使用配置
 
 ```yaml
@@ -31,8 +28,6 @@ macula:
 ```
 
 RocketMQ的配置可以参考 macula-boot-starter-rocketmq
-
-
 
 ## 核心功能
 
@@ -103,8 +98,6 @@ public class OrderService {
 }
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -124,8 +117,6 @@ public class OrderService {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

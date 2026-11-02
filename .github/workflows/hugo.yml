@@ -58,7 +58,7 @@ jobs:
         uses: actions/configure-pages@v6
       - name: Install Node.js dependencies
         run: npm ci
-      - name: Verify release sync
+      - name: Verify documentation tooling
         run: python3 -m unittest discover -s scripts/tests
       - name: Sync Macula Boot Releases
         env:

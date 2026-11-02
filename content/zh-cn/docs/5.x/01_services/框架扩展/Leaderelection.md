@@ -5,7 +5,7 @@ linkTitle: "领导选择"
 weight: 7
 ---
 
-## 概述
+## 概览
 
 *通过**redis**的**lock**做领导选举*。
 
@@ -19,8 +19,6 @@ weight: 7
 </dependency>
 ```
 
-
-
 ## 使用配置
 
 ### 配置redis
@@ -33,8 +31,6 @@ spring:
     host: 127.0.0.1
     port: 6379
 ```
-
-
 
 ## 核心功能
 
@@ -71,8 +67,6 @@ public class Application {
 }
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -84,11 +78,6 @@ public class Application {
 </dependencies>
 ```
 
-
-
 ## 版权说明
 
 - redisson：https://github.com/redisson/redisson/blob/master/LICENSE.txt
-
-
-

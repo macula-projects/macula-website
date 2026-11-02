@@ -4,14 +4,14 @@
   --macula-muted: #526579;
   --macula-text: #33475b;
   --macula-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-  --macula-body-size: 1rem;
+  --macula-body-size: .9375rem;
   --macula-ui-size: .875rem;
   --macula-small-size: .8125rem;
   --macula-code-size: .875rem;
-  --macula-h1-size: 2rem;
-  --macula-h2-size: 1.5rem;
-  --macula-h3-size: 1.25rem;
-  --macula-h4-size: 1.125rem;
+  --macula-h1-size: 1.875rem;
+  --macula-h2-size: 1.375rem;
+  --macula-h3-size: 1.125rem;
+  --macula-h4-size: 1rem;
   --macula-blue: #1672ce;
   --macula-line: #e4eaf0;
   --macula-paper: #f6f8fb;
@@ -21,7 +21,7 @@ body { color: var(--macula-text); font-family: var(--macula-font); font-size: va
 a { color: var(--macula-blue); }
 a, button, select, summary { -webkit-tap-highlight-color: transparent; }
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid var(--macula-blue); outline-offset: 4px; }
-.site-container { width: calc(100% - 96px); max-width: 1200px; margin: 0 auto; }
+.site-container { width: calc(100% - 96px); max-width: 1300px; margin: 0 auto; }
 .skip-link { position: fixed; left: 16px; top: -100px; z-index: 100; padding: 10px 18px; background: #fff; border: 2px solid var(--macula-blue); border-radius: 8px; }
 .skip-link:focus { top: 12px; }
 .site-navbar.navbar { position: fixed; inset: 0 0 auto; height: 72px; min-height: 72px; padding: 0 40px !important; flex-direction: row; background: rgba(255,255,255,.97) !important; border-bottom: 1px solid var(--macula-line); box-shadow: none; z-index: 40; }
@@ -147,7 +147,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 // Documentation: a stable reading column with independently scrolling navigation.
 .macula-docs #doc-outer { overflow: visible !important; padding: 72px 0 0; }
-.macula-docs #doc-outer > .td-main > .row { display: grid; grid-template-columns: 250px minmax(0,1fr) 220px; margin: 0; height: auto !important; }
+.macula-docs #doc-outer > .td-main { width: 100%; max-width: none; margin-inline: 0; }
+.macula-docs #doc-outer > .td-main > .row { display: grid; grid-template-columns: 224px minmax(0,1fr) 192px; margin: 0; height: auto !important; }
 .macula-docs .td-sidebar, .macula-docs .td-sidebar-toc, .macula-docs .doc-main { min-width: 0; width: 100%; max-width: 100% !important; }
 .macula-docs .td-sidebar { background: #f9fbfd; border-right: 1px solid var(--macula-line); padding: 24px 20px 30px; }
 .macula-docs .td-sidebar .td-sidebar__inner { position: sticky; top: 96px; max-height: calc(100vh - 120px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: #d5dfe9 transparent; }
@@ -157,7 +158,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .macula-docs .td-sidebar-nav > .td-sidebar-nav__section { padding: 0; }
 .macula-docs .td-sidebar-nav__section-headtitle { margin: 17px 0 5px; }
 .macula-docs .td-sidebar-nav__section-headtitle > a { color: #415a70; font-weight: 650; }
-.macula-docs .td-sidebar-nav .td-sidebar-link { padding: 6px 8px !important; border-radius: 5px; overflow-wrap: anywhere; }
+.macula-docs .td-sidebar-nav .td-sidebar-link { padding: 6px 8px !important; border-radius: 5px; overflow-wrap: normal; }
 .macula-docs .td-sidebar-nav .td-sidebar-link:hover { background: #eef3f8; }
 .macula-docs .td-sidebar-nav .td-sidebar-link.active { color: #246bb4; background: #eaf2fc; }
 .macula-docs .td-sidebar-nav .td-sidebar-link__page { color: var(--macula-muted); font-weight: 400; }
@@ -165,7 +166,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .macula-docs .td-sidebar-nav .ul-1 ul { padding-left: 10px; }
 .macula-docs .td-sidebar-nav.foldable-nav .ul-1 > li > ul > li { padding-left: 17px; }
 .macula-docs .td-sidebar-nav.foldable-nav label:before { top: 7px; color: #8fa1b3; }
-.macula-docs .td-sidebar-toc { display: block !important; position: sticky !important; top: 96px; align-self: start; height: auto; max-height: calc(100vh - 120px); overflow-y: auto; border-left: 1px solid #edf1f5; padding: 0 22px 20px; margin-top: 36px; }
+.macula-docs .td-sidebar-toc { display: block !important; position: sticky !important; top: 96px; align-self: start; height: auto; max-height: calc(100vh - 120px); overflow-y: auto; border-left: 1px solid #edf1f5; padding: 0 16px 20px; margin-top: 36px; }
 .macula-docs .td-page-meta { margin: 0 !important; padding: 0 0 19px !important; border-bottom: 1px solid var(--macula-line); }
 .macula-docs .td-page-meta a { font-size: var(--macula-small-size); color: var(--macula-muted); padding-bottom: 9px; }
 .macula-docs .td-toc { margin-top: 24px; }
@@ -173,10 +174,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .macula-docs .td-toc #TableOfContents { padding-top: 13px; }
 .macula-docs #TableOfContents a { font-size: var(--macula-ui-size); line-height: 1.6; padding: 5px 0 5px 10px; border-left: 1px solid #e7edf3; color: var(--macula-muted); }
 .macula-docs #TableOfContents a.active { color: var(--macula-blue) !important; border-left: 2px solid var(--macula-blue); }
-.macula-docs .doc-main { padding: 36px 42px 80px !important; }
-.macula-docs .breadcrumb { padding: 0 0 25px; margin: 0; background: transparent; font-size: var(--macula-small-size); color: var(--macula-muted); }
+.macula-docs .doc-main { padding: 36px 32px 80px !important; }
+.macula-docs .breadcrumb { max-width: 960px; padding: 0 0 25px; margin: 0 auto; background: transparent; font-size: var(--macula-small-size); color: var(--macula-muted); }
 .macula-docs .breadcrumb a { color: var(--macula-muted); }
-.macula-docs .td-content { max-width: 880px; margin: 0 auto; padding: 0; font-size: var(--macula-body-size); line-height: 1.9; }
+.macula-docs .td-content { max-width: 960px; margin: 0 auto; padding: 0; font-size: var(--macula-body-size); line-height: 1.75; }
 .macula-docs .td-content > * { max-width: 100% !important; }
 .macula-docs .td-content h1 { font-size: var(--macula-h1-size); font-weight: 700; line-height: 1.5; letter-spacing: -.5px; margin: 0 0 26px; }
 .macula-docs .td-content h2 { font-size: var(--macula-h2-size); font-weight: 650; line-height: 1.5; margin: 46px 0 20px; padding-bottom: 12px; border-bottom: 1px solid #e9eef4; }
@@ -197,9 +198,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .code-copy:hover { color: var(--macula-blue); border-color: #aecae5; }
 .macula-docs .td-content blockquote { padding: 14px 18px; border-left: 3px solid #78a9d6; border-radius: 0 5px 5px 0; background: #f2f7fc; margin: 25px 0; }
 .macula-docs .td-content blockquote p { margin: 0; font-size: var(--macula-body-size); color: var(--macula-muted); }
-.macula-docs .td-content table { display: block; width: 100% !important; overflow-x: auto; font-size: var(--macula-body-size); margin: 24px 0; border-collapse: collapse; }
+.macula-docs .td-content table { display: block; width: 100% !important; overflow-x: auto; font-size: var(--macula-ui-size); line-height: 1.65; margin: 24px 0; border-collapse: collapse; }
 .macula-docs .td-content th { background: #f4f7fa; color: #4d6377; font-weight: 600; }
-.macula-docs .td-content td, .macula-docs .td-content th { padding: 11px 14px; border: 1px solid #e3eaf1; }
+.macula-docs .td-content td, .macula-docs .td-content th { padding: 9px 12px; border: 1px solid #e3eaf1; vertical-align: top; }
+.macula-docs .td-content :is(td, th):first-child { white-space: nowrap; overflow-wrap: normal; }
+.macula-docs .td-content :is(td, th) code { font-size: .95em; overflow-wrap: normal; }
+.doc-table-scroll { max-width: 100%; overflow-x: auto; margin: 24px 0; }
+.doc-table-scroll:focus-visible { outline: 3px solid var(--macula-blue); outline-offset: 3px; }
+.macula-docs .td-content .doc-table-scroll table { display: table; overflow: visible; margin: 0; min-width: 100%; }
 .macula-docs .td-content tr:nth-child(even) td { background: #fbfcfd; }
 .macula-docs .td-content .article-meta:empty { display: none; }
 .macula-docs .docs-section-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 28px 0; }
@@ -215,11 +221,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .macula-docs .disable-click { opacity: .5; background: #f4f7fa !important; pointer-events: none; }
 
 @media (min-width: 1600px) {
-  .macula-docs #doc-outer > .td-main > .row { grid-template-columns: 285px minmax(0,1fr) 260px; }
-  .macula-docs .doc-main { padding-inline: 60px !important; }
+  .macula-docs #doc-outer > .td-main > .row { grid-template-columns: 248px minmax(0,1fr) 224px; }
+  .macula-docs .doc-main { padding-inline: 40px !important; }
 }
 @media (max-width: 1199px) {
-  .macula-docs #doc-outer > .td-main > .row { grid-template-columns: 235px minmax(0,1fr); }
+  .macula-docs #doc-outer > .td-main > .row { grid-template-columns: 224px minmax(0,1fr); }
   .macula-docs .td-sidebar-toc { display: none !important; }
   .macula-docs .doc-main { padding-inline: 32px !important; }
   .site-nav-right { gap: 18px; }
@@ -364,12 +370,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 // Shared reading rules cover home copy, documentation, blog lists and articles.
 html { font-size: 100%; }
 button, input, select, textarea { font-family: inherit; }
-.macula-home, .macula-home p { font-size: var(--macula-body-size); line-height: 1.85; }
+.macula-home, .macula-home p { font-size: var(--macula-body-size); line-height: 1.75; }
 .macula-home .eyebrow, .macula-home .hero-note { font-size: var(--macula-small-size); }
 .macula-docs .td-content .lead { font-size: var(--macula-body-size); font-weight: 400; line-height: inherit; color: var(--macula-muted); }
 .macula-docs .td-content h1, .macula-docs .td-content h2, .macula-docs .td-content h3, .macula-docs .td-content h4 { color: var(--macula-ink); font-weight: 600; }
 .macula-docs .td-content h5 { font-size: var(--macula-h4-size); }
-.macula-docs .td-content { line-height: 1.85; overflow-wrap: anywhere; }
+.macula-docs .td-content { line-height: 1.75; overflow-wrap: anywhere; }
 .macula-docs .td-content pre { line-height: 1.75; overflow-wrap: normal; }
 .macula-docs .td-content :is(p, li, dd) > a { text-decoration: underline; text-underline-offset: .18em; }
 .site-navbar .nav-link { white-space: nowrap; min-height: 44px; display: inline-flex; align-items: center; }
@@ -381,7 +387,11 @@ button, input, select, textarea { font-family: inherit; }
 .macula-docs .td-page-meta a, .macula-docs .td-toc::before, .macula-docs .breadcrumb, .blog-byline { font-size: var(--macula-small-size); color: var(--macula-muted); }
 .macula-docs .td-sidebar-nav .td-sidebar-link { color: var(--macula-muted); }
 .macula-docs .td-sidebar-nav .td-sidebar-link.active { color: #145ca8; font-weight: 600; }
-.macula-docs .td-sidebar-nav.foldable-nav .ul-1 > li > ul > li { padding-left: 30px; }
+.macula-docs .td-sidebar-nav ul { padding-left: 0 !important; margin-left: 0; }
+.macula-docs .td-sidebar-nav li { padding-left: 0 !important; }
+.macula-docs .td-sidebar-nav li.has-section-toggle { padding-left: 24px !important; }
+.macula-docs .td-sidebar-nav .ul-3 > li { padding-left: 12px !important; }
+.macula-docs .td-sidebar-nav label { display: block; width: 100%; }
 .macula-docs .td-sidebar-nav .section-toggle { width: 28px; height: 32px; top: 0; color: var(--macula-muted); }
 .code-copy { min-height: 30px; padding: 3px 10px; color: var(--macula-muted); }
 .workbench-code > div { color: #c1d1dd; }
@@ -415,6 +425,9 @@ button, input, select, textarea { font-family: inherit; }
     --macula-h3-size: 1.125rem;
     --macula-h4-size: 1rem;
   }
+  .macula-docs .td-content table { font-size: .8125rem; }
+  .macula-docs .td-content .doc-table-scroll table { min-width: 34rem; }
+  .macula-docs .td-content .doc-table-scroll :is(td, th):not(:first-child) { min-width: 12rem; }
   html { scroll-padding-top: 124px; }
   .site-navbar.navbar { display: grid; grid-template-columns: minmax(0,1fr) auto; grid-template-rows: 56px 44px; height: 100px; padding-inline: 20px !important; }
   .site-navbar .navbar-brand { grid-column: 1; grid-row: 1; }

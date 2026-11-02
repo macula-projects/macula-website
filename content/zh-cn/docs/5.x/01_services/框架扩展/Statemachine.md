@@ -5,11 +5,9 @@ linkTitle: "状态机"
 weight: 11
 ---
 
-## 概述
+## 概览
 
 基于[alibab cola statemachine](https://github.com/alibaba/COLA/tree/master/cola-components/cola-component-statemachine)的状态机模块，cola statemachine是简单、轻量、性能极高的状态机DSL实现，解决业务中的状态流转问题。
-
-
 
 ## 组件坐标
 
@@ -21,7 +19,9 @@ weight: 11
 </dependency>
 ```
 
+## 使用配置
 
+状态流转通过 Java DSL 定义，无独立 YAML 配置项。业务负责状态持久化、事务与并发控制，规则定义见“核心功能”。
 
 ## 核心功能
 
@@ -151,8 +151,6 @@ public class OrderService {
 
 具体可以参考[cola-statemachine实践](https://lensman.com.cn/2023/03/14/hdqzkbp1ywg1gt1w/)
 
-
-
 ## 依赖引入
 
 ```xml
@@ -163,8 +161,6 @@ public class OrderService {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

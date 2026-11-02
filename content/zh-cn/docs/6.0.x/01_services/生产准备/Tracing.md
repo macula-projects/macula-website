@@ -14,6 +14,11 @@ source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 
 - macula-boot-starter-skywalking 接入skywalking
 
+
+本模块主要提供Tracing最终的配置和定制化的指引。可以选择zipkin、skywalking接入。
+
+- macula-boot-starter-sleuth 接入zipkin
+
 ## 组件坐标
 
 ### Skywalking
@@ -22,6 +27,17 @@ source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-skywalking</artifactId>
+    <version>${macula.version}</version>
+</dependency>
+```
+
+
+### Sleuth
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-sleuth</artifactId>
     <version>${macula.version}</version>
 </dependency>
 ```
@@ -72,62 +88,6 @@ source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 </included>
 ```
 
-## 核心功能
-
-### Skywalking
-
-#### 日志中添加traceid
-
-默认情况下，引入上述依赖后，日志格式中已经添加了traceid。
-
-#### 自定义埋点
-
-请参考[官方文档](https://skywalking.apache.org/docs/skywalking-java/v9.1.0/en/setup/service-agent/java-agent/application-toolkit-tracer/)
-
-## 依赖引入
-
-### Skywalking
-
-```xml
-<dependencies>
-    <!-- skywalking 整合 logback -->
-    <dependency>
-        <groupId>org.apache.skywalking</groupId>
-        <artifactId>apm-toolkit-logback-1.x</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.skywalking</groupId>
-        <artifactId>apm-toolkit-trace</artifactId>
-    </dependency>
-</dependencies>
-```
-
-## 版权说明
-
-- Skywalking:  https://github.com/apache/skywalking-java/blob/main/LICENSE
-
-
----
-
-## 概览
-
-本模块主要提供Tracing最终的配置和定制化的指引。可以选择zipkin、skywalking接入。
-
-- macula-boot-starter-sleuth 接入zipkin
-
-## 组件坐标
-
-### Sleuth
-
-```xml
-<dependency>
-    <groupId>dev.macula.boot</groupId>
-    <artifactId>macula-boot-starter-sleuth</artifactId>
-    <version>${macula.version}</version>
-</dependency>
-```
-
-## 使用配置
 
 ### Sleuth
 
@@ -167,6 +127,17 @@ spring:
 
 ## 核心功能
 
+### Skywalking
+
+#### 日志中添加traceid
+
+默认情况下，引入上述依赖后，日志格式中已经添加了traceid。
+
+#### 自定义埋点
+
+请参考[官方文档](https://skywalking.apache.org/docs/skywalking-java/v9.1.0/en/setup/service-agent/java-agent/application-toolkit-tracer/)
+
+
 ### Sleuth
 
 #### 日志中添加traceid
@@ -178,6 +149,23 @@ spring:
 请参考[官方文档](https://docs.spring.io/spring-cloud-sleuth/docs/current/reference/html/)
 
 ## 依赖引入
+
+### Skywalking
+
+```xml
+<dependencies>
+    <!-- skywalking 整合 logback -->
+    <dependency>
+        <groupId>org.apache.skywalking</groupId>
+        <artifactId>apm-toolkit-logback-1.x</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.skywalking</groupId>
+        <artifactId>apm-toolkit-trace</artifactId>
+    </dependency>
+</dependencies>
+```
+
 
 ### Sleuth
 
@@ -196,5 +184,10 @@ spring:
 ```
 
 ## 版权说明
+
+- Skywalking:  https://github.com/apache/skywalking-java/blob/main/LICENSE
+
+
+
 
 - zipkin:  https://github.com/openzipkin/zipkin/blob/master/LICENSE

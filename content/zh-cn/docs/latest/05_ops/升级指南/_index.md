@@ -140,7 +140,7 @@ Metrics、Traces、Logs 可分别通过各自 `enabled=false` 关闭。Spring Bo
 | 异步上下文 | 受管线程池下 Trace/MDC、Tenant、GrayVersion 正确传播，任务结束后无串租户或上下文残留 |
 | 运维 | 任务执行、MQ 生产消费、健康检查、资源使用和灰度错误率符合预期 |
 
-统一可观测性的详细配置见 [生产准备](/docs/latest/01_services/生产准备/)。验收时需要连接实际 Redis、数据库、MQ、Nacos 和 Collector；未提供相关设施时，不应将单元测试结果写成完整链路验收通过。
+统一可观测性的详细配置见 [Observability](/docs/latest/01_services/生产准备/observability/)。验收时需要连接实际 Redis、数据库、MQ、Nacos 和 Collector；未提供相关设施时，不应将单元测试结果写成完整链路验收通过。
 
 升级前保留 6.0.x 的配置、依赖清单及镜像。需要回退时同时恢复应用版本和对应配置：仅关闭 OTLP 导出不会恢复被移除的旧 Starter，6.1 的新旧可观测性依赖也不能在同一应用内混用。
 

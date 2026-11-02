@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 lock4j是一个基于redisson的分布式锁组件，其提供了多种不同的支持以满足不同性能和环境的需求。致力于打造一个简单但富有内涵的分布式锁组件。
 

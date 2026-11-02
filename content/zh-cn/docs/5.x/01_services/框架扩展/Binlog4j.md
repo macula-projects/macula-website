@@ -5,11 +5,9 @@ linkTitle: "Binlog订阅"
 weight: 2
 ---
 
-## 概述
+## 概览
 
 binlog4j是一个读取MySQL binlog的组件，以slave的方式接入mysql，将binlog转为事件。
-
-
 
 ## 组件坐标
 
@@ -20,8 +18,6 @@ binlog4j是一个读取MySQL binlog的组件，以slave的方式接入mysql，�
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -50,8 +46,6 @@ binlog4j:
       gtidPurged: true          # 当GTID SET为“”时，是否获取最近的purged的GTID SET，默认为true
       gtidSetDefault: "xxx"     # 设置开始消费的GTID位置      
 ```
-
-
 
 ## 核心功能
 
@@ -102,8 +96,6 @@ public class User {
 
 本模块的高可用原理是通过redis锁，集群中某个实例先连上mysql后，后hold redis锁，其他实例会单独一个线程等待锁，如果前面的实力出现异常宕机，redis锁释放，则其他实例会自动重连，并且从redis恢复binlog的postion，从而实现高可用。
 
-
-
 ## 依赖引入
 
 ```xml
@@ -135,8 +127,6 @@ public class User {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

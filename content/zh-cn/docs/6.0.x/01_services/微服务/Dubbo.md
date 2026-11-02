@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 引入基于Dubbo的微服务框架。
 
@@ -22,11 +22,13 @@ source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 </dependency>
 ```
 
-## 核心功能
+## 使用配置
 
 ### 基于springboot使用dubbo
 
 请参考[官方文档](https://cn.dubbo.apache.org/zh-cn/overview/mannual/java-sdk/quick-start/spring-boot/)
+
+## 核心功能
 
 ### dubbo与spring cloud互通
 

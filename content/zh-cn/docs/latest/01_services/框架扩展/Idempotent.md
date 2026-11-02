@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 该模块对原有 [idempotent](https://github.com/it4alla/idempotent) 的代码进行了重构和功能增强。非常感谢idempotent 作者的分享。
 

@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 基于spring-boot-starter-actuator以及micrometer提供Prometheus监控所需端点。
 
@@ -22,6 +22,10 @@ source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
     <version>${macula.version}</version>
 </dependency>
 ```
+
+## 使用配置
+
+通过 Actuator 暴露指标，按环境配置端点与指标采集端；具体接入说明见“核心功能”。
 
 ## 核心功能
 
@@ -123,7 +127,7 @@ custom_metric_counter 1.0
 </dependencies>
 ```
 
-## 版本说明
+## 版权说明
 
 spring-boot：https://github.com/spring-projects/spring-boot/blob/main/LICENSE.txt
 

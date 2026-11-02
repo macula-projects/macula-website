@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 本模块提供基于 Spring Cache 的两级缓存能力：一级缓存使用 Caffeine，二级缓存使用 Redis。读取时优先访问本地缓存，Redis 命中后回填本地缓存；写入、删除和清空时通过 Redis Pub/Sub 通知其他应用实例清理本地缓存。
 
@@ -24,7 +24,7 @@ Macula Boot 6.1 起，本模块不再依赖 Resilience4j。Redis 连接、资源
 </dependency>
 ```
 
-## 使用说明
+## 使用配置
 
 ### 配置两级缓存
 
@@ -67,6 +67,8 @@ spring:
 | `topic` | `macula:cache:two-level:topic` | 跨实例失效通知频道，同一缓存集群需一致 |
 | `local.max-size` | `2000` | 本地缓存容量上限 |
 | `local.expiry-jitter` | `50` | 本地过期时间随机偏移百分比 |
+
+## 核心功能
 
 ### 使用 Spring Cache 注解
 
@@ -119,6 +121,38 @@ spring:
 - 带 `CircuitBreaker` 参数的 `TwoLevelCacheManager` 构造函数
 
 如果业务应用仍需要通用熔断能力，应在业务或远程调用边界独立引入，而不是依赖 Cache Starter 传递 Resilience4j。
+
+## 依赖引入
+
+以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-redis</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.github.ben-manes.caffeine</groupId>
+    <artifactId>caffeine</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-core</artifactId>
+</dependency>
+```
 
 ## 版权说明
 

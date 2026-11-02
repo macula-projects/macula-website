@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 引入基于Dubbo的微服务框架。
 
@@ -22,7 +22,7 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 </dependency>
 ```
 
-## 核心功能
+## 使用配置
 
 ### 基于springboot使用dubbo
 
@@ -38,6 +38,8 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 | `dubbo.provider.timeout` | 提供端默认超时（毫秒） |
 
 请参考[官方文档](https://cn.dubbo.apache.org/zh-cn/overview/mannual/java-sdk/quick-start/spring-boot/)
+
+## 核心功能
 
 ### dubbo与spring cloud互通
 

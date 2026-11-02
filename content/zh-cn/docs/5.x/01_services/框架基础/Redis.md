@@ -4,11 +4,10 @@ title: "Macula Boot Starter Redis"
 linkTitle: "Redis"
 weight: 4
 ---
-## 概述
+
+## 概览
 
 该模块提供连接Redis的相关配置，使用了[redisson库](https://redisson.pro/)
-
-
 
 ## 组件坐标
 
@@ -20,9 +19,8 @@ weight: 4
 </dependency>
 ```
 
-
-
 ## 使用配置
+
 使用时有两种方式配置，一种是spring-boot默认的配置形式，另一种是redisson的配置形式。如下所示：
 ```yaml
 spring:
@@ -79,6 +77,7 @@ spring:
         codec: !<org.redisson.codec.Kryo5Codec> {}
         transportMode: "NIO"
 ```
+
 ## 核心功能
 
 ### 默认提供的Bean
@@ -187,8 +186,6 @@ public class Config {
 
 {{% /alert %}}
 
-
-
 ## 依赖引入
 
 ```xml
@@ -219,8 +216,6 @@ public class Config {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

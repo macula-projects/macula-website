@@ -5,11 +5,9 @@ linkTitle: "Kafka"
 weight: 7
 ---
 
-## 概述
+## 概览
 
 该模块依赖spring-kafka接入kafka服务。
-
-
 
 ## 组件坐标
 
@@ -20,8 +18,6 @@ weight: 7
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -40,8 +36,6 @@ spring:
       enable-auto-commit: true														# 是否自动提交
       auto-commit-interval: 1000													# 自动提交时间间隔，单位ms
 ```
-
-
 
 ## 核心功能
 
@@ -105,8 +99,6 @@ spring:
 			concurrency: 3																	# 批消费并发量，小于或等于Topic的分区数
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -128,8 +120,6 @@ spring:
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

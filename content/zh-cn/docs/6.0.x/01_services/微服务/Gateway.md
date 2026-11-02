@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 网关服务模块，给每个平台应用依赖用的。主要提供token认证、鉴权、接口加解密等功能。
 

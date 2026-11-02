@@ -4,7 +4,8 @@ title: "Macula Boot Starter LiteFlow"
 linkTitle: "流程引擎"
 weight: 10
 ---
-## 概述
+
+## 概览
 
 该模块基于[LiteFlow](https://liteflow.yomahub.com/)，是一个轻量，快速，稳定可编排的组件式规则引擎。
 
@@ -17,8 +18,6 @@ weight: 10
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -90,13 +89,9 @@ liteflow:
 
 其他规则源配置可以参考[官方文档](https://liteflow.yomahub.com/pages/6fa87e/)
 
-
-
 ## 核心功能
 
 示例：https://gitee.com/bryan31/liteflow-example
-
-
 
 ## 依赖引入
 
@@ -114,8 +109,6 @@ liteflow:
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

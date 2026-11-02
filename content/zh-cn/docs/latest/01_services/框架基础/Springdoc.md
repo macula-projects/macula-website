@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 该模块是基于 [SpringDoc](https://springdoc.org/) 3.x 的 OpenAPI V3 规范 API 接口文档生成工具，兼容 Spring Boot 4。
 

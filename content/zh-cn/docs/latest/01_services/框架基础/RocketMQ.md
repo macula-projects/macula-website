@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 该模块主要依赖阿里开源的RocketMQ。[RocketMQ](https://github.com/apache/rocketmq-spring/wiki/%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C)
 支持同步、异步发送消息，半事务消息等，具体可以参考官方文档。
@@ -24,21 +24,7 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 </dependency>
 ```
 
-## 核心功能
-
-### 消息序列化
-
-Macula 的消息转换链使用 Jackson 3，保留字节数组、UTF-8 字符串和 JSON 消息支持。JSON 内置 Java 时间类型支持，日期仍输出 ISO 字符串，长整数仍输出数字；未知字段和基本类型的 `null` 值沿用历史兼容行为。转换链不再使用 Jackson 2 或 Fastjson 回退，自定义序列化器须使用 `tools.jackson` API。
-
-RocketMQ Spring 2.3.4 自身初始化仍依赖 Jackson 2，因此保留第三方传递依赖。不要因 Macula 已使用 Jackson 3 而排除这些依赖。
-
-### RocketMQ最佳实践
-
-{{% alert title="提示" color="primary" %}}
-
-[最佳实践](https://mp.weixin.qq.com/s/Rxzo584le5XzUuI71S9nJg)
-
-{{% /alert %}}
+## 使用配置
 
 ### 生产者配置建议
 
@@ -210,7 +196,23 @@ public class ExtRocketMQTemplate extends RocketMQTemplate {
 
 {{% /alert %}}
 
-#### Macula 额外扩展
+## 核心功能
+
+### 消息序列化
+
+Macula 的消息转换链使用 Jackson 3，保留字节数组、UTF-8 字符串和 JSON 消息支持。JSON 内置 Java 时间类型支持，日期仍输出 ISO 字符串，长整数仍输出数字；未知字段和基本类型的 `null` 值沿用历史兼容行为。转换链不再使用 Jackson 2 或 Fastjson 回退，自定义序列化器须使用 `tools.jackson` API。
+
+RocketMQ Spring 2.3.4 自身初始化仍依赖 Jackson 2，因此保留第三方传递依赖。不要因 Macula 已使用 Jackson 3 而排除这些依赖。
+
+### RocketMQ最佳实践
+
+{{% alert title="提示" color="primary" %}}
+
+[最佳实践](https://mp.weixin.qq.com/s/Rxzo584le5XzUuI71S9nJg)
+
+{{% /alert %}}
+
+### Macula 额外扩展
 
 灰度消息配置前缀为 `macula.rocketmq.gray`，均为布尔值；不启用时使用常规生产、消费链路。
 

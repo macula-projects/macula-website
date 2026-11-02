@@ -8,11 +8,27 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-# Macula Boot Commons
+## 概览
 
 主要引入所有模块都需要使用到的工具类，基础类
 
-## 统一的返回结构
+## 组件坐标
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-commons</artifactId>
+    <version>${macula.version}</version>
+</dependency>
+```
+
+## 使用配置
+
+Commons 提供公共数据结构与工具契约，无独立 YAML 配置项；按下文接口在业务代码中使用。
+
+## 核心功能
+
+### 统一的返回结构
 
 ```java
 @Data
@@ -66,11 +82,11 @@ public class Result<T> implements Serializable {
 }
 ```
 
-## 全局常量
+### 全局常量
 
-## Hutool工具类
+### Hutool工具类
 
-## 全局异常类
+### 全局异常类
 
 ```java
 // 框架异常基类
@@ -113,3 +129,67 @@ public class ApiException extends MaculaException {
     }
 }
 ```
+
+## 依赖引入
+
+以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>io.swagger.core.v3</groupId>
+    <artifactId>swagger-annotations</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>cn.hutool</groupId>
+    <artifactId>hutool-all</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>transmittable-thread-local</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcpkix-jdk18on</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>jakarta.validation</groupId>
+    <artifactId>jakarta.validation-api</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-annotation</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
+```
+
+## 版权说明
+
+Macula Boot 使用 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/main/LICENSE)。第三方组件遵循各自许可证。

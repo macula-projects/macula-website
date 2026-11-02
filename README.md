@@ -37,7 +37,7 @@ IDE 的启动命令也推荐使用 `npm run dev`，工作目录设置为本仓�
 
 修改后运行 `npm run build` 验证构建，并通过 `npm run dev` 检查桌面与手机布局。验收时检查：首页不显示版本菜单、五个文档版本可切换、手机目录可展开、代码和表格不会撑宽页面。版本化 Markdown 正文与同步规则独立维护，不应为样式调整重写各分支内容。
 
-全站排版共用 `_styles_project.scss` 中的字体与字号变量：首页段落、文档、博客和变更历史在 PC 使用 `1rem`（默认 16px），767px 及以下使用 `.875rem`（默认 14px）。导航与目录统一为 14px，辅助说明为 PC 13px / 手机 12px，代码为 PC 14px / 手机 13px。使用相对单位以响应浏览器字体设置；正文、辅助文字、键盘焦点及手机导航采用同一套颜色与间距规则。
+全站排版共用 `_styles_project.scss` 中的字体与字号变量：首页段落、文档、博客和变更历史在 PC 使用 `.9375rem`（默认 15px），767px 及以下使用 `.875rem`（默认 14px），阅读行高为 1.75。导航与目录统一为 14px，辅助说明为 PC 13px / 手机 12px，代码为 PC 14px / 手机 13px，表格为 PC 14px / 手机 13px。文档左右导航贴近浏览器两侧，正文居中、随窗口伸缩且最大 960px；窄屏隐藏侧栏。表格首列保留完整标签，宽表在可键盘操作的独立区域滚动。使用相对单位以响应浏览器字体设置。
 
 ## Release 变更历史
 
@@ -70,11 +70,13 @@ npm run build
 
 5.x、6.0.x、latest 三个版本保持一致的栏目层级，以 `content/zh-cn/docs/5.x/` 为基准，包括平台简介、平台能力、开发规范、开发指引、运维指引和关于。6.0.x 与 latest 在“框架基础”下额外声明独立的 `Commons.md` 和 `Async.md`，各自同步对应分支的模块 README；栏目 `_index.md` 只保留简介与章节导航。源码模块路径只用于内容映射，不会生成另一套文档目录。
 
-latest 的组件章节同时核对 main 中实际存在的 Starter POM（包含 Cloud 下的嵌套模块），缺少显式映射的新模块会使同步失败。已删除模块不再从 5.x 回填；旧章节地址跳转至对应栏目。目前 TSF 从 latest 微服务目录移除，Loggers、Metrics、Tracing 三份重复章节合并到生产准备的 Observability 文档。历史版本继续保留各自内容。仅更新当前版本时运行 `python3 scripts/sync-boot-docs.py --version latest`。
+latest 的组件章节同时核对 main 中实际存在的 Starter POM（包含 Cloud 下的嵌套模块），缺少显式映射的新模块会使同步失败。已删除模块不再从 5.x 回填；TSF 旧地址跳转至微服务栏目，Loggers、Metrics、Tracing 旧地址跳转至独立的 `生产准备/Observability.md`。生产准备首页只提供分类导览。历史版本继续保留各自内容。仅更新当前版本时运行 `python3 scripts/sync-boot-docs.py --version latest`。
+
+5.x、6.0.x、latest 的组件页统一使用“概览、组件坐标、使用配置、核心功能、依赖引入、版权说明”六个二级标题；版本差异与各自示例保留在对应小节。`scripts/module_docs.py` 在同步时整理 README 层级与合并章节，不改动代码块；缺少的组件坐标和直接依赖从该分支 POM 提取。人工维护的组件页面也遵循这套结构，3.1、4.0 归档文档保持原貌。
 
 Macula Cloud 的管理端与后端同仓，入口为 `macula-cloud/macula-cloud-admin`。首页管理端链接指向该目录。latest 的快速开始、平台部署与 Sentinel 指引设置 `manual_content: true`，按当前源码维护；跨仓库资料使用 `source_repository`、`source_branch`、`source_commit` 和 `source_paths` 记录来源，后续同步不会覆盖这些说明。
 
-latest 的快速开始仅保留 Boot Examples 的 Gateway / BFF（consumer）/ Service（provider）接入概述，明确 IAM introspection、Cloud endpoint 与应用网关 JWK 三类地址。Samples 开发指引按独立仓库的已提交源码整理，包含环境准备、项目组织、模块说明、application.yml 规范、业务开发、运行测试与部署；全部使用 `manual_content: true`，通过 `source_refs` 补充跨仓库的提交与文件。`LATEST_CHAPTERS` 显式声明新增的模块说明、配置规范两页，历史版本保持各自内容。
+latest 的快速开始仅保留 Boot Examples 的 Gateway / BFF（consumer）/ Service（provider）接入概述，明确 IAM introspection、Cloud endpoint 与应用网关 JWK 三类地址。Samples 开发指引按独立仓库的已提交源码整理，包含环境准备、项目组织、模块说明、application.yml 规范、业务开发、运行测试与部署；全部使用 `manual_content: true`，通过 `source_refs` 补充跨仓库的提交与文件。开发业务服务连接到应用分层规范，说明 Controller / Service / Mapper、模型及跨服务契约边界。`LATEST_CHAPTERS` 显式声明当前版本的新增章节，历史版本保持各自内容。
 
 同步 latest 时，普通 Examples 文档链接进入快速开始，专项 Docker / 可观测性说明链接回 Boot 源码中的完整 README；不会再将 Examples 全文覆盖到 Samples 的“运行与测试”或“打包部署”中。核对 Samples 时只读取固定提交，不使用其工作区中尚未提交的业务扩展作为文档依据。
 

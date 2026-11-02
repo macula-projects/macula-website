@@ -8,13 +8,11 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 本模块是 `macula-cloud-system` 的客户端集成，提供菜单、当前用户查询及按钮权限校验，不包含系统管理服务端。
 
-## 客户端接入
-
-### 组件坐标
+## 组件坐标
 
 ```xml
 <dependency>
@@ -24,7 +22,7 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 </dependency>
 ```
 
-### 使用配置
+## 使用配置
 
 | 属性 | 默认值 | 说明 |
 | --- | --- | --- |
@@ -42,9 +40,9 @@ macula:
     secret-key: example
 ```
 
-### 核心功能
+## 核心功能
 
-#### 对接macula-cloud-system
+### 对接macula-cloud-system
 
 根据app-key对应的应用获取菜单和用户信息。SystemService是通过远程RPC访问macula-cloud-system。具体的controller如下：
 
@@ -73,13 +71,17 @@ public class SystemController {
 }
 ```
 
-#### 提供按钮权限注解鉴权
+### 提供按钮权限注解鉴权
 
 ```java
 @PreAuthorize("@pms.hasPermission('sys:user:del')")
 ```
 
-### 依赖引入
+### 服务端介绍
+
+`macula-cloud-system` 需独立部署，并通过网关暴露 `/system` 路由；应用标识、密钥及用户权限由服务端维护。
+
+## 依赖引入
 
 ```xml
 
@@ -102,10 +104,6 @@ public class SystemController {
     </dependency>
 </dependencies>
 ```
-
-## 服务端介绍
-
-`macula-cloud-system` 需独立部署，并通过网关暴露 `/system` 路由；应用标识、密钥及用户权限由服务端维护。
 
 ## 版权说明
 

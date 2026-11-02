@@ -5,11 +5,9 @@ linkTitle: "JPA"
 weight: 3
 ---
 
-## 概述
+## 概览
 
 该模块主要使用alibaba druid作为数据源工具，Spring Data JPA和Fenix作为数据库操作框架。[ Fenix](https://github.com/blinkfox/fenix)（菲尼克斯）是一个为了解决复杂动态 SQL (`JPQL`) 而生的 `Spring Data JPA` 扩展库，能辅助开发者更方便快捷的书写复杂、动态且易于维护的 SQL，支持 ActiveRecord 模式和多种查询方式。
-
-
 
 ## 组件坐标
 
@@ -20,8 +18,6 @@ weight: 3
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -63,8 +59,6 @@ fenix:
   # v2.7.0 新增的配置项，表示带前缀下划线转换时要移除的自定义前缀，多个值用英文逗号隔开，通常你不用配置这个值.
   underscore-transformer-prefix:
 ```
-
-
 
 ## 核心功能
 
@@ -216,8 +210,6 @@ Fenix具体使用请参考[官方文档](https://blinkfox.github.io/fenix/#/READ
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

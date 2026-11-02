@@ -5,11 +5,9 @@ linkTitle: "Metrics"
 weight: 2
 ---
 
-## 概述
+## 概览
 
 基于spring-boot-starter-actuator以及micrometer提供Prometheus监控所需端点。
-
-
 
 ## 组件坐标
 
@@ -22,7 +20,9 @@ weight: 2
 </dependency>
 ```
 
+## 使用配置
 
+通过 Actuator 暴露指标，按环境配置端点与指标采集端；具体接入说明见“核心功能”。
 
 ## 核心功能
 
@@ -109,8 +109,6 @@ public class MyController {
 custom_metric_counter 1.0
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -126,9 +124,7 @@ custom_metric_counter 1.0
 </dependencies>
 ```
 
-
-
-## 版本说明
+## 版权说明
 
 spring-boot：https://github.com/spring-projects/spring-boot/blob/main/LICENSE.txt
 

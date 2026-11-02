@@ -4,9 +4,10 @@ linkTitle: "服务治理(Sentinel)"
 weight: 20
 ---
 
+## 概览
+
 > 本章沿用 5.x 的文档内容，尚未按 6.0.x 分支核对。涉及依赖、配置或 API 时，请以 [6.0.x 分支源码](https://github.com/macula-projects/macula-boot/tree/6.0.x) 为准。
 
-## 概述
 
 macula-cloud-sentinel基于官方的sentinel-dashboard并引入nacos作为数据源的服务治理管理平台。在macula-boot-starter-cloud-alibaba中已经引入了sentinel依赖包。只需通过配置打开即可。
 
@@ -16,11 +17,17 @@ macula-cloud-sentinel基于官方的sentinel-dashboard并引入nacos作为数据
 
 基于macula-boot-starter-cloud-tsf的微服务应用可以直接使用腾讯云的TSF平台。
 
+## 组件坐标
 
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-cloud-alibaba</artifactId>
+    <version>${macula.version}</version>
+</dependency>
+```
 
-## 客户端使用
-
-### 使用配置
+## 使用配置
 
 macula平台默认基于nacos数据源承接Sentinel的动态配置
 
@@ -91,11 +98,9 @@ public static final String GATEWAY_FLOW_DATA_ID_POSTFIX = "-gateway-flow-rules";
 public static final String GATEWAY_API_GROUP_DATA_ID_POSTFIX = "-gateway-api-group-rules";
 ```
 
+## 核心功能
 
-
-### 核心功能
-
-#### @SentinelResource注解
+### @SentinelResource注解
 
 ```java
 @SpringBootApplication
@@ -118,11 +123,11 @@ public class TestController {
 
 @SentinelResource 注解用来标识资源是否被限流、降级。上述例子上该注解的属性 hello 表示资源名。 @SentinelResource 还提供了其它额外的属性如 blockHandler，blockHandlerClass，fallback 用于表示限流或降级的操作，更多内容可以参考 [Sentinel注解支持](https://github.com/alibaba/Sentinel/wiki/注解支持)。具体的规则需要在Sentinel Dashboard中配置
 
-#### 客户端支持
+### 客户端支持
 
 Spring Cloud Alibaba 提供的 Sentinel 有关 Starter 提供了对 Spring Cloud 生态中如 OpenFeign、RestTemplate 等主流的客户端组件的适配支持。
 
-##### OpenFeign（熔断）
+#### OpenFeign（熔断）
 
 spring-cloud-starter-alibaba-sentinel 适配了 [OpenFeign](https://github.com/OpenFeign/feign) 组件。如果想使用，除了引入必要的 Starter 依赖外还需要在配置文件打开 sentinel 对 feign 的支持：==feign.sentinel.enabled=true==。
 
@@ -154,7 +159,7 @@ NOTE: Feign 对应的接口中的资源名策略定义：httpmethod:protocol://r
 
 EchoService 接口中方法 echo 对应的资源名为 GET:http://service-provider/echo/{str}。
 
-##### RestTemplate（熔断）
+#### RestTemplate（熔断）
 
 spring-cloud-starter-alibaba-sentinel 支持对 RestTemplate 的服务调用使用 Sentinel 进行保护，在构造 RestTemplate bean的时候需要加上 @SentinelRestTemplate 注解。
 
@@ -195,19 +200,19 @@ Sentinel RestTemplate 限流的资源规则提供两种粒度：
 
 NOTE: 以 https://www.taobao.com/test 这个 url 并使用 GET 方法为例。对应的资源名有两种粒度，分别是 GET:[https://www.taobao.com](https://www.taobao.com/) 以及 GET:https://www.taobao.com/test。
 
-##### Spring WebMVC Adapter
+#### Spring WebMVC Adapter
 
 spring-cloud-starter-alibaba-sentinel默认已经集成了sentinel-spring-webmvc-adapter，通过SentinelWebInterceptor将HTTP请求变成Sentinel的Resource，提供限流规则配置。Sentinel从Controller中提取Web Resource (e.g. `/foo/{id}`)。如果不需要自动拦截Web，可以通过spring.cloud.sentinel.filter.enabled=false关闭。详情见[官网](https://github.com/alibaba/Sentinel/blob/master/sentinel-adapter/sentinel-spring-webmvc-adapter/README.md)
 
-##### Spring Webflux Adapter
+#### Spring Webflux Adapter
 
 spring-cloud-starter-alibaba-sentinel默认已经集成了sentinel-spring-webflux-adapter，同上，这个是支持Webflux响应式应用。
 
-##### 更多开源框架适配
+#### 更多开源框架适配
 
 请参考[官网](https://sentinelguard.io/zh-cn/docs/open-source-framework-integrations.html)
 
-#### Spring Cloud Gateway 支持
+### Spring Cloud Gateway 支持
 
 参考 [Sentinel 网关限流](https://github.com/alibaba/Sentinel/wiki/网关限流)。
 
@@ -235,11 +240,76 @@ spring-cloud-starter-alibaba-sentinel默认已经集成了sentinel-spring-webflu
 
 
 
-## 服务端介绍
+### 服务端介绍
 
 Macula基于Sentinel-Dashboard扩展了对于nacos数据源的支持。请参考[官网](https://sentinelguard.io/zh-cn/docs/dashboard.html)
 
+## 依赖引入
 
+以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-feign</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-cloud-alibaba-gray</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>com.alibaba.csp</groupId>
+    <artifactId>sentinel-datasource-nacos</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-pool2</artifactId>
+</dependency>
+```
 
 ## 版权说明
 

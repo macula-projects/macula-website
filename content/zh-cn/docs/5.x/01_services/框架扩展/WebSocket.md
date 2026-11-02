@@ -5,11 +5,9 @@ linkTitle: "WebSocket"
 weight: 22
 ---
 
-## 概述
+## 概览
 
 该模块基于[Spring Boot Websocket](https://docs.spring.io/spring-boot/docs/current/reference/html/messaging.html#messaging.websockets)搭建，支持基于[STOMP协议](https://docs.spring.io/spring-framework/reference/web/websocket.html)的Websocket通讯，通过Redis Pub/Sub实现Websocket跨实例通讯。支持微服务调用统一登录上下文获取。
-
-
 
 ## 组件坐标
 
@@ -20,8 +18,6 @@ weight: 22
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -60,15 +56,14 @@ macula:
       only-auth-urls: /api/**, /websocket/**      # /websocket前缀在握手时会请求，这里要设置为仅认证
 ```
 
+## 核心功能
 
-
-## Spring Websocket核心流程
+### Spring Websocket核心流程
 
 ![message-flow](../images/message-flow.png)
 
 具体见[详细介绍](https://www.tony-bro.com/posts/3568303861/index.html)
 
-## 核心功能
 
 {{% alert title="提示" color="primary" %}}
 
@@ -671,8 +666,6 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
 }
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -703,8 +696,6 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

@@ -5,7 +5,7 @@ linkTitle: "Alibaba"
 weight: 10
 ---
 
-## 概述
+## 概览
 
 基于[Spring Cloud Alibaba](https://github.com/alibaba/spring-cloud-alibaba)的微服务开源套件[Nacos](https://nacos.io/zh-cn/)、[Sentinel](https://sentinelguard.io/zh-cn/)等搭建微服务平台。
 
@@ -26,8 +26,6 @@ weight: 10
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -92,8 +90,6 @@ spring:
     sentinel:
       enabled: false
 ```
-
-
 
 ## 核心功能
 
@@ -183,8 +179,6 @@ spring:
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

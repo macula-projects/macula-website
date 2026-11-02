@@ -34,9 +34,6 @@ weight: 3
 </dependency>
 ```
 
-
-
-
 ## 使用配置
 
 ### Sleuth
@@ -123,9 +120,6 @@ spring:
 </included>
 ```
 
-
-
-
 ## 核心功能
 
 ### Sleuth
@@ -181,8 +175,6 @@ spring:
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

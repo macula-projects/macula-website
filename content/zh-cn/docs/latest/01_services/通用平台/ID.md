@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 通过 Feign 经 Macula Cloud 网关申请号段，在本地缓存、预加载并生成 ID，支持单个和批量取号。
 

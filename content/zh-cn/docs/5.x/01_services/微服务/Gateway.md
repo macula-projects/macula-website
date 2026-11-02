@@ -4,11 +4,10 @@ title: "Macula Boot Starter Cloud Gateway"
 linkTitle: "Gateway"
 weight: 3
 ---
-## 概述
+
+## 概览
 
 网关服务模块，给每个平台应用依赖用的。主要提供token认证、鉴权、接口加解密等功能。
-
-
 
 ## 组件坐标
 
@@ -26,8 +25,6 @@ weight: 3
 <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -74,8 +71,6 @@ macula:
       only-auth-urls: /usr/xx, /bbb/xxx 	# 仅需认证无需鉴权的路径
 ```
 
-
-
 ## 核心功能
 
 ### Token认证
@@ -111,7 +106,7 @@ macula:
 
 
 
-###  定制JWT的Claims
+### 定制JWT的Claims
 
 框架开放了JwtClaimsCustomizer接口，可以用来添加你自己的Claim
 
@@ -332,8 +327,6 @@ spring:
             max-age: 1800  								# 预检请求的缓存时间，单位为秒（1800秒=30分钟），在这个时间内，浏览器可以缓存CORS的预检请求结果，不必每次都发送预检请求
         add-to-simple-url-handler-mapping: true  # 是否将CORS配置应用于简单的URL处理器映射（通常用于非路由路径）
 ```
-
-
 
 ## 依赖引入
 

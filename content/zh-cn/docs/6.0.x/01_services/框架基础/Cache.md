@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 该模块提供两级缓存功能，第一级是本地缓存，使用Caffeine，第二级是Redis缓存，使用Redis。
 
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
 </dependencies>
 ```
 
-## 版本说明
+## 版权说明
 
 - caffeine：https://github.com/ben-manes/caffeine/blob/master/LICENSE
 - resilience4j：https://github.com/resilience4j/resilience4j/blob/master/LICENSE.txt

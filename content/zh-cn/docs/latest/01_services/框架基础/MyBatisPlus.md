@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 该模块主要使用alibaba druid作为数据源工具，mybatis-plus作为数据库操作框架
 

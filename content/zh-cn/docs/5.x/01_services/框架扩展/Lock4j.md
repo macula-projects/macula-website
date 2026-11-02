@@ -5,10 +5,8 @@ linkTitle: "分布式锁"
 weight: 5
 ---
 
+## 概览
 
-
-
-## 概述
 lock4j是一个基于redisson的分布式锁组件，其提供了多种不同的支持以满足不同性能和环境的需求。致力于打造一个简单但富有内涵的分布式锁组件。
 
 ## 组件坐标
@@ -21,8 +19,6 @@ lock4j是一个基于redisson的分布式锁组件，其提供了多种不同的
 </dependency>
 ```
 
-
-
 ## 使用配置
 
 理论是支持 [macula-boot-starter-redis](../../框架基础/redis)全部配置
@@ -33,8 +29,6 @@ spring:
     host: 127.0.0.1
     port: 6379
 ```
-
-
 
 ## 核心功能
 
@@ -183,8 +177,6 @@ public class ProgrammaticService {
     }
 }
 ```
-
-
 
 ## 依赖引入
 

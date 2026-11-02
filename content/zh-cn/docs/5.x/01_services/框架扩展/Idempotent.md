@@ -4,11 +4,10 @@ title: "Macula Boot Starter Idempotent"
 linkTitle: "幂等"
 weight: 6
 ---
-## 概述
+
+## 概览
 
 该模块对原有 [idempotent](https://github.com/it4alla/idempotent) 的代码进行了重构和功能增强。非常感谢idempotent 作者的分享。
-
-
 
 ## 组件坐标
 
@@ -19,8 +18,6 @@ weight: 6
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -34,8 +31,6 @@ spring:
     host: 127.0.0.1
     port: 6379
 ```
-
-
 
 ## 核心功能
 
@@ -154,8 +149,6 @@ public Order createOrder(Order order) {
 }
 ```
 
-
-
 ## 依赖引入
 
 ```xml
@@ -175,10 +168,7 @@ public Order createOrder(Order order) {
 </dependencies>
 ```
 
-
-
 ## 版权说明
 
 - 原始代码1：https://github.com/it4alla/idempotent/blob/dev/LICENSE
 - 原始代码2：https://github.com/pig-mesh/idempotent-spring-boot-starter/blob/master/LICENSE
-

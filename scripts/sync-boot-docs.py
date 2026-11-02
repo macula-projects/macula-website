@@ -10,6 +10,8 @@ from collections import defaultdict
 from pathlib import Path
 from urllib.parse import quote, urlsplit
 
+from module_docs import normalize_module, pom_defaults
+
 SITE = Path(__file__).resolve().parents[1]
 DOCS = SITE / 'content/zh-cn/docs'
 REMOTE = 'https://github.com/macula-projects/macula-boot'
@@ -25,6 +27,9 @@ EXTRA_CHAPTERS = {
 }
 
 LATEST_CHAPTERS = {
+    '01_services/生产准备/Observability.md': {
+        'title': 'Observability：统一可观测性', 'linkTitle': 'Observability', 'weight': 1,
+    },
     '00_introduce/安全架构.md': {
         'title': '安全架构', 'linkTitle': '安全架构', 'weight': 3,
     },
@@ -56,7 +61,7 @@ for category, modules in {
              'cloud-alibaba-scg': 'Alibaba', 'cloud-tencent-scg': 'Tencent',
              'cloud-gateway': 'Gateway', 'cloud-tencent': 'Tencent',
              'cloud-tsf': 'TSF', 'cloud-tsf-scg': 'TSF', 'dubbo': 'Dubbo', 'feign': 'Feign'},
-    '生产准备': {'auditlog': 'Auditing', 'operationlog': 'Auditing', 'observability': '_index',
+    '生产准备': {'auditlog': 'Auditing', 'operationlog': 'Auditing', 'observability': 'Observability',
               'logstash': 'Loggers', 'prometheus': 'Metrics', 'skywalking': 'Tracing', 'sleuth': 'Tracing'},
     '通用平台': {'seata': 'Seata', 'system': 'System', 'task': 'Task', 'tinyid': 'ID'},
 }.items():
@@ -120,7 +125,10 @@ def main():
         expected_files = (template_files | {Path(path) for path in additions}) - removed_chapters
         retired_aliases = defaultdict(list)
         for chapter in sorted(removed_chapters):
-            retired_aliases[(chapter.parent / '_index.md').as_posix()].append(url(version['id'], chapter.as_posix()))
+            redirect = chapter.parent / '_index.md'
+            if chapter.parent.as_posix() == '01_services/生产准备':
+                redirect = chapter.parent / 'Observability.md'
+            retired_aliases[redirect.as_posix()].append(url(version['id'], chapter.as_posix()))
         sources = [p for p in tree if p == 'README.md'
                    or (p.startswith('macula-boot-') and p.endswith('/README.md') and '/src/' not in p)
                    or (p.startswith('docs/') and p.endswith('.md'))]
@@ -242,6 +250,19 @@ def main():
                         f"涉及依赖、配置或 API 时，请以 [{branch} 分支源码]({REMOTE}/tree/{branch}) 为准。\n\n" + body)
             if path == '01_services/框架基础/_index.md':
                 body = '框架基础组件按职责独立成篇。请从下方目录选择 Commons、Async、Web、数据访问、缓存等组件。\n'
+            if version['id'] == 'latest' and path == '01_services/生产准备/_index.md':
+                body = ('生产准备关注应用上线后的可观测性与审计能力。\n\n'
+                        '- [Observability](observability/)：统一采集指标、链路与日志，通过 OTLP 接入 Collector。\n'
+                        '- [Auditing](auditing/)：数据审计与操作日志。\n\n'
+                        '旧 Prometheus、Logstash、Sleuth、SkyWalking Starter 的迁移见'
+                        '[升级指南](/docs/latest/05_ops/升级指南/)。\n')
+            if path.startswith('01_services/') and not relative.name.startswith('_index'):
+                module_poms = [p for p in tree if p.endswith('/pom.xml') and
+                               (MAPPING.get(Path(p).parent.name) == path
+                                or (path.endswith('/Commons.md') and p == 'macula-boot-commons/pom.xml')
+                                or (path.endswith('/Sentinel.md') and Path(p).parent.name == 'macula-boot-starter-cloud-alibaba'))]
+                defaults = pom_defaults([git('show', f'{commit}:{p}') for p in module_poms])
+                body = normalize_module(body, defaults, relative.stem)
             if version['id'] == 'latest' and path == '01_services/微服务/_index.md':
                 body += ('\n\n## 已移除的 TSF 接入\n\n'
                          'main 已移除 `macula-boot-starter-cloud-tsf` 与 `macula-boot-starter-cloud-tsf-scg`。'

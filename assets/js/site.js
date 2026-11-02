@@ -77,6 +77,29 @@
     block.appendChild(button);
   });
 
+  // Preserve native table semantics while giving wide technical tables their own scroll region.
+  document.querySelectorAll('.td-content table').forEach(function (table) {
+    var region = document.createElement('div');
+    region.className = 'doc-table-scroll';
+    table.parentNode.insertBefore(region, table);
+    region.appendChild(table);
+    function refreshTable() {
+      var overflowing = region.scrollWidth > region.clientWidth + 1;
+      if (overflowing) {
+        region.tabIndex = 0;
+        region.setAttribute('role', 'region');
+        region.setAttribute('aria-label', '表格，可横向滚动');
+      } else {
+        region.removeAttribute('tabindex');
+        region.removeAttribute('role');
+        region.removeAttribute('aria-label');
+      }
+    }
+    refreshTable();
+    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(refreshTable).observe(region);
+    else window.addEventListener('resize', refreshTable);
+  });
+
   var toc = document.getElementById('TableOfContents');
   if (!toc) return;
   var entries = Array.from(toc.querySelectorAll('a[href*="#"]')).map(function (link) {

@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 本模块提供 Spring 异步任务与定时任务的基础配置，并基于 Micrometer Context Propagation 在 Spring
 托管线程池之间传播调用上下文。
@@ -34,7 +34,7 @@ Micrometer Context Propagation。
 </dependency>
 ```
 
-## 使用说明
+## 使用配置
 
 本模块没有独立的 `macula.async.*` 配置。Spring Boot 自动创建的线程池使用以下属性；自行声明 Executor 时需自行应用配置与 TaskDecorator。
 
@@ -46,6 +46,8 @@ Micrometer Context Propagation。
 | `spring.task.scheduling.pool.size` | 定时任务线程池大小 |
 | `spring.task.scheduling.thread-name-prefix` | 定时任务线程名前缀 |
 | `spring.reactor.context-propagation` | Reactor 传播模式，WebFlux/Gateway 按下文设为 `auto` |
+
+## 核心功能
 
 ### `@Async` 上下文传播
 
@@ -121,6 +123,38 @@ Starter 提供的 `TaskDecorator` 使用最高优先级。用户可以继续声�
 - 第三方组件内部创建且未开放定制入口的私有线程池
 
 这些场景应改用 Spring 托管 Executor，或通过 `ContextExecutorService.wrap(...)` 显式接入。
+
+## 依赖引入
+
+以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-commons</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>context-propagation</artifactId>
+</dependency>
+```
+
+```xml
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context-support</artifactId>
+</dependency>
+```
 
 ## 版权说明
 

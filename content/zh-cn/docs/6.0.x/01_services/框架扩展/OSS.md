@@ -8,7 +8,7 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-## 概述
+## 概览
 
 在 SpringBoot 中通过简单的方式将文件存储到 本地、FTP、SFTP、WebDAV、FastDFS、Minio、谷歌云存储、阿里云OSS、华为云OBS、七牛云Kodo、腾讯云COS、MinIO、
 AWS S3及其它兼容 S3 协议的平台。详情可以参考[x-file-storage](https://x-file-storage.xuyanwu.cn/)官网

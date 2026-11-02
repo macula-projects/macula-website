@@ -5,15 +5,15 @@ linkTitle: "统一认证"
 weight: 1
 ---
 
-## 概述
+## 概览
 
 基于[spring-authorization-server](https://github.com/spring-projects/spring-authorization-server)开发的支持的FORM、OAUTH2、CAS、SAML等协议的统一认证平台。
 
+## 组件坐标
 
+IAM 为独立部署的平台服务。应用通过网关的 OAuth2 Resource Server 接入，配置方式见下节；不存在独立的 IAM Starter 坐标。
 
-## 客户端接入
-
-#### 使用配置
+## 使用配置
 
 ```yaml
 spring:
@@ -28,15 +28,17 @@ spring:
 
 上述为资源服务器的配置，依赖spring-boot-starter-oauth2-resource-server。macula平台使用gateway作为资源服务器。
 
-## 服务端介绍
+## 核心功能
+
+### 服务端介绍
 
 提供基于OAUTH/CAS/OIDC/SAML协议的统一认证服务，所有服务经过网站认证
 
-### 认证方式
+#### 认证方式
 
 负责认证资源Owner方提供的认证凭据，为下层交互协议生成token或者ticket做准备
 
-#### 用户名密码认证
+##### 用户名密码认证
 
 ```
 POST /login
@@ -45,7 +47,7 @@ password 密码
 要带上openid/unionid可以绑定
 ```
 
-#### 短信认证(TODO)
+##### 短信认证(TODO)
 
 ```
 POST /login/captcha
@@ -54,7 +56,7 @@ captcha 短信验证码
 要带上openid/unionid可以绑定
 ```
 
-#### 微信授权手机号登录(TODO)
+##### 微信授权手机号登录(TODO)
 
 ```
 POST /login/weapp/phone
@@ -66,7 +68,7 @@ iv
 要带上openid/unionid可以绑定
 ```
 
-#### 已绑定小程序登录认证(TODO)
+##### 已绑定小程序登录认证(TODO)
 
 ```
 POST /login/weapp/code
@@ -74,18 +76,18 @@ code（后端调用code2session获取openid/unionid,如果没有绑定则调用�
 
 ```
 
-#### 已绑定企微小程序登录认证(TODO)
+##### 已绑定企微小程序登录认证(TODO)
 
 ```
 POST /login/qyweapp/code
 code（后端调用code2session获取userid，没有绑定登录不成功）
 ```
 
-### 协议
+#### 协议
 
 协议层不负责用户身份认证，只按照协议生成对应的token或者ticket返回给客户端
 
-#### OAuth2协议
+##### OAuth2协议
 
 提供基于OAuth2.1协议的实现，基于[spring-authorization-server 0.41](https://github.com/spring-projects/spring-authorization-server/tree/0.4.x)实现，默认支持的grant_type为：
 
@@ -96,25 +98,25 @@ code（后端调用code2session获取userid，没有绑定登录不成功）
 
 > 注意：基于安全原因，OAuth2.1默认已经取消了对于grant_type为password及implicit的支持。
 
-#### CAS协议（TODO）
+##### CAS协议（TODO）
 
-#### SAML协议（TODO）
+##### SAML协议（TODO）
 
-### 二次开发
+#### 二次开发
 
-#### 认证方式扩展
+##### 认证方式扩展
 
 主要参考authentication和grant两个包中类
 
-#### 协议扩展
+##### 协议扩展
 
 参考config中的有关各协议的配置
 
-#### 登录界面定制
+##### 登录界面定制
 
 在 src/resources/templates/目录中，可以考虑在client配置中设置不同client需要的认证方式，从而出现不同登录界面
 
-#### 用户身份源定制
+##### 用户身份源定制
 
 实现UserAuthInfoService接口，可以根据UserType访问不同的身份源
 
@@ -142,6 +144,10 @@ public enum UserTypeEnum {
 > 注意：
 >
 > 为了兼容旧版oauth2服务器，grant包提供password的grant_type方式，不过该方式以后会逐步取消
+
+## 依赖引入
+
+网关侧通过 OAuth2 Resource Server 验证外部 Token；使用 Macula Gateway 组合 Starter 接入。IAM 服务端单独部署，不作为业务服务的库依赖。
 
 ## 版权说明
 

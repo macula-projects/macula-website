@@ -4,7 +4,8 @@ title: "Macula Boot Starter SpringDoc"
 linkTitle: "Swagger"
 weight: 14
 ---
-## 概述
+
+## 概览
 
 该模块是基于[SpringDoc](https://springdoc.org/)的OpenAPI V3规范的API接口文档生成工具。
 
@@ -17,8 +18,6 @@ weight: 14
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -123,8 +122,6 @@ public class DeptForm {
 
 - API Docs： http://xxx/context-path/v3/api-docs
 
-  
-
 ## 依赖引入
 
 ```xml
@@ -139,8 +136,6 @@ public class DeptForm {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 

@@ -5,10 +5,9 @@ linkTitle: "微信接入"
 weight: 20
 ---
 
-## 概述
+## 概览
 
 微信Java开发工具包，支持包括微信支付、开放平台、公众号、企业微信、视频号、小程序等微信功能模块的后端开发。
-
 
 ## 组件坐标
 
@@ -22,11 +21,6 @@ weight: 20
 
 
 
-## 使用配置
-
-### 开放平台
-
-#### 引入依赖
 
 ```xml
 <dependency>
@@ -34,7 +28,7 @@ weight: 20
     <artifactId>wx-java-open-spring-boot-starter</artifactId>
 </dependency>
 ```
-#### 添加配置
+### 添加配置
 
 ```yaml
 wx:
@@ -58,14 +52,13 @@ wx:
       retry-sleep-millis: 1000         # 重试时间间隔步进，默认：1000 毫秒，如果小于 0，则为 1000
 
 ```
-#### 支持自动注入的类型
+### 支持自动注入的类型
 
 - WxOpenService
 - WxOpenMessageRouter
 - WxOpenComponentService
 
 ### 公众号
-#### 引入依赖
 
 ```xml
 <dependency>
@@ -73,7 +66,7 @@ wx:
     <artifactId>wx-java-mp-spring-boot-starter</artifactId>
 </dependency>
 ```
-#### 添加配置
+### 添加配置
 
 ```yaml
 wx:
@@ -93,13 +86,12 @@ wx:
 
 
 ```
-#### 自动注入的类型
+### 自动注入的类型
 
 - WxMpService
 - WxMpConfigStorage
 
 ### 企业微信
-#### 引入依赖
 
 ```xml
 <dependency>
@@ -107,7 +99,7 @@ wx:
     <artifactId>wx-java-cp-spring-boot-starter</artifactId>
 </dependency>
 ```
-#### 添加配置
+### 添加配置
 
 ```yaml
 wx:
@@ -131,12 +123,12 @@ wx:
       max-retry-times: 5
       retry-sleep-millis: 1000
 ```
-#### 支持自动注入的类型
+### 支持自动注入的类型
 
 - WxCpService
 - WxCpConfigStorage
 
-#### 覆盖自动配置: 自定义注入的bean会覆盖自动注入的
+### 覆盖自动配置: 自定义注入的bean会覆盖自动注入的
 
 - WxCpService
 - WxCpConfigStorage
@@ -147,7 +139,6 @@ wx:
 - 未实现 WxCpTpService 初始化，需要的小伙伴可以参考多 WxCpService 配置的实现。
 - 未实现 WxCpCgService 初始化，需要的小伙伴可以参考多 WxCpService 配置的实现。
 
-#### 引入依赖
 
 ```xml
 <dependency>
@@ -155,7 +146,7 @@ wx:
     <artifactId>wx-java-cp-multi-spring-boot-starter</artifactId>
 </dependency>
 ```
-#### 添加配置
+### 添加配置
 
 ```yaml
 wx:
@@ -197,10 +188,10 @@ wx:
       retry-sleep-millis: 1000
 
 ```
-#### 支持自动注入的类型
+### 支持自动注入的类型
 
 - WxCpMultiServices
-#### 使用样例
+### 使用样例
 
 ```java
 @Service
@@ -235,7 +226,6 @@ public class DemoService {
 }
 ```
 ### 小程序
-#### 引入依赖
 
 ```xml
 <dependency>
@@ -243,7 +233,7 @@ public class DemoService {
     <artifactId>wx-java-miniapp-spring-boot-starter</artifactId>
 </dependency>
 ```
-#### 添加配置
+### 添加配置
 
 ```yaml
 wx:
@@ -263,13 +253,12 @@ wx:
       http-proxy-username: ''
 
 ```
-#### 自动注入的类型
+### 自动注入的类型
 
 - WxMaService
 - WxMaConfig
 
 ### 微信支付
-#### 引入依赖
 
 ```xml
 <dependency>
@@ -277,9 +266,9 @@ wx:
     <artifactId>wx-java-pay-spring-boot-starter</artifactId>
 </dependency>
 ```
-#### 添加配置 
+### 添加配置
 
-##### V2版本
+### V2版本
 
 ```yaml
 wx:
@@ -289,7 +278,7 @@ wx:
     mchKey: 
     keyPath:
 ```
-##### V3版本
+### V3版本
 
 ```yaml
 wx:
@@ -301,7 +290,7 @@ wx:
     privateKeyPath: classpath:cert/apiclient_key.pem #apiclient_key.pem证书文件的绝对路径或者以classpath:开头的类路径
     privateCertPath: classpath:cert/apiclient_cert.pem #apiclient_cert.pem证书文件的绝对路径或者以classpath:开头的类路径
 ```
-##### V3服务商版本
+### V3服务商版本
 
 ```yaml
 wx:
@@ -316,7 +305,6 @@ wx:
       privateCertPath: classpath:cert/apiclient_cert.pem #apiclient_cert.pem证书文件的绝对路径或者以classpath:开头的类路径
 ```
 ### 视频号
-#### 引入依赖
 
 ```xml
 <dependency>
@@ -324,7 +312,7 @@ wx:
     <artifactId>wx-java-channel-spring-boot-starter</artifactId>
 </dependency>
 ```
-#### 添加配置
+### 添加配置
 
 ```yaml
 wx:
@@ -343,17 +331,17 @@ wx:
       http-proxy-port: ''
       http-proxy-username: ''
 ```
-#### 自动注入的类型
+### 自动注入的类型
 
 - WxChannelService
 
+## 使用配置
 
+### 开放平台
 
 ## 核心功能
 
 请参考[官方网站](https://github.com/Wechat-Group/WxJava/wiki)
-
-
 
 ## 依赖引入
 
@@ -407,9 +395,6 @@ wx:
 </dependencies>
 ```
 
-
-
-## 版本说明
+## 版权说明
 
 - WxJava: https://github.com/Wechat-Group/WxJava/blob/develop/LICENSE
-

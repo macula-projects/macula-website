@@ -4,11 +4,10 @@ title: "Macula Boot Starter MapStruct"
 linkTitle: "MapStruct"
 weight: 2
 ---
-## 概述
+
+## 概览
 
 开发JAVA应用程序时会进行逻辑分层，各层之间为了解耦，通常会定义不同的对象进行数据传递（如XXXVO、XXXDTO、XXXPO、XXXBO）。当在不同层之间进行数据传递时，需要将这些对象进行相互转换。通常有两种处理方式：一是直接使用Setter和Getter方法转换，二是使用一些工具类进行转换（如BeanUtil.copyProperties）。第一种方式如果对象属性比较多时，要写很多的Getter/Setter代码，很繁琐；第二种方式虽然比第一种方式要简单很多，但是因为使用了反射，性能不佳。故在此推荐，统一使用MapStruct（MapStructPlus），代码简洁且不存在性能问题。
-
-
 
 ## 组件坐标
 
@@ -20,7 +19,9 @@ weight: 2
 </dependency>
 ```
 
+## 使用配置
 
+该组件在编译期生成转换代码，无独立运行时 YAML 配置。继承 Macula Boot 父 POM 的注解处理配置，并在 IDE 启用注解处理；具体写法见“核心功能”。
 
 ## 核心功能
 
@@ -139,8 +140,6 @@ public class QuickStartTest {
 
 ***MapStruct Plus更多功能可以[参考官方文档](https://mapstruct.plus/)***
 
-
-
 ## 依赖引入
 
 ```xml
@@ -152,11 +151,8 @@ public class QuickStartTest {
 </dependencies>
 ```
 
-
-
 ## 版权说明
 
 - MapStruct：https://github.com/mapstruct/mapstruct/blob/main/LICENSE.txt
 
 - MapStruct Plus：https://github.com/linpeilie/mapstruct-plus/blob/main/LICENSE
-

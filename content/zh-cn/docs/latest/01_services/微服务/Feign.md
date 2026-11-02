@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
-## 概述
+## 概览
 
 引入spring-cloud-openfeign并添加了HMAC拦截器、请求头传递等功能。
 

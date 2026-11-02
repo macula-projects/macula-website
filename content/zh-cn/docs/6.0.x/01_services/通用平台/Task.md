@@ -8,17 +8,37 @@ source_branch: "6.0.x"
 source_commit: "fbd20cfd4020734880ff4cc41f7cec95a0bfd70e"
 ---
 
-# Task 示例
+## 概览
 
 该模块展示 Macula Boot 任务 Starter 与 XXL-JOB、SnailJob 的集成方式，包含一个普通执行器和一个命令行执行器。
 
-## 前置条件
+
+定时任务接入模块，支持下列定义的定时任务：
+
+- xxljob任务
+- PowerJob任务
+- Spring注解(@Scheduled、@Retryable)接管
+- TODO，统一的macula task定义
+
+## 组件坐标
+
+```xml
+
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-task</artifactId>
+</dependency>
+```
+
+## 使用配置
+
+### 前置条件
 
 - Nacos，默认 `127.0.0.1:8848`。
 - XXL-JOB Admin，默认 `http://127.0.0.1:9084/macula-cloud-xxljob`。
 - SnailJob Server，默认通信地址 `127.0.0.1:17888`。
 
-## 启动
+### 启动
 
 ```bash
 export XXL_JOB_ACCESS_TOKEN=default_token
@@ -29,43 +49,9 @@ mvn -pl macula-boot-examples/macula-example-task -am spring-boot:run
 
 默认应用端口为 `7099`，SnailJob 客户端通信端口为 `17899`。Nacos 参数也可通过 `NACOS_SERVER_ADDR`、`NACOS_NAMESPACE`、`NACOS_USERNAME` 和 `NACOS_PASSWORD` 覆盖。
 
-## 执行器
-
-| 调度平台 | Handler | 说明 |
-| --- | --- | --- |
-| XXL-JOB | `demoJobHandler` | 连续输出 5 次执行日志 |
-| XXL-JOB | `commandJobHandler` | 执行调度参数指定的单一命令，只应用于受信任的本地演示环境 |
-| SnailJob | `demoJobHandler` | 记录任务参数并返回成功 |
-
-生产环境不应开放通用命令执行器，也不应使用 README 中的占位 token。
 
 
----
-
-## 概述
-
-定时任务接入模块，支持下列定义的定时任务：
-
-- xxljob任务
-- PowerJob任务
-- Spring注解(@Scheduled、@Retryable)接管
-- TODO，统一的macula task定义
-
-## 客户端介绍
-
-### 组件坐标
-
-```xml
-
-<dependency>
-    <groupId>dev.macula.boot</groupId>
-    <artifactId>macula-boot-starter-task</artifactId>
-</dependency>
-```
-
-### 使用配置
-
-#### 接入xxljob的配置如下：
+### 接入xxljob的配置如下：
 
 ```yaml
 xxl:
@@ -84,7 +70,7 @@ xxl:
       logretentiondays: 30                             # 执行器日志保存天数 [选填] ：值大于3时生效，启用执行器Log文件定期清理功能，否则不生效；
 ```
 
-#### 接入PowerJob的配置如下：
+### 接入PowerJob的配置如下：
 
 ```yaml
 powerjob:
@@ -101,9 +87,22 @@ powerjob:
     max-heavy-task-num: 64                            # 同时运行的重量级任务数量上限
 ```
 
-### 核心功能
+## 核心功能
 
-#### 使用@XxlJob注解定义任务
+### 执行器
+
+| 调度平台 | Handler | 说明 |
+| --- | --- | --- |
+| XXL-JOB | `demoJobHandler` | 连续输出 5 次执行日志 |
+| XXL-JOB | `commandJobHandler` | 执行调度参数指定的单一命令，只应用于受信任的本地演示环境 |
+| SnailJob | `demoJobHandler` | 记录任务参数并返回成功 |
+
+生产环境不应开放通用命令执行器，也不应使用 README 中的占位 token。
+
+
+
+
+### 使用@XxlJob注解定义任务
 
 ```java
 /**
@@ -178,7 +177,7 @@ public class XxlJobDemoHandler {
 }
 ```
 
-#### 使用PowerJob定义任务
+### 使用PowerJob定义任务
 
 ```java
 public class PowerJobDemoProcessor implements BasicProcessor {
@@ -200,7 +199,21 @@ public class PowerJobDemoProcessor implements BasicProcessor {
 }
 ```
 
-### 依赖引入
+### 服务端介绍
+
+##### xxl-job
+
+请参考xxljob[官网](https://www.xuxueli.com/xxl-job/)。由于服务端需要回调客户端，建议各平台拷贝macula-cloud-xxjob部署到自己的集群中。
+
+##### PowerJob
+
+请参考PowerJob[官网](http://www.powerjob.tech/)
+
+##### Macula Task
+
+TODO，未来Macula会提供统一的task服务能力，整合多个常用的定时任务协议。
+
+## 依赖引入
 
 ```xml
 <dependencies>
@@ -229,20 +242,6 @@ public class PowerJobDemoProcessor implements BasicProcessor {
     </dependency>
 </dependencies>
 ```
-
-## 服务端介绍
-
-#### xxl-job
-
-请参考xxljob[官网](https://www.xuxueli.com/xxl-job/)。由于服务端需要回调客户端，建议各平台拷贝macula-cloud-xxjob部署到自己的集群中。
-
-#### PowerJob
-
-请参考PowerJob[官网](http://www.powerjob.tech/)
-
-#### Macula Task
-
-TODO，未来Macula会提供统一的task服务能力，整合多个常用的定时任务协议。
 
 ## 版权说明
 

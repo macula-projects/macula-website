@@ -5,7 +5,7 @@ linkTitle: "TSF"
 weight: 30
 ---
 
-## 概述
+## 概览
 
 基于腾讯云企业级微服务框架[TSF](https://cloud.tencent.com/document/product/649/13005)搭建的微服务开发平台。
 
@@ -26,8 +26,6 @@ weight: 30
     <version>${macula.version}</version>
 </dependency>
 ```
-
-
 
 ## 使用配置
 
@@ -148,8 +146,6 @@ public class MaculaExampleTsfApplication {
     </dependency>
 </dependencies>
 ```
-
-
 
 ## 版权说明
 
