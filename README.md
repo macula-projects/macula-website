@@ -2,6 +2,8 @@
 
 基于[Hugo](https://gohugo.io)和[Docsy](https://docsy.dev)的Macula官方文档
 
+维护前请阅读 [AGENTS.md](AGENTS.md)，其中记录文档归属、内容保留、来源核对、排版和验证约定。
+
 
 ## 构建环境与运行
 
@@ -78,7 +80,9 @@ latest 的组件章节同时核对 main 中实际存在的 Starter POM（包含 
 
 Macula Cloud 的管理端与后端同仓，入口为 `macula-cloud/macula-cloud-admin`。首页管理端链接指向该目录。latest 的快速开始、平台部署与 Sentinel 指引设置 `manual_content: true`，按当前源码维护；跨仓库资料使用 `source_repository`、`source_branch`、`source_commit` 和 `source_paths` 记录来源，后续同步不会覆盖这些说明。
 
-latest 的快速开始仅保留 Boot Examples 的 Gateway / BFF（consumer）/ Service（provider）接入概述，明确 IAM introspection、Cloud endpoint 与应用网关 JWK 三类地址。Samples 开发指引按独立仓库的已提交源码整理，包含环境准备、项目组织、模块说明、application.yml 规范、业务开发、运行测试与部署；全部使用 `manual_content: true`，通过 `source_refs` 补充跨仓库的提交与文件。开发业务服务连接到应用分层规范，说明 Controller / Service / Mapper、模型及跨服务契约边界。`LATEST_CHAPTERS` 显式声明当前版本的新增章节，历史版本保持各自内容。
+latest 的快速开始采用“下载并启动 Macula Cloud → 下载 Macula Boot 并运行 Examples → 调用接口验证”的简短流程，再介绍 Gateway / Consumer（BFF）/ Provider（Service）三个角色。IAM introspection、Cloud endpoint 与应用网关 JWK 只说明关键方向，详细配置链接到安全架构与组件页。
+
+Samples 开发指引以 [macula-samples](https://github.com/macula-projects/macula-samples) 单仓的已提交源码为准，包含环境准备、项目组织、模块说明、application.yml 规范、业务开发、运行测试与部署；多仓模式只在“开发环境准备”中简要提及并链接 macula-samples-workspace。开发指引与微服务栏目首页只显示自动章节目录，不放说明正文；微服务依赖与配置归入对应模块，TSF 移除说明放在升级指南。人工维护页使用 `manual_content: true`，通过 `source_refs` 记录来源提交与文件。开发业务服务连接到通用应用分层规范，并保留原有分层图、工程目录图和模型传递图。`LATEST_CHAPTERS` 显式声明当前版本的新增章节，历史版本保持各自内容。
 
 同步 latest 时，普通 Examples 文档链接进入快速开始，专项 Docker / 可观测性说明链接回 Boot 源码中的完整 README；不会再将 Examples 全文覆盖到 Samples 的“运行与测试”或“打包部署”中。核对 Samples 时只读取固定提交，不使用其工作区中尚未提交的业务扩展作为文档依据。
 
