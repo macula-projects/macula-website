@@ -6,6 +6,7 @@ source_path: "macula-boot-starters/macula-boot-starter-springretry/README.md"
 source_paths: ["macula-boot-starters/macula-boot-starter-springretry/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
+manual_content: true
 ---
 
 ## 概览
@@ -15,11 +16,12 @@ Retry来实现重试机制，通过配置retry策略来达到重试的目的。
 
 ## 组件坐标
 
+下列坐标以继承 [Macula Boot Parent](/docs/latest/00_introduce/概述/#依赖基线) 为前提，由 Parent 管理版本；无需重复声明版本。独立接入时按该节显式定义版本和依赖管理。
+
 ```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-springretry</artifactId>
-    <version>${macula.version}</version>
 </dependency>
 ```
 

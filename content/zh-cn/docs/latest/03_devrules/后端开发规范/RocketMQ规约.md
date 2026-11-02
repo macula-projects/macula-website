@@ -2,9 +2,11 @@
 title: "RocketMQ规约"
 linkTitle: "RocketMQ规约"
 weight: 8
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/后端开发规范/RocketMQ规约.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["pom.xml", "macula-samples-parent/pom.xml"]}]
 ---
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+以下为消息业务约定，不是当前客户端参数清单。Starter 配置以 [RocketMQ 组件](/docs/latest/01_services/框架基础/rocketmq/)及当前 POM 为准；并发、批量与重试参数须按实际客户端版本选择，不机械照搬旧参数名。消费幂等、失败重试、死信监控与业务补偿需同时设计，敏感消息体不得直接记录日志。
 
 ## 命名规范
 

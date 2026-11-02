@@ -106,3 +106,7 @@ Gateway 组件说明同时覆盖 README 中的完整能力：HTTP / WebSocket �
 人工编写的版本专属章节可在 Front Matter 中设置 `manual_content: true`，同步工具会完整保留该页面。latest 的“运维指引 → 升级指南”直接记录从 5.x 升级到 main 的步骤、分支对照提交和参考源码，整合 Java/Jakarta、最新技术栈、可观测性和任务等变更，不要求经过未发布的中间版本。latest 概述同步时会移除 README 中“从 6.0 升级到 6.1”的详细迁移章节，仅保留指向统一升级指南的入口。后续分支升级说明变化时，应同步维护对应指南及此提取规则。
 
 历史版本名称与正式路径统一不带 `v` 前缀，原 `/docs/v3.1/`、`/docs/v4.0/` 及其章节地址保留跳转，图片等资源地址继续可用。
+
+### 使用者文档与搜索
+
+latest 的接入步骤按快速开始、首次接入 Cloud、业务开发及生产交付分别维护，人工页面标记 `manual_content: true`；新增章节同步登记到 `scripts/sync-boot-docs.py`。本地搜索使用 Hugo 生成的静态索引，默认当前文档版本，运行 `node --test scripts/tests/site-search.test.cjs` 验证中文、版本范围与结果顺序。分层图的 SVG 为清晰补充，原始 PNG 保留。

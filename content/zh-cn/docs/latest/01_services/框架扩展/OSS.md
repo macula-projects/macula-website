@@ -6,6 +6,7 @@ source_path: "macula-boot-starters/macula-boot-starter-oss/README.md"
 source_paths: ["macula-boot-starters/macula-boot-starter-oss/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
+manual_content: true
 ---
 
 ## 概览
@@ -15,16 +16,37 @@ AWS S3及其它兼容 S3 协议的平台。详情可以参考[x-file-storage](ht
 
 ## 组件坐标
 
+下列坐标以继承 [Macula Boot Parent](/docs/latest/00_introduce/概述/#依赖基线) 为前提，由 Parent 管理版本；无需重复声明版本。独立接入时按该节显式定义版本和依赖管理。
+
 ```xml
 
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-oss</artifactId>
-    <version>${macula.version}</version>
 </dependency>
 ```
 
 ## 使用配置
+
+### 基础接入：一个本地存储实例
+
+先启用一个平台并让 `default-platform` 指向它，再使用下文的上传 API。以下只启用磁盘存储，不开放匿名 HTTP 文件访问；应用需有目录写权限，并自行提供鉴权下载接口。
+
+```yaml
+macula:
+  oss:
+    default-platform: local-plus-1
+    local-plus:
+      - platform: local-plus-1
+        enable-storage: true
+        enable-access: false
+        storage-path: /var/lib/my-app/files/
+        base-path: uploads/
+```
+
+### 完整配置与多平台选项
+
+以下选项按需使用，未启用的平台无需配置凭据，不需要复制全部存储平台。
 
 自有配置前缀为 `macula.oss`；默认平台必须指向一个已启用的平台标识，并不会自动创建名为 `local` 的存储实例。
 

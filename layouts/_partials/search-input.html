@@ -1,0 +1,8 @@
+{{- $index := resources.Get "json/site-search.json" | resources.ExecuteAsTemplate "site-search.json" . | fingerprint "md5" -}}
+<div class="td-search">
+  <div class="td-search__icon" aria-hidden="true"></div>
+  <input type="search" class="td-search__input td-search-input form-control macula-search-input"
+         placeholder="搜索文档" aria-label="搜索文档" autocomplete="off"
+         data-search-index-src="{{ $index.RelPermalink }}">
+  <noscript><a href="{{ "/docs/latest/" | relURL }}">浏览文档目录（搜索需 JavaScript）</a></noscript>
+</div>

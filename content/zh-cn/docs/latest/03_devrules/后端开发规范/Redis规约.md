@@ -2,9 +2,11 @@
 title: "Redis规约"
 linkTitle: "Redis规约"
 weight: 7
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/后端开发规范/Redis规约.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["pom.xml", "macula-samples-parent/pom.xml"]}]
 ---
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+以下为 Redis 使用约定，体积与批量数值作为容量评估起点，应按延迟、内存与实例规格验证。当前普通服务使用 `spring.data.redis.*`；Samples Gateway 的自定义 Redis 前缀与 System Redis 另见[应用配置](/docs/latest/04_devmanual/应用配置/)。缓存命名、TTL 和序列化契约需保持跨版本兼容；大 key 清理应优先采用服务器与客户端支持的异步释放机制并分批验证，不在生产执行全库清空。
 
 ## 概述
 

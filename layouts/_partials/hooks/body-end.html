@@ -1,2 +1,4 @@
 {{ $siteJS := resources.Get "js/site.js" | minify | fingerprint }}
 <script defer src="{{ $siteJS.RelPermalink }}" integrity="{{ $siteJS.Data.Integrity }}" crossorigin="anonymous"></script>
+{{ $searchJS := resources.Get "js/site-search.js" | minify | fingerprint }}
+<script defer src="{{ $searchJS.RelPermalink }}" integrity="{{ $searchJS.Data.Integrity }}" crossorigin="anonymous"></script>

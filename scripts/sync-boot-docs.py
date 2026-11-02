@@ -27,6 +27,9 @@ EXTRA_CHAPTERS = {
 }
 
 LATEST_CHAPTERS = {
+    '04_devmanual/首次接入Macula Cloud.md': {
+        'title': '首次接入 Macula Cloud', 'linkTitle': '首次接入', 'weight': 4,
+    },
     '01_services/生产准备/Observability.md': {
         'title': 'Observability：统一可观测性', 'linkTitle': 'Observability', 'weight': 1,
     },

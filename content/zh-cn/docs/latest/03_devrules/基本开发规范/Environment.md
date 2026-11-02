@@ -2,9 +2,11 @@
 title: "环境管理"
 linkTitle: "环境管理"
 weight: 1
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/基本开发规范/Environment.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["pom.xml", "macula-samples-parent/pom.xml"]}]
 ---
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+Samples 当前 Maven profiles 为 `local`（默认）、`dev`、`stg`、`pet`、`prd`；`test` 可作为团队环境名称，但不是当前工程预置的 Maven profile。`docker` 为 Spring profile，复用 local 并覆盖地址。业务配置按 Nacos namespace 与 Data ID 隔离，详见[应用配置](/docs/latest/04_devmanual/应用配置/)。
 
 ## 概述
 

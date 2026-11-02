@@ -59,12 +59,14 @@ curl "http://127.0.0.1:5000/consumer/api/v1/consumer/echo/demo?str=hello"
 
 ## 3. 用 Archetype 创建自己的项目
 
+latest 使用开发快照。首次使用先在 Boot 根目录安装完整框架与模板，确保生成项目依赖的 Parent 和 Starter 都已进入本地 Maven 仓库。
+
 跑通示例后，可用 Archetype 生成包含 Gateway、Admin BFF、Service1、API 契约和 Admin 前端等模块的单仓项目。需要 Java 17 和 Maven 3.9+。
 
-在前面下载的 **macula-boot 仓库根目录**安装当前模板，再回到仓库外生成项目；输出目录 `demo-app` 应尚不存在：
+在前面下载的 **macula-boot 仓库根目录**安装当前框架与模板，再回到仓库外生成项目；输出目录 `demo-app` 应尚不存在：
 
 ```bash
-mvn -pl macula-boot-archetype -am install -DskipTests -Dgpg.skip=true -Pdeploy
+mvn clean install -DskipTests=true -Dgpg.skip=true -Pdeploy
 cd ..
 mvn archetype:generate \
   -DarchetypeGroupId=dev.macula.boot \
@@ -81,3 +83,5 @@ mvn archetype:generate \
 将 `groupId`、`package` 和 `artifactId` 换成自己的组织、包名与项目名；`version` 是业务项目版本，`archetypeVersion` 是模板版本，两者独立。
 
 生成后进入 `demo-app/`，按其中的 `deploy/README.md` 配置 Macula Cloud 应用与 OAuth Client，再运行项目。模板参数见 [Archetype README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-archetype)，业务开发见[开发指引](/docs/latest/04_devmanual/)，认证配置见[安全架构](/docs/latest/00_introduce/安全架构/)。
+
+自己的应用还需在 Cloud 注册应用与 OAuth Client，按[首次接入 Macula Cloud](/docs/latest/04_devmanual/首次接入macula-cloud/)完成登录和受保护接口验证。

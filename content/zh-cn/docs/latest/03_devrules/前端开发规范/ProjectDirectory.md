@@ -2,37 +2,47 @@
 title: "工程规约"
 linkTitle: "工程规约"
 weight: 2
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["macula-samples-admin/package.json", "macula-samples-admin/vite.config.js", "macula-samples-admin/src/config/index.js"]}]
 ---
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+## 当前工程
 
-## 概述
+当前 Samples 管理端使用 Vue 3 与 Vite，位于业务单仓的 `macula-samples-admin`；Cloud 管理端位于 Cloud 同仓。两者各自维护 package.json 和锁文件，按各自 README 选择 Node 版本，不混用安装目录。
 
-建议按以下的前端工程（管理后台类的前端工程）目录组织项目，并进行功能开发。
+```text
+macula-samples-admin/
+├── public/            # 原样复制的静态资源
+├── src/
+│   ├── api/           # API 模型和请求入口
+│   ├── assets/        # 参与构建的资源
+│   ├── components/    # 公共组件
+│   ├── config/        # 环境配置与模块前缀
+│   ├── directives/    # 指令
+│   ├── layout/        # 布局
+│   ├── locales/       # 国际化
+│   ├── router/        # 路由
+│   ├── store/         # 状态管理
+│   ├── style/         # 全局样式
+│   ├── utils/         # 请求、授权等工具
+│   ├── views/         # 按业务组织的页面
+│   ├── App.vue
+│   └── main.js
+├── vite.config.js
+├── package.json
+└── package-lock.json
+```
 
-## 目录
+## 开发约定
 
-整体目录结构如下图所示：
+API 统一放在 `src/api/model` 并复用请求封装，不在每个页面拼接 IAM 或后端地址。组件只处理展示与交互，通用状态、错误和权限沿用现有项目约定。业务页面放在 `src/views/<领域>`，与 Cloud 菜单登记的组件路径保持一致。
 
-![image](../images/pd.png)
+Vite 按 mode 读取环境文件，代理规则在 `vite.config.js`；不存在需要维护的 `vue.config.js` 或 Webpack 配置。公开环境变量会打入浏览器代码，不能承载应用 SK、数据库密码等服务端凭据。登录兼容差异见[首次接入](/docs/latest/04_devmanual/首次接入macula-cloud/)。
 
-|  目录名   | 说明  |
-|  ----  | ----  |
-| public	| 静态资源(不会被Webpack打包)，存放静态资源文件，不会被Webpack打包 | 
-| src	| 源代码 |
-| src/api	| 统一的API列表管理 |
-| src/assets	| 静态资源(会被打包)，存放全局的资源文件 |
-| src/components	| 组件目录，所有UI组件代码。每一个组件单独一个目录文件，命名规则采用驼峰式命名法。|
-| src/config	| 存放配置文件，包括组件的基础配置信息等 |
-| src/directives	| 自定义的一些指令，例如 v-auth |
-| src/layout	| 存放框架的布局、视图 |
-| src/locales	| 存放关于国际化的资源文件本 |
-| src/router	| 存放处理路由表的逻辑 |
-| src/store	| 用于缓存状态管理 |
-| src/style	| 存放全局样式 |
-| src/utils	| 存放全局工具类 |
-| src/views	| 存放服务所有视图 |
-| src/App.vue	| 入口视图 |
-| src/main.js	| 入口文件 |
-| package.json	| 包管理 |
-| vue.config.js	| vue-cli 配置 |
+## 构建与检查
+
+在 Admin 目录执行 `npm ci`、`npm run dev`、`npm run build`。测试、lint 与端到端验证使用 package.json 中已有脚本；含自动修复的 lint 会修改文件，执行后检查差异。
+
+旧工程目录图仍保留供历史对照，不作为 Vite 工程文件清单：
+
+![历史前端工程目录示意](../images/pd.png)

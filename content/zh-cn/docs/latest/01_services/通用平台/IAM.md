@@ -2,155 +2,78 @@
 title: "统一认证"
 linkTitle: "统一认证"
 weight: 1
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["macula-cloud-iam/README.md", "macula-cloud-iam/pom.xml", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/config/ProtocolCasConfiguration.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/config/ProtocolSaml2Configuration.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/authentication/sms/SmsLoginFilterConfigurer.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/config/ProtocolOAuth2Configuration.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/config/DefaultSecurityConfiguration.java", "macula-cloud-admin/src/views/system/oauth2Client/index.vue"]}]
 ---
 
 ## 概览
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+Macula Cloud IAM 是统一身份认证与授权中心，提供 OAuth 2.1 / OpenID Connect 登录、令牌签发、刷新、撤销、内省及公钥发布。用户名、手机号、邮箱、验证码以及第三方身份的接入按 OAuth Client 与 Provider 注册配置管理。
 
-
-基于[spring-authorization-server](https://github.com/spring-projects/spring-authorization-server)开发的支持的FORM、OAUTH2、CAS、SAML等协议的统一认证平台。
+IAM 管理身份与外部令牌；Gateway 负责入口认证、角色/菜单/URL 控制并签发内部 JWT；BFF 和服务通过 Security 实施方法与资源权限。参见[安全架构](/docs/latest/00_introduce/安全架构/)。
 
 ## 组件坐标
 
-IAM 为独立部署的平台服务。应用通过网关的 OAuth2 Resource Server 接入，配置方式见下节；不存在独立的 IAM Starter 坐标。
+IAM 为独立部署的 `macula-cloud-iam` 服务，不是业务工程的 Maven 库，没有 IAM Starter 坐标。管理端位于 Macula Cloud 同仓的 `macula-cloud-admin`。
 
 ## 使用配置
 
+### 首次接入
+
+先启动 Cloud，再登记业务应用及 OAuth Client，区分 AK/SK 和 Client Secret，完成菜单/角色分配。具体字段、兼容 Samples 登录方式及验证命令见[首次接入 Macula Cloud](/docs/latest/04_devmanual/首次接入macula-cloud/)。
+
+### Gateway 验证外部 Token
+
 ```yaml
 spring:
-	security:
+  security:
     oauth2:
       resourceserver:
         opaquetoken:
-          client-id: e4da4a32-592b-46f0-ae1d-784310e88423
-          client-secret: secret
-          introspection-uri: http://127.0.0.1:9010/oauth2/introspect  # 统一认证的endpoint
+          introspection-uri: ${IAM_INTROSPECTION_URI:http://127.0.0.1:9010/oauth2/introspect}
+          client-id: ${IAM_INTROSPECTION_CLIENT_ID}
+          client-secret: ${IAM_INTROSPECTION_CLIENT_SECRET}
 ```
 
-上述为资源服务器的配置，依赖spring-boot-starter-oauth2-resource-server。macula平台使用gateway作为资源服务器。
+内省 Client 在平台登记并配置允许的认证方式，凭据只留服务端。BFF 的 Cloud endpoint 指向 Cloud Gateway，内部服务的 JWK 指向应用 Gateway，不能将这三个地址混用。
+
+### IAM 服务端
+
+按 Cloud `deploy/README.md` 配置环境与数据库迁移；生产使用稳定的 `IAM_ISSUER_URI`、HTTPS、持久化签名密钥和加密密码。变更 issuer 或签名材料会影响既有令牌，发布前核对回调、密钥和缓存策略。
 
 ## 核心功能
 
-### 服务端介绍
+### OAuth 与 OIDC
 
-提供基于OAUTH/CAS/OIDC/SAML协议的统一认证服务，所有服务经过网站认证
+浏览器/移动公共客户端使用授权码和 S256 PKCE；服务身份使用 `client_credentials`。授权方式、scope、租户、回调与精确 Origin 均按 Client 管理。`password`、`sms` 等旧令牌扩展用于兼容现有客户端，新浏览器接入不沿用密码授权或暴露 Secret。
 
-#### 认证方式
+常用端点：
 
-负责认证资源Owner方提供的认证凭据，为下层交互协议生成token或者ticket做准备
+| 路径 | 用途 |
+| --- | --- |
+| `/login` | 统一登录页 |
+| `/oauth2/authorize` | OAuth 2.1 / OIDC 授权入口 |
+| `/oauth2/token` | 获取或刷新令牌 |
+| `/oauth2/introspect` | 查询令牌状态 |
+| `/oauth2/revoke` | 撤销令牌 |
+| `/.well-known/openid-configuration` | OIDC Discovery |
+| `/oauth2/jwks` | JWT 验签公钥 |
+| `/userinfo` | 获取已授权的用户信息 |
+| `/connect/logout` | OIDC 退出 |
 
-##### 用户名密码认证
 
-```
-POST /login
-username 用户名
-password 密码
-要带上openid/unionid可以绑定
-```
+### 登录与第三方身份
 
-##### 短信认证(TODO)
+支持本地账号、手机号/邮箱及验证码登录。短信验证码发送入口为 `/api/v1/sms-code`，表单登录处理地址为 `POST /login/sms`。登录链路已有 Sms Filter / Provider / 验证服务实现，不再使用旧文档的 `/login/captcha` TODO。实际短信发送仍需部署方配置供应商和验证存储，不能将接口存在视为真实短信已联通。
 
-```
-POST /login/captcha
-phone   手机号码
-captcha 短信验证码
-要带上openid/unionid可以绑定
-```
+GitHub、企业微信、飞书、钉钉、微信等第三方登录需创建对应 Provider 注册并绑定到 Client。浏览器、App SDK、小程序和 WebView 使用的 code 类型与供应商接口不同，按管理端终端与登录方式选择，不互换认证凭据。
 
-##### 微信授权手机号登录(TODO)
-
-```
-POST /login/weapp/phone
-新版
-code（后端通过code获取手机号），再根据手机号查询对应用户
-旧版（加密数据，后端用session_key解密得到手机号）
-encryptedData
-iv
-要带上openid/unionid可以绑定
-```
-
-##### 已绑定小程序登录认证(TODO)
-
-```
-POST /login/weapp/code
-code（后端调用code2session获取openid/unionid,如果没有绑定则调用不成功)
-
-```
-
-##### 已绑定企微小程序登录认证(TODO)
-
-```
-POST /login/qyweapp/code
-code（后端调用code2session获取userid，没有绑定登录不成功）
-```
-
-#### 协议
-
-协议层不负责用户身份认证，只按照协议生成对应的token或者ticket返回给客户端
-
-##### OAuth2协议
-
-提供基于OAuth2.1协议的实现，基于[spring-authorization-server 0.41](https://github.com/spring-projects/spring-authorization-server/tree/0.4.x)实现，默认支持的grant_type为：
-
-- authorization_code
-- client_credentials
-- refresh_token
-- 兼容旧OAuth2.0扩展的password等类型
-
-> 注意：基于安全原因，OAuth2.1默认已经取消了对于grant_type为password及implicit的支持。
-
-##### CAS协议（TODO）
-
-##### SAML协议（TODO）
-
-#### 二次开发
-
-##### 认证方式扩展
-
-主要参考authentication和grant两个包中类
-
-##### 协议扩展
-
-参考config中的有关各协议的配置
-
-##### 登录界面定制
-
-在 src/resources/templates/目录中，可以考虑在client配置中设置不同client需要的认证方式，从而出现不同登录界面
-
-##### 用户身份源定制
-
-实现UserAuthInfoService接口，可以根据UserType访问不同的身份源
-
-```java
-public interface UserAuthInfoService {
-    /**
-     * 获取用户信息，上层覆盖该方法
-     *
-     * @param userType 用户类型
-     * @param username 用户名
-     * @return 返回指定用户类型和用户名的用户信息
-     */
-    UserAuthInfo getUserAuthInfo(UserTypeEnum userType, String username);
-}
-
-public enum UserTypeEnum {
-    MEMBER("member", "会员"), 
-    EMPLOYEE("employee", "行政员工"), 
-    ODC("odc", "外包人员"), 
-    SUPPLIER("supplier", "供应商");
-    ...
-}
-```
-
-> 注意：
->
-> 为了兼容旧版oauth2服务器，grant包提供password的grant_type方式，不过该方式以后会逐步取消
+当前提交的 `ProtocolCasConfiguration` 与 `ProtocolSaml2Configuration` 仍为空配置类，不构成已可接入的 CAS / SAML 协议实现。本页不沿用 5.x 的 TODO 接口或旧 Spring Authorization Server 0.4.x 配置；需要这些协议时应另行实现并验证。
 
 ## 依赖引入
 
-网关侧通过 OAuth2 Resource Server 验证外部 Token；使用 Macula Gateway 组合 Starter 接入。IAM 服务端单独部署，不作为业务服务的库依赖。
+业务 Gateway 按云平台选择 Alibaba SCG 或 Tencent SCG 组合 Starter，见 [Gateway](/docs/latest/01_services/微服务/gateway/)；内层引入 [Security](/docs/latest/01_services/框架基础/security/) 验证内部 JWT，BFF 引入 [System](/docs/latest/01_services/通用平台/system/)获取平台用户与菜单。组合 Starter 已传递引入的依赖不用重复声明。
 
 ## 版权说明
 
-- spring-authorization-server：https://github.com/spring-projects/spring-authorization-server/blob/main/LICENSE.txt
+Macula Cloud 使用 [Apache License 2.0](https://github.com/macula-projects/macula-cloud/blob/main/LICENSE)。Spring Security 等第三方组件遵循各自许可证。

@@ -2,9 +2,11 @@
 title: "版本管理"
 linkTitle: "版本管理"
 weight: 3
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/基本开发规范/VersionMng.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["pom.xml", "macula-samples-parent/pom.xml"]}]
 ---
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+以下为通用语义化版本约定。Macula Boot main 当前为 `6.1.0-SNAPSHOT`，`latest` 是文档入口，不是 Maven 版本号。框架版本由 Boot 的 `revision` 管理；业务工程管理自己的 revision，Archetype 版本单独指定。正式发布情况以 GitHub Releases 为准，生产制品固定版本或 digest，不把快照当稳定版。
 
 ## 概述
 在软件管理的领域里存在着被称作“依赖地狱”的死亡之谷，系统规模越大，加入的包越多，你就越有可能在未来的某一天发现自己已深陷绝望之中。在依赖高的系统中发布新版本包可能很快会成为噩梦。如果依赖关系过高，可能面临版本控制被锁死的风险（必须对每一个依赖包改版才能完成某次升级）。而如果依赖关系过于松散，又将无法避免版本的混乱（假设兼容于未来的多个版本已超出了合理数量）。

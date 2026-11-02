@@ -2,9 +2,11 @@
 title: "阿里规范"
 linkTitle: "阿里规范"
 weight: 1
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/后端开发规范/阿里规范/_index.md"]}]
 ---
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+以下是已归档的《Java 开发手册（黄山版）》参考资料，不是 Spring Boot 4 的配置手册。团队沿用其中命名、集合、异常、SQL 与安全原则；API、依赖和配置以当前源码为准。框架源码的 JavaDoc、版权头与验证命令见[贡献规范](/docs/latest/11_about/贡献规范/)。
 
 * [前言](./Java开发手册(黄山版).pdf#前言)
 * 一、编程规约

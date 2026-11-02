@@ -1,0 +1,8 @@
+{{ define "main" }}
+<div class="td-content release-page">
+  <h1>{{ .Title }}</h1>
+  <p>输入关键词搜索本站内容。文档页面默认当前版本，也可切换版本或检索全站。</p>
+  {{ partial "search-input.html" . }}
+  <p><a href="/docs/latest/">浏览当前文档目录</a></p>
+</div>
+{{ end }}

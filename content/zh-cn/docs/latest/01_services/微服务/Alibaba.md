@@ -13,7 +13,7 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 
 Alibaba 接入面向 Java 17、Spring Boot 4 与 Spring Cloud 2025.1，组合 Nacos 配置与服务发现、Sentinel、Feign 和灰度路由能力。业务服务与网关按各自角色选择 Starter。
 
-基于 Nacos 实例元数据和 Spring Cloud LoadBalancer，按 `grayversion` 标签筛选实例，再在候选实例中轮询。适用于 Alibaba 服务调用和 Spring Cloud Gateway 的服务发现路由，不提供百分比放量、用户分群或强隔离策略。
+进阶灰度能力基于 Nacos 实例元数据和 Spring Cloud LoadBalancer，按 `grayversion` 标签筛选实例，再在候选实例中轮询。适用于 Alibaba 服务调用和 Spring Cloud Gateway 的服务发现路由，不提供百分比放量、用户分群或强隔离策略。
 
 
 基于[Spring Cloud Alibaba](https://github.com/alibaba/spring-cloud-alibaba)
@@ -21,75 +21,41 @@ Alibaba 接入面向 Java 17、Spring Boot 4 与 Spring Cloud 2025.1，组合 Na
 
 ## 组件坐标
 
+下列坐标以继承 [Macula Boot Parent](/docs/latest/00_introduce/概述/#依赖基线) 为前提，由 Parent 管理版本；无需重复声明版本。独立接入时按该节显式定义版本和依赖管理。
+
 业务服务选择 `macula-boot-starter-cloud-alibaba`，网关选择 `macula-boot-starter-cloud-alibaba-scg`。SCG 已包含共享 Gateway、Nacos、Sentinel Gateway 和灰度模块，无需再重复引入共享 Gateway；Web、持久化等业务能力按需组合。
 
 `macula-boot-starter-cloud` 本身只是 packaging 为 `pom` 的聚合模块，不会自动启用全部云组件。子模块的 groupId 为 `dev.macula.boot`，版本由 Macula Boot Parent 管理；未采用统一版本管理时显式指定版本。
-
-```xml
-<dependency>
-    <groupId>dev.macula.boot</groupId>
-    <artifactId>macula-boot-starter-cloud-alibaba-gray</artifactId>
-    <version>${macula.version}</version>
-</dependency>
-```
-
-通常直接选择 [Alibaba Starter](/docs/latest/01_services/微服务/alibaba/) 或 `macula-boot-starter-cloud-alibaba-scg`，二者已传递引入本模块，无需重复声明。单独引入时还需提供 Nacos Discovery、Spring Cloud LoadBalancer；它们在本模块 POM 中为 optional 依赖。
-
 
 ```xml
 <!-- 微服务模块依赖 -->
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-cloud-alibaba</artifactId>
-    <version>${macula.version}</version>
 </dependency>
 
         <!-- 网关模块依赖 -->
 <dependency>
 <groupId>dev.macula.boot</groupId>
 <artifactId>macula-boot-starter-cloud-alibaba-scg</artifactId>
-<version>${macula.version}</version>
 </dependency>
 ```
 
+
+### 按需独立引入灰度模块
+
+```xml
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-cloud-alibaba-gray</artifactId>
+</dependency>
+```
+
+通常直接选择 [Alibaba Starter](/docs/latest/01_services/微服务/alibaba/) 或 `macula-boot-starter-cloud-alibaba-scg`，二者已传递引入本模块，无需重复声明。单独引入时还需提供 Nacos Discovery、Spring Cloud LoadBalancer；它们在本模块 POM 中为 optional 依赖。
+
 ## 使用配置
 
-沿用最新 [Alibaba Provider application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml) 的注册发现配置，在需要灰度发布的实例上追加：
-
-```yaml
-spring:
-  cloud:
-    nacos:
-      discovery:
-        metadata:
-          grayversion: v2
-```
-
-同一服务的基线实例不配置 `grayversion`，灰度实例配置如 `v2`。samples 中已有的 `metadata.version: v1` 不是灰度匹配键，不能代替 `metadata.grayversion`。
-
-| 配置 / 输入 | 默认值 | 说明 |
-| --- | --- | --- |
-| `spring.cloud.nacos.discovery.metadata.grayversion` | 未设置 | 本实例灰度标签；未设置或空串视为基线，避免使用空白字符 |
-| HTTP 请求头 `grayversion` | 未设置 | 本次请求希望访问的灰度标签，使用第一个头值、精确匹配 |
-| `GrayVersionContextHolder` | 当前线程未设置 | 非 `RequestDataContext` 请求从该上下文读取标签 |
-| `macula.cloud.gray.enabled` | `true` | **Gateway 模块**创建灰度过滤器的开关，不是本模块开关 |
-| `macula.gateway.gray.enabled` | `false` | **Gateway 模块**读取请求头并设置灰度上下文的开关 |
-| `spring.reactor.context-propagation` | samples 为 `auto` | WebFlux/Gateway 上下文传播配置，不是实例筛选开关 |
-
-需要网关灰度上下文处理时，在 [Gateway 示例](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml) 上补充：
-
-```yaml
-macula:
-  cloud:
-    gray:
-      enabled: true
-  gateway:
-    gray:
-      enabled: true
-```
-
-本模块没有独立的 `enabled` 属性。关闭上述网关开关既不会卸载 `GrayRoundRobinLoadBalancer`，也不会移除原始请求头；负载均衡器仍可直接读取请求中的 `grayversion`。如需停用本模块，可通过 `spring.autoconfigure.exclude` 排除 `dev.macula.boot.starter.cloud.alibaba.gray.config.GrayNacosAutoConfiguration`，并核对应用剩余的负载均衡配置。
-
+### 基础接入：Nacos 与环境配置
 
 以下按当前 [Alibaba Provider application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml) 精简，Gateway / Consumer 使用相同的配置中心组织方式。示例值不是 Starter 默认值。
 
@@ -159,8 +125,47 @@ spring:
 
 Redis 连接使用 `spring.data.redis.*`，详见 [Redis](/docs/latest/01_services/框架基础/redis/)；Metrics、Traces、Logs 使用 `management.*` 配置，详见 [Observability](/docs/latest/01_services/生产准备/observability/)。云平台示例的普通 profile 默认关闭 OTLP 网络导出，叠加 `observability` profile 时开启。
 
-## 核心功能
 
+### 进阶：灰度发布
+
+
+沿用最新 [Alibaba Provider application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml) 的注册发现配置，在需要灰度发布的实例上追加：
+
+```yaml
+spring:
+  cloud:
+    nacos:
+      discovery:
+        metadata:
+          grayversion: v2
+```
+
+同一服务的基线实例不配置 `grayversion`，灰度实例配置如 `v2`。samples 中已有的 `metadata.version: v1` 不是灰度匹配键，不能代替 `metadata.grayversion`。
+
+| 配置 / 输入 | 默认值 | 说明 |
+| --- | --- | --- |
+| `spring.cloud.nacos.discovery.metadata.grayversion` | 未设置 | 本实例灰度标签；未设置或空串视为基线，避免使用空白字符 |
+| HTTP 请求头 `grayversion` | 未设置 | 本次请求希望访问的灰度标签，使用第一个头值、精确匹配 |
+| `GrayVersionContextHolder` | 当前线程未设置 | 非 `RequestDataContext` 请求从该上下文读取标签 |
+| `macula.cloud.gray.enabled` | `true` | **Gateway 模块**创建灰度过滤器的开关，不是本模块开关 |
+| `macula.gateway.gray.enabled` | `false` | **Gateway 模块**读取请求头并设置灰度上下文的开关 |
+| `spring.reactor.context-propagation` | samples 为 `auto` | WebFlux/Gateway 上下文传播配置，不是实例筛选开关 |
+
+需要网关灰度上下文处理时，在 [Gateway 示例](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml) 上补充：
+
+```yaml
+macula:
+  cloud:
+    gray:
+      enabled: true
+  gateway:
+    gray:
+      enabled: true
+```
+
+本模块没有独立的 `enabled` 属性。关闭上述网关开关既不会卸载 `GrayRoundRobinLoadBalancer`，也不会移除原始请求头；负载均衡器仍可直接读取请求中的 `grayversion`。如需停用本模块，可通过 `spring.autoconfigure.exclude` 排除 `dev.macula.boot.starter.cloud.alibaba.gray.config.GrayNacosAutoConfiguration`，并核对应用剩余的负载均衡配置。
+
+## 核心功能
 ### 注册发现与服务调用
 
 通过 Nacos 加载配置并注册、发现服务，由 Feign 调用下游；Sentinel 提供流量控制与熔断接入，延迟注册由 `register-enabled=false` 与 `register-delayed=true` 显式启用。Alibaba 与 Alibaba SCG 均传递引入下述灰度扩展。
@@ -199,6 +204,7 @@ curl -H 'grayversion: v2' \
 请参考[官方文档](https://sca.aliyun.com/zh-cn/)
 
 ## 依赖引入
+应用直接引入本页“组件坐标”的角色对应 Starter 即可。下面是源码依赖清单，用于排查版本与能力组成；已传递引入的依赖无需逐项加入业务 POM。
 
 | 依赖 | 是否传递 | 用途 |
 | --- | --- | --- |
@@ -286,7 +292,6 @@ curl -H 'grayversion: v2' \
 ```
 
 ## 版权说明
-
 Macula Boot 使用 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/LICENSE)。
 
 本模块遵循仓库 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/LICENSE)。

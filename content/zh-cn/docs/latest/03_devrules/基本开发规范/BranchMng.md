@@ -2,9 +2,11 @@
 title: "分支管理"
 linkTitle: "分支管理"
 weight: 2
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/基本开发规范/BranchMng.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["pom.xml", "macula-samples-parent/pom.xml"]}]
 ---
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+当前 Boot 与 Samples 主线名为 `main`，维护旧版时使用对应版本分支。下文各分支模型是可选方法介绍，其中 `master` 是模型示例名；不要求创建 `develop`、环境分支或把所有历史模型混合使用。团队选定一种协作流程，合并前完成评审与验证，发布需单独授权。
 
 ## 概述
 在软件研发的过程中，代码分支管理模型至关重要，直接影响着软件研发交付的效率。行业里存在着多种不同的分支管理模型，如GitFlow、GitHubFlow、GitLabFlow、OneFlow以及AOneFlow(阿里)。
@@ -38,7 +40,7 @@ GitFlow是最早诞生并得到广泛应用的一种工作流程。
 GitHubFlow分支模型只存在一个master主分支，日常开发都合并至master，永远保持其为最新的代码且随时可发布的。在需要添加或修改代码时，基于master创建分支，提交修改。
 创建Pull Request，所有人讨论和审查你的代码。然后部署到生产环境中进行验证。待验证通过后合并到master分支中。
 
-> Macula采用该分支管理模型。
+> 可采用短期功能分支与主干 PR 的协作方式，具体发布与合并顺序按团队流程执行。
 
 整体分支模型，如下图所示：
 

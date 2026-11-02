@@ -1,0 +1,14 @@
+{{- $pages := slice -}}
+{{- range hugo.Sites -}}
+  {{- range .Pages -}}
+    {{- if and (ne .Params.exclude_search true) (or .IsPage (gt (len .Plain) 0)) -}}
+      {{- $version := "" -}}
+      {{- $parts := split .RelPermalink "/" -}}
+      {{- if and (ge (len $parts) 4) (eq (index $parts 1) "docs") -}}
+        {{- $version = index $parts 2 -}}
+      {{- end -}}
+      {{- $pages = $pages | append (dict "url" .RelPermalink "title" .Title "version" $version "body" (.Plain | htmlUnescape) "excerpt" ((.Description | default .Plain) | htmlUnescape | truncate 150 | htmlUnescape)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $pages | jsonify -}}

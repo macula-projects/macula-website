@@ -25,14 +25,13 @@ def pom_defaults(poms):
             if all(pair) and pair not in dependencies:
                 dependencies.append(pair)
 
-    def xml(items, version=False):
+    def xml(items):
         return '\n\n'.join('```xml\n<dependency>\n'
             f'    <groupId>{group}</groupId>\n    <artifactId>{artifact}</artifactId>\n'
-            + ('    <version>${macula.version}</version>\n' if version else '')
             + '</dependency>\n```' for group, artifact in dict.fromkeys(items))
 
     return {
-        '组件坐标': xml(coordinates, True),
+        '组件坐标': xml(coordinates),
         '依赖引入': ('以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。\n\n'
                  + xml(dependencies)) if dependencies else '',
     }

@@ -95,6 +95,8 @@ class ModuleDocsTest(unittest.TestCase):
           </dependencies></project>'''
         result = pom_defaults([pom])
         self.assertIn('<artifactId>example</artifactId>', result['组件坐标'])
+        self.assertNotIn('${macula.version}', result['组件坐标'])
+        self.assertNotIn('<version>', result['组件坐标'])
         self.assertIn('<artifactId>client</artifactId>', result['依赖引入'])
         self.assertNotIn('test-only', result['依赖引入'])
 

@@ -7,6 +7,7 @@ source_path: "macula-boot-starters/macula-boot-starter-auditlog/README.md"
 source_paths: ["macula-boot-starters/macula-boot-starter-auditlog/README.md", "macula-boot-starters/macula-boot-starter-operationlog/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
+manual_content: true
 ---
 
 ## 概览
@@ -18,12 +19,13 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 
 ## 组件坐标
 
+下列坐标以继承 [Macula Boot Parent](/docs/latest/00_introduce/概述/#依赖基线) 为前提，由 Parent 管理版本；无需重复声明版本。独立接入时按该节显式定义版本和依赖管理。
+
 ```xml
 <!-- 日志审计 -->
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-auditlog</artifactId>
-    <version>${macula.version}</version>
 </dependency>
 ```
 

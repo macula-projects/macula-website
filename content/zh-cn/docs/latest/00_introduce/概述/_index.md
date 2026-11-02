@@ -2,10 +2,8 @@
 title: "概述"
 linkTitle: "概述"
 weight: 1
-source_path: "README.md"
-source_paths: ["README.md"]
-source_branch: "main"
-source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["README.md", "pom.xml", "macula-boot-parent/pom.xml"]}]
 ---
 
 <h2 align="center">Macula Boot</h2>
@@ -52,114 +50,44 @@ Macula Boot 面向 Java 微服务应用提供统一的依赖管理、自动配�
 统一可观测性接入见 [`macula-boot-starter-observability`](/docs/latest/01_services/生产准备/observability/)，
 从 5.x 迁移请参考[从 5.x 迁移到 latest 的升级指南](/docs/latest/05_ops/升级指南/)。
 
-## 项目结构
+## 平台边界
 
-```text
-macula-boot
-├── macula-boot-parent       # 依赖版本、插件和构建规范
-├── macula-boot-commons      # 通用模型、异常、上下文和工具
-├── macula-boot-starters     # 按能力拆分的 Spring Boot Starter
-├── macula-boot-examples     # Alibaba/Tencent 微服务、任务和 Binlog 示例
-└── macula-boot-archetype    # Maven 项目骨架
-```
+Macula Boot 提供可组合的开发组件；Macula Cloud 提供 IAM、用户、角色、菜单与平台管理服务，管理端位于同仓的 `macula-cloud-admin`；Macula Samples 是基于二者的业务应用示例。业务前端通过应用 Gateway 访问 BFF，BFF 编排业务服务。
 
-## 快速使用
+## 依赖基线
 
-业务项目通常继承 Macula Boot Parent，再按需添加 Starter：
+latest 跟随 main，当前框架版本为 **6.1.0-SNAPSHOT**（开发快照），基于 Java 17、Spring Boot 4.0 和 Spring Cloud 2025.1。正式发行版本以[变更历史](/docs/latest/11_about/更新日志/)及 GitHub Releases 为准，6.0 系列不建议使用。
+
+业务项目先继承 Parent，再选择 Starter，Parent 已管理组件版本：
 
 ```xml
 <parent>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-parent</artifactId>
     <version>6.1.0-SNAPSHOT</version>
+    <relativePath/>
 </parent>
-
-<dependencies>
-    <dependency>
-        <groupId>dev.macula.boot</groupId>
-        <artifactId>macula-boot-starter-web</artifactId>
-    </dependency>
-</dependencies>
 ```
 
-将示例版本替换为项目实际采用的 Macula Boot 发布版本。具体属性与扩展点请查看对应 Starter 的 README，完整应用组合可参考 [`macula-boot-examples`](/docs/latest/00_introduce/快速开始/)。
-
-## 构建与测试
-
-项目要求 JDK 17，并使用 Maven 构建。日常开发建议从目标模块开始验证：
-
-```bash
-# 运行目标模块及其依赖的单元测试
-mvn -pl macula-boot-starters/macula-boot-starter-web -am test
-
-# 运行全仓库单元测试
-mvn test
-
-# 运行单元测试、集成测试并完成构建验证
-mvn verify
-```
-
-### 测试分层规范
-
-项目通过 Maven Surefire 和 Failsafe 区分两类测试：
-
-| 类型 | 命名 | 使用场景 | 执行命令 |
-| --- | --- | --- | --- |
-| 单元测试 | `*Test`、`*Tests`、`Test*`、`*TestCase` | 纯逻辑、Mockito，以及使用 `ApplicationContextRunner` / `WebApplicationContextRunner` 的轻量自动配置测试 | `mvn test` |
-| 集成测试 | `*IT`、`IT*`、`*ITCase` | `@SpringBootTest` 完整上下文、自动配置发现，以及 Redis、数据库、消息队列等基础设施协作 | `mvn verify` |
-
-编写测试时遵循以下约定：
-
-- 纯业务逻辑优先使用普通 JUnit 和 Mockito，不启动 Spring。
-- Starter 的条件装配、属性绑定和 Bean 回退优先使用 Context Runner。
-- `@SpringBootTest` 仅用于需要完整应用上下文的集成测试，并采用 `*IT` 命名。
-- 依赖 Redis、数据库、Kafka、RocketMQ 等外部服务的测试必须归入集成测试，并明确运行条件。
-- 测试应可重复、与执行顺序无关，不依赖随机值或未声明的共享状态。
-
-测试报告分别生成在：
-
-```text
-target/surefire-reports    # 单元测试
-target/failsafe-reports    # 集成测试
-```
-
-当前 CI 会提供 Redis 7 并执行 `mvn verify`。Kafka、RocketMQ 和 TinyID 的真实服务测试在基础设施未提供时带有明确的禁用原因，同时各模块保留不连接外部服务的自动配置测试。
-
-### 发布构建
-
-项目使用 `${revision}` 管理版本。生成用于发布的完整构建产物时需要启用 `deploy` Profile：
+快照尚未发布或远程无法解析时，先在 **Macula Boot 源码根目录**安装完整框架及模板，然后构建业务项目：
 
 ```bash
 mvn clean install -DskipTests=true -Dgpg.skip=true -Pdeploy
 ```
 
-`deploy` Profile 默认跳过测试，因此发布前应先执行 `mvn verify`。`release.sh` 会涉及分支、提交、标签和远端推送，仅应在确认版本和工作区状态后使用。
+该命令跳过测试，只用于本地制品准备，不代表框架验证通过。只安装 `macula-boot-archetype` 不会同时安装所有 Starter。
 
-## 开发约定
+已有其他 Parent 的项目，可在自己的 POM 中定义版本，并为所选 Macula 依赖显式填写 `<version>${macula.version}</version>`：
 
-- Java 代码保持 JDK 17 兼容，包名沿用 `dev.macula...`。
-- Java 排版由开发者编辑器负责：IntelliJ IDEA 自动使用版本化的 `.idea/codeStyles` 项目方案，`.editorconfig` 提供跨编辑器的基础设置，`.config/license-header` 是版权头参考模板。仓库不使用 Maven 自动格式化源码。
-- 依赖版本统一在 [`macula-boot-parent/pom.xml`](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-parent/pom.xml) 管理，避免在子模块重复声明。
-- Starter 自动配置应可禁用、可覆盖，并使用 `@ConditionalOnMissingBean` 等机制为业务项目保留扩展能力。
-- 新增或移动自动配置时，同步维护 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`。
-- 公共 API、配置键或行为发生变化时，同步更新模块 README 和测试。
-
-CI 使用 `.github/workflows/verification.yml` 检查相对目标分支发生变化的 Java 文件。提交前也可以手动检查全仓源码，用于逐步治理历史问题（当前全仓仍有存量告警）：
-
-```bash
-mvn -N checkstyle:check
+```xml
+<properties>
+    <macula.version>6.1.0-SNAPSHOT</macula.version>
+</properties>
 ```
 
-IntelliJ IDEA 打开项目后会自动读取 `.idea/codeStyles/Project.xml` 和根目录 `.editorconfig`，无需手工导入 Formatter。建议在 `Settings | Tools | Actions on Save` 中启用 `Reformat code`，或在提交前对变更文件执行 Reformat Code；不要一次性格式化全仓历史代码。Checkstyle 只做静态检查，不修改文件，主要检查版权头、类型注释、import 和基础代码结构；缩进、换行和行宽由编辑器格式器负责。
+这只是 Macula 制品版本声明；还需按对应 Parent 的 dependencyManagement 管理 Spring 与第三方依赖，避免混用不同 Boot/Cloud 主线。新项目优先用 Archetype 生成完整 Parent 配置。
 
-Java 注释遵循以下约定：
-
-- 类、接口、枚举、注解、Record 及测试类必须使用类级 Javadoc 说明职责，内部辅助类型也不能只写普通行注释。
-- 顶层类型的 Javadoc 必须包含非空的 `@author`、`@since`；内部类型无需重复 `@author`，但仍须包含 `@since`，格式参考 `AsyncAutoConfiguration`。
-- 对外公开的类和方法应说明用途、参数、返回值、异常及重要约束；实现显而易见时不写逐行翻译代码的注释。
-- `TODO` 应说明待办事项和上下文，避免无意义的占位注释；修改行为时同步更新关联注释。
-
-更多路线规划参见 [Roadmap](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/Roadmap.md)。
+[快速开始](/docs/latest/00_introduce/快速开始/)提供启动与项目生成步骤；[首次接入](/docs/latest/04_devmanual/首次接入macula-cloud/)说明应用和 OAuth Client 注册；[贡献规范](/docs/latest/11_about/贡献规范/)保留框架源码构建、测试和代码规范。
 
 ## 技术架构
 

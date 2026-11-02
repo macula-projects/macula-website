@@ -14,11 +14,12 @@ Sentinel 能力由 `macula-boot-starter-cloud-alibaba` 及 Alibaba SCG 组合提
 
 ## 组件坐标
 
+下列坐标以继承 [Macula Boot Parent](/docs/latest/00_introduce/概述/#依赖基线) 为前提，由 Parent 管理版本；无需重复声明版本。独立接入时按该节显式定义版本和依赖管理。
+
 ```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-cloud-alibaba</artifactId>
-    <version>${macula.version}</version>
 </dependency>
 ```
 

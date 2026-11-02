@@ -18,6 +18,8 @@ Tencent 接入面向 Java 17、Spring Boot 4 与 Spring Cloud 2025.1，提供 Po
 
 ## 组件坐标
 
+下列坐标以继承 [Macula Boot Parent](/docs/latest/00_introduce/概述/#依赖基线) 为前提，由 Parent 管理版本；无需重复声明版本。独立接入时按该节显式定义版本和依赖管理。
+
 业务服务选择 `macula-boot-starter-cloud-tencent`，网关选择 `macula-boot-starter-cloud-tencent-scg`。SCG 已组合共享 `macula-boot-starter-cloud-gateway`，无需重复引入。通常按项目选择 Tencent 或 Alibaba 一套云平台。
 
 `macula-boot-starter-cloud` 是聚合 POM，不是启用全部云能力的运行时 Starter。以下子模块均使用 `dev.macula.boot` 坐标，版本由 Macula Boot Parent 管理；未采用统一版本管理时显式指定版本。
@@ -27,14 +29,12 @@ Tencent 接入面向 Java 17、Spring Boot 4 与 Spring Cloud 2025.1，提供 Po
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-cloud-tencent</artifactId>
-    <version>${macula.version}</version>
 </dependency>
 
         <!-- 网关模块依赖 -->
 <dependency>
 <groupId>dev.macula.boot</groupId>
 <artifactId>macula-boot-starter-cloud-tencent-scg</artifactId>
-<version>${macula.version}</version>
 </dependency>
 ```
 

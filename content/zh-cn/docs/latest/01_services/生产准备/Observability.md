@@ -28,11 +28,12 @@ Micrometer Tracing 和 OpenTelemetry 实现 Metrics、Traces、Logs 三类信号
 
 ## 组件坐标
 
+下列坐标以继承 [Macula Boot Parent](/docs/latest/00_introduce/概述/#依赖基线) 为前提，由 Parent 管理版本；无需重复声明版本。独立接入时按该节显式定义版本和依赖管理。
+
 ```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-observability</artifactId>
-    <version>${macula.version}</version>
 </dependency>
 ```
 
@@ -162,6 +163,41 @@ spring:
   [统一可观测性迁移指南](/docs/latest/05_ops/升级指南/)
 - OpenTelemetry Collector、Prometheus、Loki、Tempo 的本地验证环境参见
   [示例 Docker 使用说明](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/docker/README.md)
+
+### 验证三类信号
+
+先为预发布部署独立 Collector。以下是仅用于受控验证的 `otel-collector.yml`，通过 debug exporter 检查三种数据是否到达；生产替换为实际存储 exporter，不将遥测接收端口暴露到公网。
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+exporters:
+  debug:
+    verbosity: basic
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      exporters: [debug]
+    logs:
+      receivers: [otlp]
+      exporters: [debug]
+```
+
+使用已固定版本的 OpenTelemetry Collector 镜像/二进制并挂载该文件，以 `--config` 加载；不要使用可变镜像标签作为发布记录。应用启用上文的 metrics/traces/logs 三个导出开关，HTTP endpoint 分别以 `/v1/metrics`、`/v1/traces`、`/v1/logs` 结尾。宿主机应用使用宿主机映射端口，容器内使用 Collector 服务名。
+
+1. 在隔离验证环境临时将 tracing sampling probability 设为 `1.0`，发起一次 Gateway → BFF → Service 请求。
+2. Collector 日志应出现资源与三类信号批次；等待指标的实际 export step 后再检查 metrics，不能只看 Collector 进程启动。
+3. 在追踪后端按 `service.name` 与环境查询该请求，确认上下游 span 连续；在日志后端以 traceId 定位对应日志，在指标后端确认请求计数/延迟变化。
+4. 关闭 Collector 再恢复，观察导出错误与恢复情况；验收后恢复生产采样率，确认无凭据或个人敏感信息导出。debug exporter 只验证接收，不能证明 Tempo/Loki/Prometheus 等存储已成功写入。
+
+完整切流与回滚检查见[生产部署](/docs/latest/05_ops/服务部署/)。
 
 ## 依赖引入
 

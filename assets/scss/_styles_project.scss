@@ -450,3 +450,24 @@ button, input, select, textarea { font-family: inherit; }
   .site-navbar .docs-version-selector select { width: 128px; max-width: 128px; }
   .site-navbar .navbar-nav { gap: 18px; }
 }
+
+// Local search shares typography with document text and keeps results inside its dialog.
+.site-search-dialog {
+  color: var(--macula-text); background: #fff; border: 1px solid var(--macula-line);
+  border-radius: 14px; padding: 24px; width: min(760px, calc(100vw - 32px));
+  max-height: 85dvh; overflow: auto;
+  &::backdrop { background: rgba(23,40,57,.4); }
+  .site-search-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  h2 { font-size: var(--macula-h2-size); margin: 0; }
+  button { border: 1px solid var(--macula-line); border-radius: 6px; background: var(--macula-paper); padding: 4px 12px; }
+  form { display: grid; gap: 8px; margin: 20px 0; }
+  input, select { width: 100%; min-width: 0; border: 1px solid #8b9bac; border-radius: 6px; background: #fff; color: inherit; padding: 8px 10px; font: inherit; }
+  label, .site-search-status { font-size: var(--macula-ui-size); }
+  ol { padding-left: 24px; }
+  li { margin-bottom: 18px; overflow-wrap: anywhere; }
+  li a { font-weight: 600; }
+  li p { margin: 4px 0; font-size: var(--macula-ui-size); color: var(--macula-muted); }
+}
+.layer-diagram { overflow-x: auto; border: 1px solid var(--macula-line); border-radius: 8px; margin: 16px 0; }
+.layer-diagram svg { width: 760px; max-width: none; display: block; font-family: var(--macula-font); font-size: var(--macula-body-size); }
+.layer-diagram text { fill: var(--macula-ink); }

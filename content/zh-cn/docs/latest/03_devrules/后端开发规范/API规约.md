@@ -2,9 +2,11 @@
 title: "API规约"
 linkTitle: "API规约"
 weight: 2
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/后端开发规范/API规约.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["pom.xml", "macula-samples-parent/pom.xml"]}]
 ---
 
-> 本章沿用 5.x 的文档内容，尚未按 latest（当前） 分支核对。涉及依赖、配置或 API 时，请以 [main 分支源码](https://github.com/macula-projects/macula-boot/tree/main) 为准。
+以下为接口设计约定，新增接口优先遵循；既有路径兼容性优先，例如 Samples 已有 `/api/v1/app` 不为统一复数强制改名。Web Starter 统一处理响应，Controller 返回业务结果；契约使用 Query/Form/VO，跨服务通过 `*-api` 与 Feign，避免传 Entity。分页必须限额，排序字段采用允许列表。
 
 ## 概述
 
