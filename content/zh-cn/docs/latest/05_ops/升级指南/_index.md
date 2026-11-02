@@ -62,6 +62,10 @@ Macula Boot 6.1 基于 Spring Boot 4、Spring Framework 7、Spring Cloud 2025.1 
 
 这些变化会影响实现 Macula 扩展接口、直接操作 Jackson 节点或自定义基础设施 Bean 的下游源码；升级到 6.1 时应重新编译并运行应用集成测试。
 
+### 已移除的 TSF 接入
+
+main 已移除 `macula-boot-starter-cloud-tsf` 与 `macula-boot-starter-cloud-tsf-scg`。现有应用需根据部署环境选择 [Alibaba](/docs/latest/01_services/微服务/alibaba/) 或 [Tencent](/docs/latest/01_services/微服务/tencent/) 接入，并调整配置中心、服务发现和网关依赖；旧版用法保存在 [5.x TSF 历史文档](/docs/5.x/01_services/微服务/tsf/)。
+
 ## 4. 统一可观测性与异步上下文迁移
 
 ### 依赖替换

@@ -2,13 +2,16 @@
 title: "Macula Boot Starter Cloud Alibaba"
 linkTitle: "Alibaba"
 weight: 10
+manual_content: true
 source_path: "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-alibaba-gray/README.md"
-source_paths: ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-alibaba-gray/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-alibaba/README.md"]
+source_paths: ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-alibaba-gray/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-alibaba/README.md", "macula-boot-starters/macula-boot-starter-cloud/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-alibaba-scg/pom.xml"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 ---
 
 ## 概览
+
+Alibaba 接入面向 Java 17、Spring Boot 4 与 Spring Cloud 2025.1，组合 Nacos 配置与服务发现、Sentinel、Feign 和灰度路由能力。业务服务与网关按各自角色选择 Starter。
 
 基于 Nacos 实例元数据和 Spring Cloud LoadBalancer，按 `grayversion` 标签筛选实例，再在候选实例中轮询。适用于 Alibaba 服务调用和 Spring Cloud Gateway 的服务发现路由，不提供百分比放量、用户分群或强隔离策略。
 
@@ -17,6 +20,10 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 的微服务开源套件[Nacos](https://nacos.io/zh-cn/)、[Sentinel](https://sentinelguard.io/zh-cn/)等搭建微服务平台。
 
 ## 组件坐标
+
+业务服务选择 `macula-boot-starter-cloud-alibaba`，网关选择 `macula-boot-starter-cloud-alibaba-scg`。SCG 已包含共享 Gateway、Nacos、Sentinel Gateway 和灰度模块，无需再重复引入共享 Gateway；Web、持久化等业务能力按需组合。
+
+`macula-boot-starter-cloud` 本身只是 packaging 为 `pom` 的聚合模块，不会自动启用全部云组件。子模块的 groupId 为 `dev.macula.boot`，版本由 Macula Boot Parent 管理；未采用统一版本管理时显式指定版本。
 
 ```xml
 <dependency>
@@ -150,7 +157,15 @@ spring:
 
 `optional:` 仅表示导入可选，不保证注册中心等其他依赖不可用时应用仍可启动；生产环境是否允许缺失配置需明确选择。
 
+Redis 连接使用 `spring.data.redis.*`，详见 [Redis](/docs/latest/01_services/框架基础/redis/)；Metrics、Traces、Logs 使用 `management.*` 配置，详见 [Observability](/docs/latest/01_services/生产准备/observability/)。云平台示例的普通 profile 默认关闭 OTLP 网络导出，叠加 `observability` profile 时开启。
+
 ## 核心功能
+
+### 注册发现与服务调用
+
+通过 Nacos 加载配置并注册、发现服务，由 Feign 调用下游；Sentinel 提供流量控制与熔断接入，延迟注册由 `register-enabled=false` 与 `register-delayed=true` 显式启用。Alibaba 与 Alibaba SCG 均传递引入下述灰度扩展。
+
+Nacos、Redis 与 IAM 等运行服务需单独部署，启动过程见[快速开始](/docs/latest/00_introduce/快速开始/)。
 
 ### 实例选择规则
 
@@ -271,6 +286,8 @@ curl -H 'grayversion: v2' \
 ```
 
 ## 版权说明
+
+Macula Boot 使用 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/LICENSE)。
 
 本模块遵循仓库 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/LICENSE)。
 

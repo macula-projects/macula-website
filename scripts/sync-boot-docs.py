@@ -264,10 +264,9 @@ def main():
                 defaults = pom_defaults([git('show', f'{commit}:{p}') for p in module_poms])
                 body = normalize_module(body, defaults, relative.stem)
             if version['id'] == 'latest' and path == '01_services/微服务/_index.md':
-                body += ('\n\n## 已移除的 TSF 接入\n\n'
-                         'main 已移除 `macula-boot-starter-cloud-tsf` 与 `macula-boot-starter-cloud-tsf-scg`。'
-                         '当前云接入方式见上方 Alibaba、Tencent 与 Gateway 文档；'
-                         '旧版 TSF 用法保存在 [5.x 历史文档](/docs/5.x/01_services/微服务/tsf/)。\n')
+                # This landing page only lists modules. Integration guidance belongs
+                # to the module pages; retired integrations belong to the upgrade guide.
+                body = ''
             if path == '_index.md':
                 header = header.replace('docs_version: "5.x"', f'docs_version: "{version["id"]}"')
                 header = header.replace('title: "Macula 5.x 文档"', f'title: "Macula {version["label"]} 文档"')
