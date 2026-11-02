@@ -37,10 +37,31 @@
     });
   });
 
+  // Snapshot the whole tree, including untouched branches, so navigation cannot
+  // replace a user's choices with the new page's active-path defaults.
+  var sidebarStateKey = sidebar && 'macula.sidebar.v1:' + sidebar.dataset.stateKey;
+  var sidebarControls = [];
+  function readSidebarState() {
+    try {
+      var value = JSON.parse(window.localStorage.getItem(sidebarStateKey));
+      return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    } catch (error) { return {}; }
+  }
+  var sidebarState = sidebar ? readSidebarState() : {};
+  function saveSidebarState() {
+    if (!sidebar) return;
+    try { window.localStorage.setItem(sidebarStateKey, JSON.stringify(sidebarState)); }
+    catch (error) { /* Navigation remains usable when browser storage is unavailable. */ }
+  }
+
   document.querySelectorAll('#td-section-nav .with-child > input[type="checkbox"]').forEach(function (checkbox) {
     var label = checkbox.nextElementSibling;
     var children = label && label.nextElementSibling;
     if (!label || !children || children.tagName !== 'UL') return;
+    if (typeof sidebarState[checkbox.id] === 'boolean') {
+      checkbox.checked = sidebarState[checkbox.id];
+    }
+    sidebarState[checkbox.id] = checkbox.checked;
     var title = label.textContent.trim();
     var toggle = document.createElement('button');
     toggle.type = 'button';
@@ -55,11 +76,28 @@
       toggle.setAttribute('aria-expanded', String(checkbox.checked));
       toggle.setAttribute('aria-label', (checkbox.checked ? '收起' : '展开') + title);
     }
-    toggle.addEventListener('click', function () { checkbox.checked = !checkbox.checked; refresh(); });
-    checkbox.addEventListener('change', refresh);
+    function remember() {
+      sidebarState[checkbox.id] = checkbox.checked;
+      saveSidebarState();
+      refresh();
+    }
+    toggle.addEventListener('click', function () { checkbox.checked = !checkbox.checked; remember(); });
+    checkbox.addEventListener('change', remember);
+    sidebarControls.push({ checkbox: checkbox, refresh: refresh });
     checkbox.parentElement.classList.add('has-section-toggle');
     checkbox.parentElement.insertBefore(toggle, checkbox);
     refresh();
+  });
+
+  saveSidebarState();
+  window.addEventListener('pageshow', function (event) {
+    if (!event.persisted || !sidebar) return;
+    sidebarState = readSidebarState();
+    sidebarControls.forEach(function (control) {
+      var checked = sidebarState[control.checkbox.id];
+      if (typeof checked === 'boolean') control.checkbox.checked = checked;
+      control.refresh();
+    });
   });
 
   document.querySelectorAll('.td-content .highlight').forEach(function (block) {

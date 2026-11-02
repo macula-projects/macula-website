@@ -18,7 +18,7 @@
   </div>
   <div id="content-desktop"></div>
   {{ end -}}
-  <nav class="collapse td-sidebar-nav{{ if .Site.Params.ui.sidebar_menu_foldable }} foldable-nav{{ end }}" id="td-section-nav">
+  <nav class="collapse td-sidebar-nav{{ if .Site.Params.ui.sidebar_menu_foldable }} foldable-nav{{ end }}" id="td-section-nav" data-state-key="{{ (partial "docs-version-root.html" .).RelPermalink }}">
     <!-- {{ if  (gt (len .Site.Home.Translations) 0) }}
     <div class="nav-item dropdown d-block d-lg-none">
       {{ partial "navbar-lang-selector.html" . }}
