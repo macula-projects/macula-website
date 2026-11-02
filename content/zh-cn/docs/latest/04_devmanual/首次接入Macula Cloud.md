@@ -1,12 +1,12 @@
 ---
-title: "首次接入 Macula Cloud"
+title: "首次接入"
 linkTitle: "首次接入"
-weight: 4
+weight: 3
 manual_content: true
 source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["macula-cloud-iam/README.md", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/OAuth2ClientConfigServiceImpl.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/config/ProtocolOAuth2Configuration.java", "macula-cloud-admin/src/views/system/application/save.vue", "macula-cloud-admin/src/views/system/oauth2Client/index.vue", "macula-cloud-system/src/main/resources/db/migration/V2__admin_identity_security_settings.sql"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["macula-samples-admin/src/views/common/login/components/passwordForm.vue", "macula-samples-admin/src/config/index.js", "macula-samples-gateway/src/main/resources/application.yml", "macula-samples-admin-bff/src/main/resources/application.yml", "macula-samples-admin-bff/src/main/java/dev/macula/samples/admin/bff/controller/ApplicationController.java"]}]
 ---
 
-本页以本机启动的 Cloud 与 Samples 为例，说明从平台登记到受保护接口验证。先完成[平台部署](/docs/latest/04_devmanual/部署macula平台/)及[开发环境准备](/docs/latest/04_devmanual/开发环境准备/)。端口如有覆盖，以实际配置为准。
+本页以本机启动的 Cloud 与 Samples 为例，说明从平台登记到受保护接口验证。先完成[平台部署](/docs/latest/04_devmanual/部署macula平台/)及[创建示例平台](/docs/latest/04_devmanual/创建应用平台/)。端口如有覆盖，以实际配置为准。
 
 ## 1. 登记业务应用
 
@@ -51,7 +51,7 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", 
 | BFF → Cloud | `macula.cloud.endpoint` / `app-key` / `secret-key` | Cloud Gateway，默认 `http://127.0.0.1:9000`；填第 1 步的应用凭据 |
 | BFF / Service → 应用 Gateway | `spring.security.oauth2.resourceserver.jwt.jwk-set-uri` | Samples Gateway 的 JWK 地址，详见[安全架构](/docs/latest/00_introduce/安全架构/) |
 
-Gateway 的 System Redis 应指向 **Cloud System 实际使用的同一 Redis 与数据库**，应用自身 Redis 则独立配置。Samples 默认 System Redis 端口 `16379`，Cloud 标准 Compose 默认 `6379`，请按部署覆盖 `MACULA_CLOUD_REDIS_PORT`。同样区分本机地址、容器 DNS 与浏览器可访问地址；IDE 不自动加载 `.env`。完整键名见[应用配置](/docs/latest/04_devmanual/应用配置/)。
+Gateway 的 System Redis 应指向 **Cloud System 实际使用的同一 Redis 与数据库**，应用自身 Redis 则独立配置。Samples 默认 System Redis 端口 `16379`，Cloud 标准 Compose 默认 `6379`，请按部署覆盖 `MACULA_CLOUD_REDIS_PORT`。同样区分本机地址、容器 DNS 与浏览器可访问地址；IDE 不自动加载 `.env`。完整键名见[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
 
 ## 4. 配置菜单与用户角色
 

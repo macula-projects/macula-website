@@ -471,3 +471,6 @@ button, input, select, textarea { font-family: inherit; }
 .layer-diagram { overflow-x: auto; border: 1px solid var(--macula-line); border-radius: 8px; margin: 16px 0; }
 .layer-diagram svg { width: 760px; max-width: none; display: block; font-family: var(--macula-font); font-size: var(--macula-body-size); }
 .layer-diagram text { fill: var(--macula-ink); }
+
+// Top-level categories use the same folding controls without flattening their children.
+.macula-docs .td-sidebar-nav__section-headtitle > label > .td-sidebar-link { padding-left: 24px !important; font-weight: 650; }

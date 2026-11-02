@@ -7,7 +7,7 @@ manual_content: true
 
 ## 准备可交付制品
 
-新项目用[快速开始的 Archetype](/docs/latest/00_introduce/快速开始/#3-用-archetype-创建自己的项目)生成，现有项目参考[创建服务模块](/docs/latest/04_devmanual/创建服务模块/)。首次使用 latest 快照先安装完整 Boot 框架，生成模板不等于所有依赖已安装。
+新项目用[快速开始的 Archetype](/docs/latest/00_introduce/快速开始/#3-用-archetype-创建自己的项目)生成，现有项目参考[创建示例服务](/docs/latest/04_devmanual/创建服务模块/)。首次使用 latest 快照先安装完整 Boot 框架，生成模板不等于所有依赖已安装。
 
 发布前固定源码提交、框架版本、构建 profile、API 契约及数据库迁移版本。在业务单仓根目录构建：
 

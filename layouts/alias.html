@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>页面已迁移</title>
+  <link rel="canonical" href="{{ .Permalink }}">
+  {{ if strings.Contains .Permalink "/docs/latest/04_devmanual/" }}
+  <script>window.location.replace({{ .Permalink }} + window.location.hash);</script>
+  {{ end }}
+  <meta http-equiv="refresh" content="0; url={{ .Permalink }}">
+</head>
+<body><a href="{{ .Permalink }}">前往新页面</a></body>
+</html>

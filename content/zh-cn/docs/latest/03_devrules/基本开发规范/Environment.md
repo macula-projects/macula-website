@@ -6,7 +6,7 @@ manual_content: true
 source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/基本开发规范/Environment.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["pom.xml", "macula-samples-parent/pom.xml"]}]
 ---
 
-Samples 当前 Maven profiles 为 `local`（默认）、`dev`、`stg`、`pet`、`prd`；`test` 可作为团队环境名称，但不是当前工程预置的 Maven profile。`docker` 为 Spring profile，复用 local 并覆盖地址。业务配置按 Nacos namespace 与 Data ID 隔离，详见[应用配置](/docs/latest/04_devmanual/应用配置/)。
+Samples 当前 Maven profiles 为 `local`（默认）、`dev`、`stg`、`pet`、`prd`；`test` 可作为团队环境名称，但不是当前工程预置的 Maven profile。`docker` 为 Spring profile，复用 local 并覆盖地址。业务配置按 Nacos namespace 与 Data ID 隔离，详见[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
 
 ## 概述
 

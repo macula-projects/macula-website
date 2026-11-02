@@ -28,7 +28,7 @@ EXTRA_CHAPTERS = {
 
 LATEST_CHAPTERS = {
     '04_devmanual/首次接入Macula Cloud.md': {
-        'title': '首次接入 Macula Cloud', 'linkTitle': '首次接入', 'weight': 4,
+        'title': '首次接入', 'linkTitle': '首次接入', 'weight': 3,
     },
     '01_services/生产准备/Observability.md': {
         'title': 'Observability：统一可观测性', 'linkTitle': 'Observability', 'weight': 1,
@@ -40,10 +40,7 @@ LATEST_CHAPTERS = {
         'title': '值对象与分层', 'linkTitle': '值对象与分层', 'weight': 4,
     },
     '04_devmanual/模块说明.md': {
-        'title': 'Samples 模块说明', 'linkTitle': '模块说明', 'weight': 3,
-    },
-    '04_devmanual/应用配置.md': {
-        'title': 'application.yml 配置规范', 'linkTitle': '配置规范', 'weight': 4,
+        'title': '示例模块说明', 'linkTitle': '示例模块说明', 'weight': 4,
     },
 }
 
@@ -127,10 +124,15 @@ def main():
                     owners[Path(chapter)].add(module)
             removed_chapters = {chapter for chapter, modules in owners.items()
                                 if not chapter.name.startswith('_index') and not modules & starter_modules}
+        if version['id'] == 'latest':
+            # Merged editorial chapters retain old URLs through Hugo aliases.
+            removed_chapters |= {Path('04_devmanual/开发环境准备.md'), Path('04_devmanual/应用配置.md')}
         additions = EXTRA_CHAPTERS | (LATEST_CHAPTERS if version['id'] == 'latest' else {})
         expected_files = (template_files | {Path(path) for path in additions}) - removed_chapters
         retired_aliases = defaultdict(list)
         for chapter in sorted(removed_chapters):
+            if chapter.as_posix() in {'04_devmanual/开发环境准备.md', '04_devmanual/应用配置.md'}:
+                continue
             redirect = chapter.parent / '_index.md'
             if chapter.parent.as_posix() == '01_services/生产准备':
                 redirect = chapter.parent / 'Observability.md'

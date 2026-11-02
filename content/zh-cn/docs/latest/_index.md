@@ -32,10 +32,10 @@ content:
             - '[后端开发规范](03_devrules/后端开发规范)'
         - name: 基于Macula的开发手册
           links:
-            - '[部署Macula平台](04_devmanual/部署macula平台)'
-            - '[创建应用平台](04_devmanual/创建应用平台)'
+            - '[部署 Macula Cloud](04_devmanual/部署macula平台)'
+            - '[创建示例平台](04_devmanual/创建应用平台)'
             - '[首次接入](04_devmanual/首次接入macula-cloud)'
-            - '[创建服务模块](04_devmanual/创建服务模块)'
+            - '[创建示例服务](04_devmanual/创建服务模块)'
             - '[运行与测试](04_devmanual/运行与测试)'
         - name: 尝试部署Macula
           links:

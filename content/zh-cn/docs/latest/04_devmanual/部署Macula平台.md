@@ -1,7 +1,7 @@
 ---
-title: "部署Macula平台"
-linkTitle: "部署Macula平台"
-weight: 5
+title: "部署 Macula Cloud"
+linkTitle: "部署 Macula Cloud"
+weight: 2
 manual_content: true
 source_repository: "https://github.com/macula-projects/macula-cloud"
 source_branch: "main"

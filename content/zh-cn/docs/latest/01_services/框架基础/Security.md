@@ -170,7 +170,7 @@ public void cancel(String orderId) {
 - Passkey 到期前可复用，业务授权变化不会自动撤销已签发凭证；其签名不包含租户 / action，应用仍要落实相应边界。
 - 当前 CheckOwner 的前置 / 后置模式由统一 Advisor 实现；注解模板 Bean 可供其他组合注解使用，不用它代替 CheckOwner 的资源校验。
 
-更多返回包装、参数解析与 Passkey 扩展说明见 [Security 源码 README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-starters/macula-boot-starter-security)。实际应用组织参见 [Samples 模块说明](/docs/latest/04_devmanual/模块说明/)和[配置规范](/docs/latest/04_devmanual/应用配置/)。
+更多返回包装、参数解析与 Passkey 扩展说明见 [Security 源码 README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-starters/macula-boot-starter-security)。实际应用组织参见 [Samples 模块说明](/docs/latest/04_devmanual/模块说明/)和[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
 
 ## 依赖引入
 
