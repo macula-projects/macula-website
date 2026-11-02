@@ -21,4 +21,4 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-samples"
 5. [开发业务服务](/docs/latest/04_devmanual/创建服务模块/)：以 Service1 的应用管理接口串联各层。
 6. [运行与测试](/docs/latest/04_devmanual/运行与测试/)及[打包部署](/docs/latest/04_devmanual/打包部署/)。
 
-各模块在同一仓库内协作，后端由根 POM 聚合构建，前端在 Admin 目录构建。也支持多仓模式，可参考 [macula-samples-workspace](https://cnb.cool/macula-projects/macula-samples-workspace)。
+各模块在同一仓库内协作，后端由根 POM 聚合构建，前端在 Admin 目录构建。
