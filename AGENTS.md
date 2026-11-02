@@ -51,6 +51,7 @@
 - 简述三个配置方向：Gateway 验证 IAM Token；Consumer/BFF 用 Cloud endpoint 和应用凭据获取菜单、用户信息；Consumer、Provider 等非网关后端用应用网关的 `jwk-set-uri` 验证内部 JWT。
 - 启动命令、端口、环境变量和验证接口必须对照当前 README、配置与脚本。区分免认证连通测试和真实认证验证，不能将前者称为完成认证验收。
 - 详细认证配置链接到安全架构及对应模块，IDE 启动和更多示例链接到 Examples README。
+- 快速开始末尾简要介绍 Archetype 创建自有单仓项目，提供可核对的模板安装、生成命令及必要参数；区分业务 `version` 与模板 `archetypeVersion`，详细说明链接到 Archetype README 和开发指引。
 
 ### 开发指引
 

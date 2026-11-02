@@ -6,8 +6,8 @@ manual_content: true
 source_repository: "https://github.com/macula-projects/macula-boot"
 source_branch: "main"
 source_commit: "a0178da198a79cbbf66f7b9354d2c8711703e81e"
-source_paths: ["macula-boot-examples/README.md", "macula-boot-examples/docker/README.md", "macula-boot-examples/docker/scripts/compose.sh", "macula-boot-examples/docker/.env.example", "macula-boot-examples/docker/docker-compose.yml", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-consumer/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml"]
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-examples/README.md", "macula-boot-examples/docker/README.md", "macula-boot-examples/docker/scripts/compose.sh", "macula-boot-examples/docker/.env.example", "macula-boot-examples/docker/docker-compose.yml", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-consumer/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["deploy/README.md", "deploy/scripts/compose.sh", "deploy/.env.example"]}]
+source_paths: ["macula-boot-examples/README.md", "macula-boot-examples/docker/README.md", "macula-boot-examples/docker/scripts/compose.sh", "macula-boot-examples/docker/.env.example", "macula-boot-examples/docker/docker-compose.yml", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-consumer/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml", "macula-boot-archetype/README.md", "macula-boot-archetype/pom.xml", "macula-boot-archetype/src/main/resources/META-INF/maven/archetype-metadata.xml", "macula-boot-archetype/src/main/resources/archetype-resources/README.md", "macula-boot-archetype/src/main/resources/archetype-resources/__rootArtifactId__-parent/pom.xml"]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-examples/README.md", "macula-boot-examples/docker/README.md", "macula-boot-examples/docker/scripts/compose.sh", "macula-boot-examples/docker/.env.example", "macula-boot-examples/docker/docker-compose.yml", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-consumer/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml", "macula-boot-archetype/README.md", "macula-boot-archetype/pom.xml", "macula-boot-archetype/src/main/resources/META-INF/maven/archetype-metadata.xml", "macula-boot-archetype/src/main/resources/archetype-resources/README.md", "macula-boot-archetype/src/main/resources/archetype-resources/__rootArtifactId__-parent/pom.xml"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["deploy/README.md", "deploy/scripts/compose.sh", "deploy/.env.example"]}]
 ---
 
 准备好 Git 和 Docker Compose v2，按下面两步启动平台与 Alibaba 示例链路。
@@ -55,4 +55,29 @@ curl "http://127.0.0.1:5000/consumer/api/v1/consumer/echo/demo?str=hello"
 | Consumer（`alibaba-consumer`，BFF） | 聚合前端接口，通过 Feign 调用 Provider；获取平台菜单、用户信息时，配置指向 Macula Cloud 网关的 `macula.cloud.endpoint` 和应用凭据。 |
 | Provider（`alibaba-provider1`，Service） | 提供业务接口，实现具体业务逻辑。Consumer 与 Provider 均通过 `jwk-set-uri` 配置示例网关的 `/oauth2/jwks`，验证内部 JWT。 |
 
-模块目录均位于 `macula-boot-examples/` 下，完整名称以 `macula-example-` 开头。需要 IDE 启动或更多示例时，参考 [Examples README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-examples)；认证配置见[安全架构](/docs/latest/00_introduce/安全架构/)，正式业务开发见[开发指引](/docs/latest/04_devmanual/)。
+模块目录均位于 `macula-boot-examples/` 下，完整名称以 `macula-example-` 开头。IDE 启动和更多示例见 [Examples README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-examples)。
+
+## 3. 用 Archetype 创建自己的项目
+
+跑通示例后，可用 Archetype 生成包含 Gateway、Admin BFF、Service1、API 契约和 Admin 前端等模块的单仓项目。需要 Java 17 和 Maven 3.9+。
+
+在前面下载的 **macula-boot 仓库根目录**安装当前模板，再回到仓库外生成项目；输出目录 `demo-app` 应尚不存在：
+
+```bash
+mvn -pl macula-boot-archetype -am install -DskipTests -Dgpg.skip=true -Pdeploy
+cd ..
+mvn archetype:generate \
+  -DarchetypeGroupId=dev.macula.boot \
+  -DarchetypeArtifactId=macula-boot-archetype \
+  -DarchetypeVersion=6.1.0-SNAPSHOT \
+  -DgroupId=com.example \
+  -DartifactId=demo-app \
+  -Dpackage=com.example.demo \
+  -Dversion=1.0.0-SNAPSHOT \
+  -Dgitignore=.gitignore \
+  -DinteractiveMode=false
+```
+
+将 `groupId`、`package` 和 `artifactId` 换成自己的组织、包名与项目名；`version` 是业务项目版本，`archetypeVersion` 是模板版本，两者独立。
+
+生成后进入 `demo-app/`，按其中的 `deploy/README.md` 配置 Macula Cloud 应用与 OAuth Client，再运行项目。模板参数见 [Archetype README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-archetype)，业务开发见[开发指引](/docs/latest/04_devmanual/)，认证配置见[安全架构](/docs/latest/00_introduce/安全架构/)。
