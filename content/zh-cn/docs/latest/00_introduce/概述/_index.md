@@ -31,7 +31,7 @@ source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 
 Macula Boot 面向 Java 微服务应用提供统一的依赖管理、自动配置和基础能力 Starter。项目同时支持 Spring Cloud Alibaba、Spring Cloud Tencent 等技术体系，业务项目可以按需引入模块，不必绑定完整平台。
 
-> Macula Boot 是 Macula 微服务平台的开发框架部分。通用技术服务参见 [Macula Cloud](https://github.com/macula-projects/macula-cloud)，管理端参见 [Macula Cloud Admin](https://github.com/macula-projects/macula-cloud-admin)。
+> Macula Boot 是 Macula 微服务平台的开发框架部分。通用技术服务参见 [Macula Cloud](https://github.com/macula-projects/macula-cloud)，管理端参见 [Macula Cloud Admin](https://github.com/macula-projects/macula-cloud/tree/main/macula-cloud-admin)。
 
 ## 核心能力
 

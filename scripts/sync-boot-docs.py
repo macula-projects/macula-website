@@ -41,7 +41,9 @@ for category, modules in {
               'liteflow': 'LiteFlow', 'lock4j': 'Lock4j', 'oss': 'OSS', 'springretry': 'Retry',
               'sender': 'Sender', 'statemachine': 'Statemachine', 'websocket': 'WebSocket', 'wechat': 'Wechat'},
     '微服务': {'cloud': '_index', 'cloud-alibaba': 'Alibaba', 'cloud-alibaba-gray': 'Alibaba',
-             'cloud-gateway': 'Gateway', 'cloud-tencent': 'Tencent', 'dubbo': 'Dubbo', 'feign': 'Feign'},
+             'cloud-alibaba-scg': 'Alibaba', 'cloud-tencent-scg': 'Tencent',
+             'cloud-gateway': 'Gateway', 'cloud-tencent': 'Tencent',
+             'cloud-tsf': 'TSF', 'cloud-tsf-scg': 'TSF', 'dubbo': 'Dubbo', 'feign': 'Feign'},
     '生产准备': {'auditlog': 'Auditing', 'operationlog': 'Auditing', 'observability': '_index',
               'logstash': 'Loggers', 'prometheus': 'Metrics', 'skywalking': 'Tracing', 'sleuth': 'Tracing'},
     '通用平台': {'seata': 'Seata', 'system': 'System', 'task': 'Task', 'tinyid': 'ID'},
@@ -66,7 +68,12 @@ def url(version, chapter):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--boot-repo', type=Path, default=SITE.parent / 'macula-boot')
+    parser.add_argument('--version', action='append', help='Sync only this version; may be repeated')
     args = parser.parse_args()
+    versions = json.loads((SITE / 'data/doc_versions.json').read_text())
+    sync_versions = {v['id'] for v in versions if v.get('branch') and v['id'] != '5.x'}
+    if args.version and not set(args.version) <= sync_versions:
+        parser.error(f'Versions available for sync: {", ".join(sorted(sync_versions))}')
 
     def git(*arguments):
         return subprocess.check_output(['git', '-C', str(args.boot_repo), *arguments], text=True).strip()
@@ -74,14 +81,34 @@ def main():
     template = DOCS / '5.x'
     template_files = {p.relative_to(template) for p in template.rglob('*')
                       if p.is_file() and not p.name.startswith('.')}
-    expected_files = template_files | {Path(path) for path in EXTRA_CHAPTERS}
-    for version in json.loads((SITE / 'data/doc_versions.json').read_text()):
+    for version in versions:
         if version['id'] == '5.x' or version.get('archived'):
+            continue
+        if args.version and version['id'] not in args.version:
             continue
         branch = version['branch']
         commit = git('rev-parse', branch)
-        sources = git('ls-tree', '-r', '--name-only', commit).splitlines()
-        sources = [p for p in sources if p == 'README.md'
+        tree = git('ls-tree', '-r', '--name-only', commit).splitlines()
+        starter_modules = {Path(p).parent.name for p in tree
+                           if p.startswith('macula-boot-starters/') and p.endswith('/pom.xml')}
+        starter_modules.discard('macula-boot-starters')
+        unknown = starter_modules - MAPPING.keys()
+        if unknown:
+            raise ValueError(f'Starters need an explicit chapter mapping: {sorted(unknown)}')
+        removed_chapters = set()
+        if version['id'] == 'latest':
+            # Preserve categories, but never reintroduce a removed Starter from the 5.x template.
+            owners = defaultdict(set)
+            for module, chapter in MAPPING.items():
+                if module.startswith('macula-boot-starter-'):
+                    owners[Path(chapter)].add(module)
+            removed_chapters = {chapter for chapter, modules in owners.items()
+                                if not chapter.name.startswith('_index') and not modules & starter_modules}
+        expected_files = (template_files | {Path(path) for path in EXTRA_CHAPTERS}) - removed_chapters
+        retired_aliases = defaultdict(list)
+        for chapter in sorted(removed_chapters):
+            retired_aliases[(chapter.parent / '_index.md').as_posix()].append(url(version['id'], chapter.as_posix()))
+        sources = [p for p in tree if p == 'README.md'
                    or (p.startswith('macula-boot-') and p.endswith('/README.md') and '/src/' not in p)
                    or (p.startswith('docs/') and p.endswith('.md'))]
 
@@ -104,7 +131,7 @@ def main():
                 raise ValueError(f'Chapter is not in the shared layout or explicit additions: {chapter}')
             chapters[chapter].append(source)
         observability = next((p for p in sources if p.endswith('macula-boot-starter-observability/README.md')), None)
-        if observability:
+        if observability and version['id'] != 'latest':
             for name in ['Loggers', 'Metrics', 'Tracing']:
                 chapters[f'01_services/生产准备/{name}.md'].append(observability)
         routes = {p: url(version['id'], chapter_for(p)) for p in sources}
@@ -119,6 +146,9 @@ def main():
 
             def rewrite(match):
                 image, label, destination = match.groups()
+                if version['id'] == 'latest' and destination == 'https://github.com/macula-projects/macula-cloud-admin':
+                    destination = 'https://github.com/macula-projects/macula-cloud/tree/main/macula-cloud-admin'
+                    return f'{image}[{label}]({destination})'
                 parts = urlsplit(destination)
                 if parts.scheme or parts.netloc or destination.startswith(('#', '/')):
                     return match.group(0)
@@ -137,6 +167,13 @@ def main():
             ) for i, part in enumerate(parts))
 
         root = DOCS / version['id']
+        for chapter in removed_chapters:
+            previous = root / chapter
+            if previous.exists():
+                previous_header, _ = split_page(previous.read_text())
+                if re.search(r'^manual_content:\s*true\s*$', previous_header, re.M):
+                    raise ValueError(f'Removed Starter has a manual page; relocate it first: {previous}')
+                previous.unlink()
         # Remove only pages owned by the previous generator; preserve unexpected files.
         for previous in root.rglob('*'):
             if not previous.is_file() or previous.relative_to(root) in expected_files:
@@ -167,6 +204,8 @@ def main():
                 body = ''
             else:
                 header, body = split_page((template / relative).read_text())
+            if path in retired_aliases:
+                header += '\naliases: ' + json.dumps(retired_aliases[path], ensure_ascii=False)
             page_sources = chapters.get(path, [])
             if page_sources:
                 body = '\n\n---\n\n'.join(render(source) for source in page_sources)
@@ -179,6 +218,11 @@ def main():
                         f"涉及依赖、配置或 API 时，请以 [{branch} 分支源码]({REMOTE}/tree/{branch}) 为准。\n\n" + body)
             if path == '01_services/框架基础/_index.md':
                 body = '框架基础组件按职责独立成篇。请从下方目录选择 Commons、Async、Web、数据访问、缓存等组件。\n'
+            if version['id'] == 'latest' and path == '01_services/微服务/_index.md':
+                body += ('\n\n## 已移除的 TSF 接入\n\n'
+                         'main 已移除 `macula-boot-starter-cloud-tsf` 与 `macula-boot-starter-cloud-tsf-scg`。'
+                         '当前云接入方式见上方 Alibaba、Tencent 与 Gateway 文档；'
+                         '旧版 TSF 用法保存在 [5.x 历史文档](/docs/5.x/01_services/微服务/tsf/)。\n')
             if path == '_index.md':
                 header = header.replace('docs_version: "5.x"', f'docs_version: "{version["id"]}"')
                 header = header.replace('title: "Macula 5.x 文档"', f'title: "Macula {version["label"]} 文档"')
@@ -192,12 +236,13 @@ def main():
                 header = header.replace('[开发示例](04_devmanual/开发示例)',
                                         '[运行与测试](04_devmanual/运行与测试)')
                 body = (f"文档版本：**{version['label']}**，对应 Macula Boot **{branch}** 分支。\n\n"
-                        '各版本使用相同的栏目与章节路径。\n\n{{% docs/document_box %}}\n')
+                        '各版本保留相同栏目，组件章节以对应分支实际提供的模块为准。\n\n{{% docs/document_box %}}\n')
             target.write_text('---\n' + header + '\n---\n\n' + body)
         actual = {p.relative_to(root) for p in root.rglob('*') if p.is_file() and not p.name.startswith('.')}
         if actual != expected_files:
             raise ValueError(f'Layout differs from the declared chapters: {actual ^ expected_files}')
         print(f"{version['id']}: {len(template_files)} base files and {len(EXTRA_CHAPTERS)} component pages; "
+              f'{len(removed_chapters)} retired chapters omitted; '
               f'{len(sources)} source documents mapped into {len(chapters)} chapters')
 
 

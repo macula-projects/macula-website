@@ -2,6 +2,7 @@
 title: "生产准备"
 linkTitle: "生产准备"
 weight: 8
+aliases: ["/docs/latest/01_services/生产准备/loggers/", "/docs/latest/01_services/生产准备/metrics/", "/docs/latest/01_services/生产准备/tracing/"]
 source_path: "macula-boot-starters/macula-boot-starter-observability/README.md"
 source_paths: ["macula-boot-starters/macula-boot-starter-observability/README.md"]
 source_branch: "main"

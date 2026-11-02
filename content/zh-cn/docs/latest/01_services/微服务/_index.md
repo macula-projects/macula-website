@@ -2,6 +2,7 @@
 title: "微服务"
 linkTitle: "微服务"
 weight: 3
+aliases: ["/docs/latest/01_services/微服务/tsf/"]
 source_path: "macula-boot-starters/macula-boot-starter-cloud/README.md"
 source_paths: ["macula-boot-starters/macula-boot-starter-cloud/README.md"]
 source_branch: "main"
@@ -71,3 +72,8 @@ Alibaba local 的 Nacos 地址为 `127.0.0.1:${NACOS_SERVER_PORT:38848}`，docke
 ## 版权说明
 
 本模块遵循仓库 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/LICENSE)；第三方组件许可见各子模块说明。
+
+
+## 已移除的 TSF 接入
+
+main 已移除 `macula-boot-starter-cloud-tsf` 与 `macula-boot-starter-cloud-tsf-scg`。当前云接入方式见上方 Alibaba、Tencent 与 Gateway 文档；旧版 TSF 用法保存在 [5.x 历史文档](/docs/5.x/01_services/微服务/tsf/)。

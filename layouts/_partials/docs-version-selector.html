@@ -3,7 +3,6 @@
 {{- $current := $root.Params.docs_version | default "latest" -}}
 {{- $suffix := strings.TrimPrefix (printf "docs/%s" $current) .File.Dir -}}
 <div class="docs-version-selector d-flex align-items-center me-3">
-  <label for="docs-version" class="mb-0 me-2">文档版本</label>
   <select id="docs-version" class="form-select form-select-sm" aria-label="切换文档版本" onchange="window.location.assign(this.value)">
     {{- range hugo.Data.doc_versions -}}
       {{- $target := $page.Site.GetPage (printf "/docs/%s" .id) -}}

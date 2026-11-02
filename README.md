@@ -52,6 +52,10 @@ npm run build
 
 5.x、6.0.x、latest 三个版本保持一致的栏目层级，以 `content/zh-cn/docs/5.x/` 为基准，包括平台简介、平台能力、开发规范、开发指引、运维指引和关于。6.0.x 与 latest 在“框架基础”下额外声明独立的 `Commons.md` 和 `Async.md`，各自同步对应分支的模块 README；栏目 `_index.md` 只保留简介与章节导航。源码模块路径只用于内容映射，不会生成另一套文档目录。
 
+latest 的组件章节同时核对 main 中实际存在的 Starter POM（包含 Cloud 下的嵌套模块），缺少显式映射的新模块会使同步失败。已删除模块不再从 5.x 回填；旧章节地址跳转至对应栏目。目前 TSF 从 latest 微服务目录移除，Loggers、Metrics、Tracing 三份重复章节合并到生产准备的 Observability 文档。历史版本继续保留各自内容。仅更新当前版本时运行 `python3 scripts/sync-boot-docs.py --version latest`。
+
+Macula Cloud 的管理端与后端同仓，入口为 `macula-cloud/macula-cloud-admin`。首页管理端链接指向该目录。latest 的快速开始、平台部署与 Sentinel 指引设置 `manual_content: true`，按当前源码维护；跨仓库资料使用 `source_repository`、`source_branch`、`source_commit` 和 `source_paths` 记录来源，后续同步不会覆盖这些说明。
+
 3.1、4.0 分别独立维护在 `content/zh-cn/docs/3.1/`、`content/zh-cn/docs/4.0/`，保留各自历史目录结构，直接从顶部版本菜单进入，不再嵌套或复制到其他版本中。它们在版本配置中标记为 `archived: true`，同步工具会跳过历史版本。原始 `/docs/98_old/<版本>/` 及曾使用的 `/docs/<5.x|6.0.x|latest>/98_old/<版本>/` 章节地址均跳转到独立历史文档；旧图片地址通过 Hugo 静态挂载保留。原有“历史文档”目录入口跳转到 4.0 首页。
 
 同步工具只读取 Git 已提交内容，不切换或修改 Boot 工作区。`scripts/sync-boot-docs.py` 中的 `MAPPING` 将分支 README 映射到已有章节或 `EXTRA_CHAPTERS` 显式声明的独立组件页；已有章节保留 5.x 的标题、导航名和排序，新增组件页单独维护标题与排序。同步页记录来源分支、提交和文件路径，编辑链接指向对应 Boot 分支。

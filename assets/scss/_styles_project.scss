@@ -26,7 +26,6 @@ a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visib
 .nav-github i { font-size: 19px; }
 .nav-github:hover { text-decoration: none; }
 .site-navbar .docs-version-selector { gap: 8px; margin: 0 !important; color: var(--macula-muted); font-size: 12px; }
-.site-navbar .docs-version-selector label { margin: 0 !important; }
 .site-navbar .docs-version-selector select { min-width: 100px; max-width: 145px; height: 34px; border: 1px solid #dce4ed; border-radius: 6px; font-size: 12px; color: #30465b; background-color: #f8fafc; }
 .site-footer.macula-footer { position: relative; margin: 0; padding: 34px 0; background: #f8fafc; border-top: 1px solid var(--macula-line); color: var(--macula-muted); text-align: left; }
 .site-footer .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
@@ -167,39 +166,40 @@ a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visib
 .macula-docs .doc-main { padding: 36px 42px 80px !important; }
 .macula-docs .breadcrumb { padding: 0 0 25px; margin: 0; background: transparent; font-size: 11px; color: #94a2af; }
 .macula-docs .breadcrumb a { color: #8195a7; }
-.macula-docs .td-content { max-width: 880px; margin: 0 auto; padding: 0; font-size: 15px; line-height: 1.9; }
+.macula-docs .td-content { max-width: 880px; margin: 0 auto; padding: 0; font-size: 17px; line-height: 1.9; }
 .macula-docs .td-content > * { max-width: 100% !important; }
 .macula-docs .td-content h1 { font-size: 32px; font-weight: 700; line-height: 1.5; letter-spacing: -.5px; margin: 0 0 26px; }
-.macula-docs .td-content h2 { font-size: 23px; font-weight: 650; line-height: 1.5; margin: 46px 0 20px; padding-bottom: 12px; border-bottom: 1px solid #e9eef4; }
-.macula-docs .td-content h3 { font-size: 18px; font-weight: 650; margin: 32px 0 16px; }
-.macula-docs .td-content h4 { font-size: 16px; margin-top: 27px; }
+.macula-docs .td-content h2 { font-size: 25px; font-weight: 650; line-height: 1.5; margin: 46px 0 20px; padding-bottom: 12px; border-bottom: 1px solid #e9eef4; }
+.macula-docs .td-content h3 { font-size: 21px; font-weight: 650; margin: 32px 0 16px; }
+.macula-docs .td-content h4 { font-size: 18px; margin-top: 27px; }
 .macula-docs .td-content p, .macula-docs .td-content li { text-align: left; color: #4b6175; }
 .macula-docs .td-content p { margin-bottom: 20px; }
 .macula-docs .td-content li { margin-bottom: 5px; }
 .macula-docs .td-content a:not(.btn-grey):not(.anchorjs-link) { text-decoration-color: #c8d9eb; text-underline-offset: 3px; }
 .macula-docs .td-content img { max-width: 100%; height: auto; border-radius: 5px; }
-.macula-docs .td-content pre { position: relative; background: #f6f8fb !important; border: 1px solid #e3eaf2; padding: 22px !important; border-radius: 8px; font-size: 12px; line-height: 1.8; overflow-x: auto; tab-size: 2; }
+.macula-docs .td-content pre { position: relative; background: #f6f8fb !important; border: 1px solid #e3eaf2; padding: 22px !important; border-radius: 8px; font-size: 14px; line-height: 1.8; overflow-x: auto; tab-size: 2; }
 .macula-docs .td-content .highlight { position: relative; margin: 24px 0; }
 .macula-docs .td-content .highlight pre { margin: 0; padding-top: 41px !important; }
 .macula-docs .td-content code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88em; }
+.macula-docs .td-content pre code { font-size: 1em; }
 .macula-docs .td-content p > code, .macula-docs .td-content li > code { color: #426d97; background: #edf3f9; border-radius: 3px; padding: 2px 5px; overflow-wrap: anywhere; }
 .code-copy { position: absolute; top: 7px; right: 9px; z-index: 1; border: 1px solid #dbe4ed; border-radius: 4px; background: #fff; color: #70869a; font-size: 10px; padding: 3px 9px; cursor: pointer; }
 .code-copy:hover { color: var(--macula-blue); border-color: #aecae5; }
 .macula-docs .td-content blockquote { padding: 14px 18px; border-left: 3px solid #78a9d6; border-radius: 0 5px 5px 0; background: #f2f7fc; margin: 25px 0; }
-.macula-docs .td-content blockquote p { margin: 0; font-size: 12px; color: #6c8396; }
-.macula-docs .td-content table { display: block; width: 100% !important; overflow-x: auto; font-size: 12px; margin: 24px 0; border-collapse: collapse; }
+.macula-docs .td-content blockquote p { margin: 0; font-size: 16px; color: #6c8396; }
+.macula-docs .td-content table { display: block; width: 100% !important; overflow-x: auto; font-size: 15px; margin: 24px 0; border-collapse: collapse; }
 .macula-docs .td-content th { background: #f4f7fa; color: #4d6377; font-weight: 600; }
 .macula-docs .td-content td, .macula-docs .td-content th { padding: 11px 14px; border: 1px solid #e3eaf1; }
 .macula-docs .td-content tr:nth-child(even) td { background: #fbfcfd; }
 .macula-docs .td-content .article-meta:empty { display: none; }
 .macula-docs .docs-section-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 28px 0; }
 .macula-docs .docs-section-index .entry { border: 1px solid var(--macula-line); border-radius: 7px; padding: 20px; }
-.macula-docs .docs-section-index h5 { font-size: 14px; }
+.macula-docs .docs-section-index h5 { font-size: 17px; }
 .macula-docs .docs-section-index .entry br { display: none; }
-.macula-docs .docs-section-index p { font-size: 12px; margin: 10px 0 0; }
+.macula-docs .docs-section-index p { font-size: 15px; margin: 10px 0 0; }
 .macula-docs .td-content .card { border: 1px solid var(--macula-line); box-shadow: none !important; border-radius: 8px; }
 .macula-docs .td-content .card h4 { margin: 0 0 15px; font-size: 16px; }
-.macula-docs .td-content .card ul { padding-left: 17px; font-size: 12px; }
+.macula-docs .td-content .card ul { padding-left: 17px; font-size: 15px; }
 .macula-docs .macula-main-link-btn-group { margin-top: 40px; padding-top: 24px !important; border-top: 1px solid var(--macula-line); }
 .macula-docs .btn-grey { color: #516d86; background: #f4f7fa; font-size: 12px; border: 1px solid #dce5ee; padding: 8px 14px; border-radius: 5px; }
 .macula-docs .disable-click { opacity: .5; background: #f4f7fa !important; pointer-events: none; }
@@ -221,7 +221,6 @@ a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visib
 @media (max-width: 900px) {
   .site-container { width: calc(100% - 56px); }
   .site-navbar.navbar { padding-inline: 28px !important; }
-  .site-navbar .docs-version-selector label { display: none; }
   .nav-github span { display: none; }
   .nav-github { padding-left: 16px; }
   .home-hero { padding-top: 60px; padding-bottom: 60px; gap: 28px; }
@@ -294,11 +293,11 @@ a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visib
   .macula-docs .td-sidebar-nav { max-height: 65vh; overflow-y: auto; }
   .macula-docs .td-sidebar-nav > .td-sidebar-nav__section { padding-top: 10px; }
   .macula-docs .doc-main { padding: 26px 20px 52px !important; }
-  .macula-docs .td-content { font-size: 14px; }
+  .macula-docs .td-content { font-size: 16px; }
   .macula-docs .td-content h1 { font-size: 27px; margin-bottom: 24px; }
   .macula-docs .td-content h2 { font-size: 21px; margin-top: 35px; }
-  .macula-docs .td-content h3 { font-size: 17px; }
-  .macula-docs .td-content pre { font-size: 11px; padding-inline: 16px !important; }
+  .macula-docs .td-content h3 { font-size: 19px; }
+  .macula-docs .td-content pre { font-size: 13px; padding-inline: 16px !important; }
   .macula-docs .td-content th, .macula-docs .td-content td { min-width: 100px; padding: 9px; }
   .macula-docs .docs-section-index { grid-template-columns: 1fr; }
 }

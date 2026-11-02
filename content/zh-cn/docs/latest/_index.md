@@ -47,6 +47,6 @@ content:
 
 文档版本：**latest（当前）**，对应 Macula Boot **main** 分支。
 
-各版本使用相同的栏目与章节路径。
+各版本保留相同栏目，组件章节以对应分支实际提供的模块为准。
 
 {{% docs/document_box %}}
