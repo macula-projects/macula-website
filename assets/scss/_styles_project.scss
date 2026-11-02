@@ -150,11 +150,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .macula-docs #doc-outer > .td-main { width: 100%; max-width: none; margin-inline: 0; }
 .macula-docs #doc-outer > .td-main > .row { display: grid; grid-template-columns: 224px minmax(0,1fr) 192px; margin: 0; height: auto !important; }
 .macula-docs .td-sidebar, .macula-docs .td-sidebar-toc, .macula-docs .doc-main { min-width: 0; width: 100%; max-width: 100% !important; }
-.macula-docs .td-sidebar { background: #f9fbfd; border-right: 1px solid var(--macula-line); padding: 24px 20px 30px; }
-.macula-docs .td-sidebar .td-sidebar__inner { position: sticky; top: 96px; max-height: calc(100vh - 120px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: #d5dfe9 transparent; }
-.macula-docs .td-sidebar__search { padding: 0 0 18px; margin: 0; }
+.macula-docs .td-sidebar { margin-top: 0; background: #f9fbfd; border-right: 1px solid var(--macula-line); padding: 24px 20px 30px; }
+.macula-docs .td-sidebar .td-sidebar__inner { position: sticky; top: 96px; display: flex; flex-direction: column; height: calc(100dvh - 120px); max-height: calc(100dvh - 120px); min-height: 0; overflow: visible; }
+.macula-docs .td-sidebar__search { flex: none; padding: 0 0 18px; margin: 0; }
 .macula-docs .td-search-input { border: 1px solid #dce5ee; border-radius: 7px; font-size: var(--macula-ui-size); min-height: 37px; }
-.macula-docs .td-sidebar-nav { font-size: var(--macula-ui-size); line-height: 1.6; padding: 0; margin: 0; }
+.macula-docs .td-sidebar-nav { flex: 1; min-height: 0; max-height: none; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #d5dfe9 transparent; font-size: var(--macula-ui-size); line-height: 1.6; padding: 0; margin: 0; }
 .macula-docs .td-sidebar-nav > .td-sidebar-nav__section { padding: 0; }
 .macula-docs .td-sidebar-nav__section-headtitle { margin: 17px 0 5px; }
 .macula-docs .td-sidebar-nav__section-headtitle > a { color: #415a70; font-weight: 650; }
@@ -162,9 +162,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .macula-docs .td-sidebar-nav .td-sidebar-link:hover { background: #eef3f8; }
 .macula-docs .td-sidebar-nav .td-sidebar-link.active { color: #246bb4; background: #eaf2fc; }
 .macula-docs .td-sidebar-nav .td-sidebar-link__page { color: var(--macula-muted); font-weight: 400; }
-.macula-docs .td-sidebar-nav .ul-1 > li { padding-left: 0; }
-.macula-docs .td-sidebar-nav .ul-1 ul { padding-left: 10px; }
-.macula-docs .td-sidebar-nav.foldable-nav .ul-1 > li > ul > li { padding-left: 17px; }
 .macula-docs .td-sidebar-nav.foldable-nav label:before { top: 7px; color: #8fa1b3; }
 .macula-docs .td-sidebar-toc { display: block !important; position: sticky !important; top: 96px; align-self: start; height: auto; max-height: calc(100vh - 120px); overflow-y: auto; border-left: 1px solid #edf1f5; padding: 0 16px 20px; margin-top: 36px; }
 .macula-docs .td-page-meta { margin: 0 !important; padding: 0 0 19px !important; border-bottom: 1px solid var(--macula-line); }
@@ -301,12 +298,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .macula-docs #doc-outer { padding-top: 64px; }
   .macula-docs #doc-outer > .td-main > .row { grid-template-columns: minmax(0,1fr); }
   .macula-docs .td-sidebar { padding: 12px 20px; border-right: 0; border-bottom: 1px solid var(--macula-line); }
-  .macula-docs .td-sidebar .td-sidebar__inner { position: static; max-height: none; overflow: visible; }
+  .macula-docs .td-sidebar .td-sidebar__inner { position: static; display: block; height: auto; max-height: none; overflow: visible; }
   .macula-docs .td-sidebar #content-mobile { display: block; }
   .macula-docs .td-sidebar #content-desktop { display: none; }
   .macula-docs .td-sidebar__search { padding: 0; }
   .macula-docs .td-sidebar__toggle { margin: 0 0 0 15px !important; font-size: 15px; padding: 7px; color: #68849c; }
-  .macula-docs .td-sidebar-nav { max-height: 65vh; overflow-y: auto; }
+  .macula-docs .td-sidebar-nav { max-height: 60dvh; overflow-y: auto; }
   .macula-docs .td-sidebar-nav > .td-sidebar-nav__section { padding-top: 10px; }
   .macula-docs .doc-main { padding: 26px 20px 52px !important; }
   .macula-docs .td-content { font-size: var(--macula-body-size); }
@@ -389,10 +386,12 @@ button, input, select, textarea { font-family: inherit; }
 .macula-docs .td-sidebar-nav .td-sidebar-link.active { color: #145ca8; font-weight: 600; }
 .macula-docs .td-sidebar-nav ul { padding-left: 0 !important; margin-left: 0; }
 .macula-docs .td-sidebar-nav li { padding-left: 0 !important; }
-.macula-docs .td-sidebar-nav li.has-section-toggle { padding-left: 24px !important; }
-.macula-docs .td-sidebar-nav .ul-3 > li { padding-left: 12px !important; }
+.macula-docs .td-sidebar-nav .ul-1 ul { padding-left: 12px !important; }
+.macula-docs .td-sidebar-nav .ul-2 ul { border-left: 1px solid var(--macula-line); }
+.macula-docs .td-sidebar-nav .ul-1 ul > li > label > .td-sidebar-link { padding-left: 24px !important; }
+.macula-docs .td-sidebar-nav .td-sidebar-link__section { font-weight: 550; }
 .macula-docs .td-sidebar-nav label { display: block; width: 100%; }
-.macula-docs .td-sidebar-nav .section-toggle { width: 28px; height: 32px; top: 0; color: var(--macula-muted); }
+.macula-docs .td-sidebar-nav .section-toggle { width: 24px; height: 32px; top: 0; color: var(--macula-muted); }
 .code-copy { min-height: 30px; padding: 3px 10px; color: var(--macula-muted); }
 .workbench-code > div { color: #c1d1dd; }
 .ecosystem-card h3 { font-size: var(--macula-h3-size); line-height: 1.5; }

@@ -8,6 +8,12 @@ from module_docs import SECTIONS, normalize_module, pom_defaults
 
 
 class ModuleDocsTest(unittest.TestCase):
+    def test_gateway_usage_does_not_depend_on_example_projects(self):
+        page = (Path(__file__).resolve().parents[2] /
+                'content/zh-cn/docs/latest/01_services/微服务/Gateway.md').read_text()
+        body = page.split('\n---\n', 1)[1]
+        self.assertNotRegex(body, r'Examples|Samples|macula-boot-examples|macula-example-')
+
     def test_gateway_documents_all_its_capabilities(self):
         page = (Path(__file__).resolve().parents[2] /
                 'content/zh-cn/docs/latest/01_services/微服务/Gateway.md').read_text()

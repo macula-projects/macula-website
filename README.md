@@ -33,6 +33,8 @@ IDE 的启动命令也推荐使用 `npm run dev`，工作目录设置为本仓�
 
 首页内容位于 `content/zh-cn/_index.html`；共享导航、页脚以及文档阅读布局位于 `layouts/`。`assets/scss/_styles_project.scss` 统一维护首页与文档样式，在 Docsy 默认样式之后加载，避免改动主题依赖。`assets/js/site.js` 提供手机目录、可键盘操作的章节折叠、代码复制和页内目录定位，未新增前端依赖。
 
+文档左栏仅由 `.td-sidebar-nav` 承担目录滚动，搜索框保持定位；子目录按层级递进缩进，折叠按钮占用当前行的空间，不累计挤压整个子树。
+
 品牌标记使用 `static/img/macula-mark.svg`，保留 M 形结构和蓝、青、白配色。大写 `MACULA` 字标使用 `static/img/macula-wordmark.svg`，按参考图的宽厚几何字形制作成独立矢量路径，避免设备字体不同导致外观变化。`layouts/_partials/brand.html` 统一导航和页脚标识，尺寸在共享样式中维护；浏览器图标复用 M 形标记。字标、页面强调色与主按钮统一使用品牌蓝 `#1672CE`，Logo 底色使用同色系的轻微明暗变化。
 
 修改后运行 `npm run build` 验证构建，并通过 `npm run dev` 检查桌面与手机布局。验收时检查：首页不显示版本菜单、五个文档版本可切换、手机目录可展开、代码和表格不会撑宽页面。版本化 Markdown 正文与同步规则独立维护，不应为样式调整重写各分支内容。
@@ -82,7 +84,7 @@ latest 的快速开始仅保留 Boot Examples 的 Gateway / BFF（consumer）/ S
 
 latest 的“平台简介 → 安全架构”用原理图概述网关认证、角色 / URL 规则、内部 JWT 和微服务方法 / 数据授权。原理图由 `assets/diagrams/security-architecture.svg` 与 `security-architecture` 短码直接渲染，支持文字描述、键盘焦点和窄屏横向滚动，不依赖远程绘图库。Gateway 与 Security 两章按固定源码提交人工维护细节，使用 `manual_content: true` 保留说明；其中明确区分 Token、AK/SK、API Key 的实际分支以及 CheckOwner 两种校验时机。
 
-Gateway 组件说明同时覆盖 README 中的完整能力：HTTP / WebSocket 路由、认证授权、内部 JWT、CryptoService 与接口加解密 / 签名、System Redis 扩展、Token 缓存管理、Trace ID 和灰度标签。接口保护示例及协议细节还需对照当前过滤器与 Boot Examples 实现，`source_paths` 记录相应来源；功能覆盖检查用于防止组件页在后续整理中遗漏这些内容。
+Gateway 组件说明同时覆盖 README 中的完整能力：HTTP / WebSocket 路由、认证授权、内部 JWT、CryptoService 与接口加解密 / 签名、System Redis 扩展、Token 缓存管理、Trace ID 和灰度标签。页面直接介绍组件接入与使用，使用通用服务名和环境变量；协议细节对照 CryptoService、过滤器与配置属性，`source_paths` 记录相应来源。功能覆盖检查用于防止组件页在后续整理中遗漏这些内容。
 
 3.1、4.0 分别独立维护在 `content/zh-cn/docs/3.1/`、`content/zh-cn/docs/4.0/`，保留各自历史目录结构，直接从顶部版本菜单进入，不再嵌套或复制到其他版本中。它们在版本配置中标记为 `archived: true`，同步工具会跳过历史版本。原始 `/docs/98_old/<版本>/` 及曾使用的 `/docs/<5.x|6.0.x|latest>/98_old/<版本>/` 章节地址均跳转到独立历史文档；旧图片地址通过 Hugo 静态挂载保留。原有“历史文档”目录入口跳转到 4.0 首页。
 
