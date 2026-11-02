@@ -15,6 +15,9 @@
       {{ $gh_repo_path = printf "%s/%s/content/%s" $gh_branch $gh_subdir $pathFormatted }}
     {{ end }}
     {{ $editURL := printf "%s/edit/%s" $gh_repo $gh_repo_path }}
+    {{ with .Params.source_path }}
+      {{ $editURL = printf "%s/edit/%s/%s" $gh_project_repo $.Params.source_branch . }}
+    {{ end }}
     {{ $createURL := printf "%s/edit/%s" $gh_repo $gh_repo_path }}
     {{ $issuesURL := printf "%s/issues/new?title=%s" $gh_repo (htmlEscape $.Title )}}
     {{ $newPageStub := resources.Get "stubs/new-page-template.md" }}

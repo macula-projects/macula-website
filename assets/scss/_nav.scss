@@ -75,6 +75,22 @@
 }
 
 // Icons
+.docs-version-selector {
+  color: $gray-900;
+  white-space: nowrap;
+
+  select {
+    width: auto;
+    max-width: 11rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    label {
+      display: none;
+    }
+  }
+}
+
 #main_navbar {
   li i {
     padding-right: 0.5em;

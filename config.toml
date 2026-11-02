@@ -105,7 +105,7 @@ archived_version = false
 # The version number for the version of the docs represented in this doc set.
 # Used in the "version-banner" partial to display a version number for the 
 # current doc set.
-version = "5.0"
+version = "latest"
 
 # A link to latest version of the docs. Used in the "version-banner" partial to
 # point people to the main doc site.
@@ -205,6 +205,54 @@ enable = false
 # hugo module configuration
 
 [module]
+  # Preserve public image URLs referenced by existing Boot READMEs and external sites.
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "content/zh-cn/docs/5.x"
+    target = "static/docs"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/3.1"
+    target = "static/docs/98_old/v3.1"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/3.1"
+    target = "static/docs/5.x/98_old/v3.1"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/3.1"
+    target = "static/docs/6.0.x/98_old/v3.1"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/3.1"
+    target = "static/docs/latest/98_old/v3.1"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/4.0"
+    target = "static/docs/98_old/v4.0"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/4.0"
+    target = "static/docs/5.x/98_old/v4.0"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/4.0"
+    target = "static/docs/6.0.x/98_old/v4.0"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/4.0"
+    target = "static/docs/latest/98_old/v4.0"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/3.1"
+    target = "static/docs/v3.1"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
+  [[module.mounts]]
+    source = "content/zh-cn/docs/4.0"
+    target = "static/docs/v4.0"
+    includeFiles = ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg", "**/*.webp", "**/*.pdf"]
   # uncomment line below for temporary local development of module
   # replacements = "github.com/google/docsy -> ../../docsy"
   [module.hugoVersion]
@@ -215,4 +263,4 @@ enable = false
     disable = false
   [[module.imports]]
     path = "github.com/google/docsy/dependencies"
-    disable = false    
+    disable = false

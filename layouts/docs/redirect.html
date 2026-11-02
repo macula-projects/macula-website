@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    {{ $target := .Site.GetPage "/docs/latest" }}
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0; url={{ $target.RelPermalink }}">
+    <link rel="canonical" href="{{ $target.Permalink }}">
+    <title>Macula 文档</title>
+  </head>
+  <body><a href="{{ $target.RelPermalink }}">阅读 latest（当前）文档</a></body>
+</html>

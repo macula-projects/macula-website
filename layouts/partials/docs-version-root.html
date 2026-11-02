@@ -1,0 +1,9 @@
+{{- $root := .FirstSection -}}
+{{- if eq .Section "docs" -}}
+  {{- if .Params.docs_version -}}
+    {{- $root = . -}}
+  {{- else -}}
+    {{- with .Parent -}}{{- $root = partial "docs-version-root.html" . -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $root -}}

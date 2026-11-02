@@ -1,0 +1,16 @@
+---
+aliases: ["/docs/98_old/v3.1/chapter2/09_junit/", "/docs/5.x/98_old/v3.1/chapter2/09_junit/", "/docs/6.0.x/98_old/v3.1/chapter2/09_junit/", "/docs/latest/98_old/v3.1/chapter2/09_junit/", "/docs/v3.1/chapter2/09_junit/"]
+type: docs
+title: "单元测试"
+linkTitle: "单元测试"
+weight: 10
+description: "本文介绍单元测试"
+---
+
+为了增强业务系统的稳定性以及可测试性，编写的业务模块需要编写一定的单元测试用例。
+
+单元测试可使用JUnit来编写，并在业务插件打包前能通过，对于不能通过的测试用例将不允许发布
+
+## 单元测试
+
+测试覆盖率可根据各个项目自行决定。
