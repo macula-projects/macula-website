@@ -1,5 +1,5 @@
 ---
-title: "Auditing"
+title: "Macula Boot Starter Auditing"
 linkTitle: "Auditing"
 weight: 4
 

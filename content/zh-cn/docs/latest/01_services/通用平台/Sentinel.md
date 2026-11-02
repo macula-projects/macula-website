@@ -1,6 +1,6 @@
 ---
-title: "服务治理(Sentinel)"
-linkTitle: "服务治理(Sentinel)"
+title: "服务治理Sentinel"
+linkTitle: "服务治理Sentinel"
 weight: 20
 manual_content: true
 source_branch: "main"

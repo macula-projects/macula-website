@@ -1,5 +1,5 @@
 ---
-title: "Security：方法授权与资源归属"
+title: "Macula Boot Starter Security"
 linkTitle: "Security"
 weight: 10
 manual_content: true

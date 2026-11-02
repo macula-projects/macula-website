@@ -1,5 +1,5 @@
 ---
-title: "Macula Boot Starter for Wechat"
+title: "Macula Boot Starter Wechat"
 linkTitle: "微信接入"
 weight: 20
 source_path: "macula-boot-starters/macula-boot-starter-wechat/README.md"

@@ -16,18 +16,13 @@ content:
           links:
             - '[概述](00_introduce/概述/)'
             - '[快速开始](00_introduce/快速开始)'
+            - '[安全架构](00_introduce/安全架构)'
         - name: 了解Macula框架和平台能力
           links:
             - '[框架基础](01_services/框架基础/web)'
             - '[框架扩展](01_services/框架扩展/lock4j)'
             - '[微服务](01_services/微服务/feign)'
             - '[通用平台](01_services/通用平台/iam)'
-        - name: 尝试部署Macula
-          links:
-            - '[服务部署](05_ops/服务部署)'
-            - '[服务创建](05_ops/服务创建)'
-            - '[服务配置](05_ops/服务配置)'
-            - '[升级指南](05_ops/升级指南)'
         - name: 基于Macula的开发规范
           links:
             - '[基本开发规范](03_devrules/基本开发规范)'
@@ -35,9 +30,16 @@ content:
             - '[后端开发规范](03_devrules/后端开发规范)'
         - name: 基于Macula的开发手册
           links:
+            - '[部署Macula平台](04_devmanual/部署macula平台)'
             - '[创建应用平台](04_devmanual/创建应用平台)'
             - '[创建服务模块](04_devmanual/创建服务模块)'
             - '[运行与测试](04_devmanual/运行与测试)' 
+        - name: 尝试部署Macula
+          links:
+            - '[服务部署](05_ops/服务部署)'
+            - '[服务创建](05_ops/服务创建)'
+            - '[服务配置](05_ops/服务配置)'
+            - '[升级指南](05_ops/升级指南)'
         - name: Macula运维指引
           links:
             - '[框架基础](01_services/框架基础)'

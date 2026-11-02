@@ -1,5 +1,5 @@
 ---
-title: "Gateway：路由、认证与接口保护"
+title: "Macula Boot Starter Gateway"
 linkTitle: "Gateway"
 weight: 3
 manual_content: true

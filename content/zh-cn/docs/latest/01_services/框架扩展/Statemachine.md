@@ -1,5 +1,5 @@
 ---
-title: "Macula Boot Starter for StateMachine"
+title: "Macula Boot Starter StateMachine"
 linkTitle: "状态机"
 weight: 11
 source_path: "macula-boot-starters/macula-boot-starter-statemachine/README.md"

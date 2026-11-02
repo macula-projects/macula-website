@@ -1,5 +1,5 @@
 ---
-title: "Macula Boot Starter Seata"
+title: "分布式事务Seata"
 linkTitle: "分布式事务"
 weight: 12
 source_path: "macula-boot-starters/macula-boot-starter-seata/README.md"
@@ -176,7 +176,7 @@ Try 预留业务资源；全局成功执行 Confirm，失败执行 Cancel。
 
 > 现在我们有一个下订单的操作，订单创建后需要扣减商品库存
 
-​ 完整内容可参考[原创博客](https://blog.51cto.com/u_15952602/6034752?articleABtest=0)
+ 完整内容可参考[原创博客](https://blog.51cto.com/u_15952602/6034752?articleABtest=0)
 
 #### 案例
 
@@ -425,8 +425,8 @@ Saga模式依然要求我们自己实现正向服务和补偿服务。但是它�
 - Saga模式在正向服务中时就已经提交了本地事务了，而补偿事务也比较好实现，将正向服务的结合逆向补偿即可。
 - 比如正常服务是`update product set price=20 where price=30 and id=1`;
   那么补偿服务就是`update product set price=30 where price=20 and id=1`;
--
-比起TCC模式，Saga模式更适用于一些老服务、第三方服务或者其他无法改造的服务，要接入到我们的分布式事务中时，就可以将其作为一个正向服务存在，而直接实现他的补偿服务即可。而TCC因为要对业务进行拆分为try-confirm-cancel，所以它不适用于不可改造的服务
+  -
+  比起TCC模式，Saga模式更适用于一些老服务、第三方服务或者其他无法改造的服务，要接入到我们的分布式事务中时，就可以将其作为一个正向服务存在，而直接实现他的补偿服务即可。而TCC因为要对业务进行拆分为try-confirm-cancel，所以它不适用于不可改造的服务
 
 同时，Saga模式同样不需要全局锁，只需要结合本地事务加本地锁即可，所以性能依旧有保证。
 

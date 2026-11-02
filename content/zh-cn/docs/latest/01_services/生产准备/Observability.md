@@ -1,5 +1,5 @@
 ---
-title: "Observability：统一可观测性"
+title: "Macula Boot Starter Observability"
 linkTitle: "Observability"
 weight: 1
 aliases: ["/docs/latest/01_services/生产准备/loggers/", "/docs/latest/01_services/生产准备/metrics/", "/docs/latest/01_services/生产准备/tracing/"]

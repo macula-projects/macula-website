@@ -1,5 +1,5 @@
 ---
-title: "Macula Boot Starter for WebSocket"
+title: "Macula Boot Starter WebSocket"
 linkTitle: "WebSocket"
 weight: 22
 source_path: "macula-boot-starters/macula-boot-starter-websocket/README.md"
