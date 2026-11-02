@@ -8,6 +8,21 @@ from module_docs import SECTIONS, normalize_module, pom_defaults
 
 
 class ModuleDocsTest(unittest.TestCase):
+    def test_gateway_documents_all_its_capabilities(self):
+        page = (Path(__file__).resolve().parents[2] /
+                'content/zh-cn/docs/latest/01_services/微服务/Gateway.md').read_text()
+        for heading in ('HTTP 与 WebSocket 路由', 'Token 的角色、菜单与 URL 权限',
+                        'AK/SK：应用 HMAC 认证', 'API Key：平台应用身份', '转换为内部 JWT',
+                        '接口加解密与签名', '独立 System Redis', 'Token 缓存移除',
+                        'Trace ID 响应头', '灰度标签传递'):
+            with self.subTest(capability=heading):
+                self.assertIn('### ' + heading, page)
+        for protocol in ('/gateway/protect/urls', '/gateway/protect/key',
+                         'getSm2PublicKey()', 'decryptSm4Key(', 'HexUtil.decodeHex(sm4Key)',
+                         'timestamp:', 'nonce:', 'signature:', 'protect-urls:', 'sysRedisTemplate'):
+            with self.subTest(protocol=protocol):
+                self.assertIn(protocol, page)
+
     def test_maintained_component_pages_use_six_sections(self):
         docs = Path(__file__).resolve().parents[2] / 'content/zh-cn/docs'
         for version in ('5.x', '6.0.x', 'latest'):
