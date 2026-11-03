@@ -29,7 +29,7 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", 
 
 应用归属租户用于隔离应用接入，认证租户用于决定认证后的业务数据租户。两者通常一致；只有平台 ROOT 可设置不同的认证租户，且目标租户必须存在。不能通过把 `authTenantId` 改成目标网关的租户来绕过应用归属隔离。
 
-目标网关按 `spring.application.name` 与平台租户编码做最长前缀匹配。例如 `macula-samples-gateway` 应匹配实际存在的 `macula-samples` 租户编码；该租户 ID 必须与当前 AK/SK 应用的归属租户一致。Cloud Gateway 同样按其自身应用名确定归属。BFF 访问 Cloud 时，这组应用凭据的归属租户须匹配 Cloud Gateway，而认证租户按需要设置为业务租户；它与 BFF 所在业务网关的归属不是同一个配置入口。System Redis 中的租户映射未就绪时，网关会拒绝接入；不使用手工 `macula.gateway.tenant-id`。
+**登记租户时，应让网关应用名以租户编码为前缀，匹配时忽略大小写。** 例如网关 `spring.application.name=macula-samples-gateway`，租户编码建议为 `macula-samples`（`MACULA-SAMPLES` 同样匹配）。多个租户编码同时匹配时选择最长前缀；命中的租户 ID 必须与当前 AK/SK 应用的归属租户一致。Cloud Gateway 同样按其自身应用名确定归属。BFF 访问 Cloud 时，这组应用凭据的归属租户须匹配 Cloud Gateway，而认证租户按需要设置为业务租户；它与 BFF 所在业务网关的归属不是同一个配置入口。System Redis 中的租户映射未就绪时，网关会拒绝接入；不使用手工 `macula.gateway.tenant-id`。
 
 已有环境升级时，先通过正常数据库迁移流程应用 `V12__application_auth_tenant.sql`，新增可空的 `auth_tenant_id`，再运行新版 System 并确认租户映射缓存正常；在新版网关就绪后再配置不同的认证租户。历史应用不需回填，空值沿用归属租户。回滚旧网关前，先恢复认证租户与归属租户一致。
 

@@ -102,7 +102,7 @@
 ## 租户语义与文档归属
 
 - 区分认证租户、临时 Holder 与应用归属租户：登录认证租户关联 OAuth Client 的 `tenantId`；AK/SK 默认业务租户取应用 `authTenantId`，未配置回退应用归属 `tenantId`。应用归属用于接入隔离，不能通过相同认证租户绕过。
-- main 网关按自身 `spring.application.name` 与租户编码最长前缀解析归属，只允许同归属应用 AK/SK 接入；API Key 不纳入此次规则。不要将 main 的规则自动写到尚未包含该变更的 5.x。
+- main 网关的 `spring.application.name` 必须以租户编码为前缀，忽略大小写，多个匹配取最长前缀；例如 `macula-samples-gateway` 的租户编码建议为 `macula-samples`。据此解析归属，只允许同归属应用 AK/SK 接入；API Key 不纳入此次规则。不要将 main 的规则自动写到尚未包含该变更的 5.x。
 - `TenantContextHolder` 为临时执行上下文，MyBatisPlus 按 Holder → 认证租户 → 配置兜底选择。设置 Holder、解析请求 tenantId 或启用插件均不自动授权；业务先校验目标租户权限，操作后恢复 / 清除，不声称自动修改 JWT 或跨服务传播。
 - 原理放在请求链路的租户边界；登记放在首次接入，网关接入限制放 Gateway，认证上下文放 Security，临时数据访问放 MyBatisPlus，Holder / Web 解析按各组件分工链接；避免复制成多篇完整教程。
 

@@ -453,9 +453,13 @@ AK/SK 的应用 URL 范围与 Token 的角色 URL 规则是两套不同判断，
 | --- | --- |
 | 应用 `tenantId` | 平台应用的归属租户，用于管理与网关接入隔离 |
 | 应用 `authTenantId` | AK/SK 认证后的默认业务租户，未配置时沿用归属租户 |
-| 网关 `spring.application.name` | 按租户编码的最长前缀（忽略大小写）匹配网关归属租户 |
+| 网关 `spring.application.name` | 必须以租户编码为前缀；忽略大小写，多个匹配取最长前缀 |
 
-System 维护 `macula:cloud:system:tenants` Hash（租户编码 → ID）；网关直接从映射解析归属，不配置 `macula.gateway.tenant-id`。例如租户编码 `macula-samples` 对应 `12`，则 `macula-samples-gateway` 属于租户 `12`。应用名缺失、无映射匹配或命中值非法时，网关使用未知标记 `-1`，拒绝 AK/SK 接入。
+System 维护 `macula:cloud:system:tenants` Hash（租户编码 → ID）；网关直接从映射解析归属，不配置 `macula.gateway.tenant-id`。
+
+**命名约定：网关应用名以租户编码为前缀，忽略大小写。** 例如网关名为 `macula-samples-gateway` 时，租户编码建议为 `macula-samples`；若其映射 ID 为 `12`，网关就归属租户 `12`。编码 `MACULA-SAMPLES` 同样匹配，但平台中不能同时登记两个仅大小写不同的租户编码。若 `macula` 和 `macula-samples` 都能匹配，选择更长的 `macula-samples`，不是较短的 `macula`。
+
+应用名缺失、无映射匹配或命中值非法时，网关使用未知标记 `-1`，拒绝 AK/SK 接入。
 
 **应用与网关必须属于同一归属租户。** 例如归属 `12`、认证租户 `30` 的应用，在权限及签名校验均通过后可接入归属 `12` 的网关，JWT 默认业务租户为 `30`；归属 `20` 的应用即使认证租户也是 `30`，也不能凭 AK/SK 接入归属 `12` 的网关。只有平台 ROOT 可把认证租户配置为不同于归属租户的值，且目标租户必须存在。
 
