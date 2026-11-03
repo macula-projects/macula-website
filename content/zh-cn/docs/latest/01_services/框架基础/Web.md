@@ -7,7 +7,7 @@ source_paths: ["macula-boot-starters/macula-boot-starter-web/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java"]}]
 ---
 
 ## 概览
@@ -213,6 +213,12 @@ public class ConsumerController {
 现有 ControllerExceptionAdvice 将实现公共 `ResourceAccessDenied` 标记的异常映射为 HTTP 403 / A0312，其他异常沿用原处理。完整配置和 Controller 参数验证见 [Security Starter](/docs/latest/01_services/框架基础/security/)。
 
 列表签发后的资源请求，在 MVC Controller 参数上使用 `@Passkey` 验证；操作权限与返回值归属分别使用 `@PreAuthorize`、`@PostAuthorize`。凭证不从 JSON / 表单字段读取，完整示例见 [Security 资源凭证](/docs/latest/01_services/框架基础/security/#passkeycontroller-参数资源凭证)。
+
+### 临时租户参数
+
+Servlet 应用中的 `TenantFilter` 从 `tenantId` 请求头读取临时租户；请求头为空时再读同名请求参数，随后写入 `TenantContextHolder`。它解析的是临时切换值，不是重新登录，不改变 JWT 认证租户，也不校验调用者是否有目标租户权限。
+
+业务开放切换前须校验目标租户权限，禁止切换的接口应拒绝外部覆盖。临时值对数据访问的影响、作用域恢复与默认值选择见 [MyBatisPlus 租户插件](/docs/latest/01_services/框架基础/mybatisplus/#租户插件)。
 
 ### 国际化
 

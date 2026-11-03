@@ -99,6 +99,13 @@
 - 正文只介绍当前用法，不补充旧注解名称或替换历史。返回后归属检查使用标准 `@PostAuthorize`，资源凭证使用 MVC Controller 参数级 `@Passkey`（DTO 为 JavaBean 属性路径，不是 SpEL）。两者分别解释，不能把资源凭证当作列表过滤、按钮权限或租户数据范围的替代。变更说明时核对当前注解和实现。
 - 生产准备包含 **Observability**，说明指标、链路、日志及其配置；不能只剩审计，也不能将已删除的旧可观测性 Starter 作为 main 的当前方案。
 
+## 租户语义与文档归属
+
+- 区分认证租户、临时 Holder 与应用归属租户：登录认证租户关联 OAuth Client 的 `tenantId`；AK/SK 默认业务租户取应用 `authTenantId`，未配置回退应用归属 `tenantId`。应用归属用于接入隔离，不能通过相同认证租户绕过。
+- main 网关按自身 `spring.application.name` 与租户编码最长前缀解析归属，只允许同归属应用 AK/SK 接入；API Key 不纳入此次规则。不要将 main 的规则自动写到尚未包含该变更的 5.x。
+- `TenantContextHolder` 为临时执行上下文，MyBatisPlus 按 Holder → 认证租户 → 配置兜底选择。设置 Holder、解析请求 tenantId 或启用插件均不自动授权；业务先校验目标租户权限，操作后恢复 / 清除，不声称自动修改 JWT 或跨服务传播。
+- 原理放在请求链路的租户边界；登记放在首次接入，网关接入限制放 Gateway，认证上下文放 Security，临时数据访问放 MyBatisPlus，Holder / Web 解析按各组件分工链接；避免复制成多篇完整教程。
+
 ## 来源、同步与变更历史
 
 - 内容以目标分支**已提交源码**为依据；读 README 时同时检查相关 POM、配置绑定和必要实现。不能只凭模块名称或历史描述推断能力。

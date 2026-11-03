@@ -7,6 +7,7 @@ source_paths: ["macula-boot-starters/macula-boot-starter-mybatis-plus/README.md"
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusProperties.java"]}]
 ---
 
 ## 概览
@@ -148,36 +149,38 @@ IdType.ASSIGN_ID和ASSIGN_UUID：分别使用雪花算法和 UUID，如要自定
 
 #### 租户插件
 
+启用 `macula.mybatis-plus.tenant-enable` 后，插件为匹配 `tenant-suffixes` 的表添加租户条件；其他表不参与。当前默认后缀为 `tenant`、`TENANT`，不能假定所有表都会自动隔离。租户 ID 按以下顺序选择：
+
+| 优先级 | 读取位置 | 含义 |
+| --- | --- | --- |
+| 1 | `TenantContextHolder.getCurrentTenantId()` | 当前执行上下文的临时租户 |
+| 2 | `SecurityUtils.getTenantId()` | 登录 / AK/SK 认证后，内部 JWT 携带的默认业务租户 |
+| 3 | `macula.mybatis-plus.tenant-id` | 前两者为空时的配置兜底值，默认 `1` |
+
+OAuth Client 的租户配置决定登录关联的租户；AK/SK 应用的认证租户决定认证后的业务租户。应用归属租户另用于网关接入隔离，不由此插件选择或改变。概念关系见[请求链路](/docs/latest/00_introduce/请求链路/#租户边界)。
+
+业务已确认当前调用者有权访问目标租户后，可临时切换。下面是同步业务方法内的示意代码；`targetTenantId` 必须先经过业务授权，不能直接信任请求参数：
+
 ```java
-// 租户插件
-interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new TenantLineHandler(){
-@Override public Expression getTenantId(){
+import dev.macula.boot.context.TenantContextHolder;
 
-    // 如果上下文租户ID不为空，则用上下文的，否则用配置的租户ID（适合租户负责人切换租户）
-    if(Objects.nonNull(TenantContextHolder.getCurrentTenantId())){
-    return new LongValue(TenantContextHolder.getCurrentTenantId());
+Long previousTenantId = TenantContextHolder.getCurrentTenantId();
+try {
+    TenantContextHolder.setCurrentTenantId(targetTenantId);
+    // 对命中租户表规则的 SQL，插件优先使用 targetTenantId。
+    orderService.processForTenant();
+} finally {
+    if (previousTenantId == null) {
+        TenantContextHolder.clearCurrentTenantId();
+    } else {
+        TenantContextHolder.setCurrentTenantId(previousTenantId);
     }
-
-    // 获取当前登录用户的租户上下文（aksk访问带租户信息）
-    if(Objects.nonNull(SecurityUtils.getTenantId())){
-    return new LongValue(SecurityUtils.getTenantId());
-    }
-
-    // 默认租户ID
-    return new LongValue(properties.getTenantId());
-    }
-
-// 这是 default 方法,默认返回 false 表示所有表都需要拼多租户条件
-@Override public boolean ignoreTable(String tableName){
-    // 分租户的表名称应该统一以xx标识
-    return!Arrays.stream(properties.getTenantSuffixes()).anyMatch(suffix->tableName.endsWith(suffix));
-    }
-    }));
+}
 ```
 
-- 首先是从TenantContextHolder获取租户ID，适合具有多个租户的用户在前端切换租户ID使用；
-- 其次是从登录上下文获取租户ID，一般用于ak/sk访问应用的时候，通过应用配置获取租户ID；
-- 最后是从应用配置的租户ID获取
+Holder 本身是线程上下文，不修改 Token，也不执行切换授权。嵌套调用应恢复原值，最外层没有原值时清除；不要让线程池复用后的请求继承此次切换。异步或跨服务调用需要按各自的上下文传播机制单独处理，不能假定一次 `setCurrentTenantId` 会自动传遍服务链路。
+
+Web Starter 当前会从 `tenantId` Header（优先）或请求参数读取临时值；这个解析步骤和 MyBatisPlus 选取租户的步骤均不校验目标租户访问权。开放切换入口前，应在后端确认目标租户权限；接口不允许切换时，应拒绝外部覆盖并使用认证租户。配置兜底值也不能当作认证或授权结果。
 
 #### 数据权限插件
 
@@ -305,7 +308,7 @@ public class BasePageQuery {
 | 检查 | 预期与定位方法 |
 | --- | --- |
 | 基础映射 | 在开发库完成一次新增、按 ID 查询与修改，核对表名、列名、主键回填和审计字段。 |
-| 隔离与范围 | 用普通用户及不同租户分别查询；确认表名是否命中 tenant-suffixes，数据权限注解及可信身份是否实际参与。 |
+| 隔离与范围 | 验证无临时值时使用认证租户、有授权临时值时优先使用该值、结束后恢复原值；确认表名命中 tenant-suffixes，未经授权的租户覆盖被后端拒绝。 |
 | 查询异常 | 先核对 mapper 扫描与 mapper-locations，再检查 SQL 和参数；只在范围明确的测试环境查看脱敏 SQL。 |
 | 事务与迁移 | 异常回滚后不应留下部分业务写入；分别验证空库初始化与已有库升级，不能通过重跑 V1 清库验收。 |
 

@@ -7,6 +7,7 @@ source_paths: ["macula-boot-commons/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java"]}]
 ---
 
 ## 概览
@@ -85,6 +86,12 @@ throw new BizException(ApiResultCode.BIZ_ERROR, "订单状态不允许此操作"
 | --- | --- |
 | 模型与 HTTP | Commons 提供 Result 等契约；Servlet 返回自动包装由 Web Starter 完成，不能仅引入 Commons 就期待所有接口被拦截。 |
 | 公共异常 | 构造一个受控业务异常，通过实际使用的 Web 异常处理链验证错误码与信息，避免暴露内部堆栈。 |
+
+### 临时租户上下文
+
+`dev.macula.boot.context.TenantContextHolder` 提供 `getCurrentTenantId()`、`setCurrentTenantId(Long)`、`clearCurrentTenantId()`，用于当前执行上下文内的临时租户切换。它不修改登录身份、Token 中的认证租户或应用归属租户，也不负责校验目标租户权限。
+
+业务须先授权，再设置，并在 `finally` 中恢复原值或清除；MyBatisPlus 的租户插件优先读取此值。选择顺序和同步代码示例见 [MyBatisPlus](/docs/latest/01_services/框架基础/mybatisplus/#租户插件)。
 
 ## 依赖引入
 

@@ -7,6 +7,7 @@ source_paths: ["macula-boot-starters/macula-boot-starter-system/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "291e80dc296587cc1ec4f4979aa6fdb3bd087054", "paths": ["macula-cloud-system/README.md", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysApplicationServiceImpl.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysTenantServiceImpl.java", "macula-cloud-system/src/main/resources/db/migration/V12__application_auth_tenant.sql", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/service/userdetails/SysUserDetailsServiceImpl.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/protocol/oauth2/CustomOAuth2TokenCustomizer.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/form/OAuth2ClientForm.java"]}]
 ---
 
 ## 概览
@@ -90,6 +91,16 @@ public class SystemController {
 ### 服务端介绍
 
 `macula-cloud-system` 需独立部署，并通过网关暴露 `/system` 路由；应用标识、密钥及用户权限由服务端维护。
+
+### 应用租户登记
+
+服务端将应用的归属租户 `tenantId` 与认证租户 `authTenantId` 分开保存。归属租户决定 AK/SK 应用可以接入哪个租户的网关；认证租户决定认证后默认访问的业务租户，留空沿用归属租户。修改不同的认证租户仅允许平台 ROOT，目标租户也必须存在。
+
+通过应用接口维护时，`authTenantId` 接受整数或整数字符串；更新时省略字段保留原配置，显式 `null` 清空并恢复使用归属租户。返回的认证租户使用字符串，前端不要转换为可能丢失精度的 JavaScript Number。
+
+应用缓存保留归属 `tenantId` 并提供有效 `authTenantId`；租户编码到 ID 的映射单独保存在 `macula:cloud:system:tenants`。System 启动时初始化映射，租户增删改在事务提交成功后刷新；空编码不匹配，忽略大小写后重复的编码会使刷新失败。应用凭据缓存与租户映射都应准备就绪，不能依赖修改某个应用来刷新租户映射。
+
+登记和已有环境的迁移顺序见[首次接入](/docs/latest/04_devmanual/首次接入macula-cloud/#对齐归属租户与认证租户)，网关匹配规则见 [Gateway](/docs/latest/01_services/微服务/gateway/#应用归属与认证租户)。
 
 ### 验证与排障
 
