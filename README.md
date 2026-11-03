@@ -1,114 +1,55 @@
-# Macula 官方文档
+# Macula 官网与文档
 
-基于[Hugo](https://gohugo.io)和[Docsy](https://docsy.dev)的Macula官方文档
+基于 Hugo 和 Docsy，包含项目官网、版本化文档、博客与变更历史。维护约定见 [AGENTS.md](AGENTS.md)。
 
-维护前请阅读 [AGENTS.md](AGENTS.md)，其中记录文档归属、内容保留、来源核对、排版和验证约定。
+## 本地开发
 
-
-## 构建环境与运行
-
-使用 Hugo Extended **0.169.0**、Docsy **0.18.1**、Node.js **24 LTS** 和 Go **1.24+**。主题通过 Hugo Modules 获取；Bootstrap **5.3.8**、Font Awesome **7.3.1** 与 Sass Embedded **1.107.1** 由 npm 锁文件固定。样式直接使用 Dart Sass，不再需要 PostCSS 或单独安装全局 Sass。
+环境：Hugo Extended **0.169.0**、Node.js **24 LTS**、Go **1.24+**；Docsy **0.18.1** 由 Hugo Modules 管理。
 
 ```bash
-git clone --depth 1 https://github.com/macula-projects/macula-website.git
-cd macula-website
 nvm use
 npm ci
 npm run dev
-# 完整构建，警告会使构建失败
+```
+
+构建静态网站：
+
+```bash
 npm run build
 ```
 
-Hugo 安装请参考[官方说明](https://gohugo.io/installation/)。直接使用 Hugo 命令时，需将 node_modules/.bin 加入 PATH；推荐使用上述 npm 命令。GitHub Pages 与 Netlify 使用相同的 Hugo、Node 和锁文件。Docsy 0.18 使用 _partials、_shortcodes、_markup 目录和 Bootstrap 5。自定义模板保留本站版本导航与阅读布局，图片预览使用浏览器原生弹窗。
+Dart Sass 随 npm 依赖安装。请使用上述命令，避免直接运行 Hugo 时找不到 Sass；Hugo 安装见[官方说明](https://gohugo.io/installation/)。
 
-### 本地提示找不到 Dart Sass
+## 内容位置
 
-如果直接运行 `hugo server` 出现 `TOCSS-DART` / `You need to install Dart Sass`，请在项目目录执行 `npm ci` 后改用 `npm run dev`。Sass 安装在 `node_modules/.bin`，npm 脚本会自动将该目录加入 PATH；终端直接执行 Hugo 时需要显式提供路径：
+- `content/zh-cn/`：首页、文档和博客。
+- `layouts/`、`assets/`、`static/`：模板、样式、脚本和静态资源。
+- `data/`、`scripts/`：版本映射、Release 数据与同步工具。
 
-```bash
-PATH="$PWD/node_modules/.bin:$PATH" hugo server
-```
+## 文档版本与同步
 
-IDE 的启动命令也推荐使用 `npm run dev`，工作目录设置为本仓库根目录。无需另装全局 Sass。
+文档维护 `latest`、`5.x`、`4.0`、`3.1`；latest 对应 Macula Boot main，4.0 和 3.1 为归档。映射见 [data/doc_versions.json](data/doc_versions.json)。
 
-## 页面与样式维护
-
-首页内容位于 `content/zh-cn/_index.html`；共享导航、页脚以及文档阅读布局位于 `layouts/`。`assets/scss/_styles_project.scss` 统一维护首页与文档样式，在 Docsy 默认样式之后加载，避免改动主题依赖。`assets/js/site.js` 提供手机目录、可键盘操作的章节折叠、代码复制和页内目录定位，未新增前端依赖。
-
-文档左栏仅由 `.td-sidebar-nav` 承担目录滚动，搜索框保持定位；子目录按层级递进缩进，折叠按钮占用当前行的空间，不累计挤压整个子树。
-
-品牌标记使用 `static/img/macula-mark.svg`，保留 M 形结构和蓝、青、白配色。大写 `MACULA` 字标使用 `static/img/macula-wordmark.svg`，按参考图的宽厚几何字形制作成独立矢量路径，避免设备字体不同导致外观变化。`layouts/_partials/brand.html` 统一导航和页脚标识，尺寸在共享样式中维护；浏览器图标复用 M 形标记。字标、页面强调色与主按钮统一使用品牌蓝 `#1672CE`，Logo 底色使用同色系的轻微明暗变化。
-
-修改后运行 `npm run build` 验证构建，并通过 `npm run dev` 检查桌面与手机布局。验收时检查：首页不显示版本菜单、四个文档版本可切换、手机目录可展开、代码和表格不会撑宽页面。版本化 Markdown 正文与同步规则独立维护，不应为样式调整重写各分支内容。
-
-全站排版共用 `_styles_project.scss` 中的字体与字号变量：首页段落、文档、博客和变更历史在 PC 使用 `.9375rem`（默认 15px），767px 及以下使用 `.875rem`（默认 14px），阅读行高为 1.75。导航与目录统一为 14px，辅助说明为 PC 13px / 手机 12px，代码为 PC 14px / 手机 13px，表格为 PC 14px / 手机 13px。文档左右导航贴近浏览器两侧，正文居中、随窗口伸缩且最大 960px；窄屏隐藏侧栏。表格首列保留完整标签，宽表在可键盘操作的独立区域滚动。使用相对单位以响应浏览器字体设置。
-
-## Release 变更历史
-
-`/releases/` 与文档中的“更新日志”共用 `data/boot_releases.json`，数据来源为 Macula Boot 的 GitHub Releases。latest 展示全部发布记录，5.x 筛选对应系列；版本标签展示时去掉 `v`，详情链接保留 GitHub 原始地址。发布日期按北京时间显示，预发布单独标记。摘要提取发布说明中的主要功能与修复条目，不将 main 的未发布改动冒充正式版本。
-
-6.0 系列历史保留，并显示“不建议使用”标签。人工使用建议独立放在 `data/release_advisories.json`，展示时优先于普通发布状态标签，不改变 Release 原始数据，也不受每日同步影响。
-
-运行 `npm run sync:releases` 更新本地快照；`npm run build` 直接使用快照，离线可构建。GitHub Pages 在构建前刷新 Release 数据，并每天北京时间 10:30 定时更新；Netlify 构建前也会刷新。同步失败不会覆盖上一份快照，CI 会保留已部署的网站。维护同步逻辑后执行 `python3 -m unittest discover -s scripts/tests -v`，覆盖版本筛选、摘要、分页与失败保护。
-
-## 文档版本
-
-首页、博客等页面共用一套内容。文档顶部提供版本切换，侧栏只展示当前版本；同一章节存在时保留章节，否则进入目标版本首页。
-
-| 文档入口 | Macula Boot 分支 | 内容来源 |
-| --- | --- | --- |
-| `/docs/latest/` | `main` | 按 5.x 栏目组织当前分支的 README、模块文档及迁移指南 |
-| `/docs/5.x/` | `5.x` | 官网已有的 5.x 文档 |
-| `/docs/4.0/` | 历史归档 | 从 `98_old/v4.0` 独立出的完整文档 |
-| `/docs/3.1/` | 历史归档 | 从 `98_old/v3.1` 独立出的完整文档 |
-
-6.0.x 未正式发布，不作为独立文档版本维护；其原版本首页与升级指南地址分别跳转到 latest 首页和新的 5.x → latest 指南。旧归档资源的兼容路径继续保留。
-
-`/docs/` 默认跳转到 latest。原有 `/docs/<章节>/` 地址跳转到 5.x 的对应页面，避免旧链接指向其他版本。
-
-版本与分支映射统一维护于 `data/doc_versions.json`。更新 latest 文档时，先在相邻的 `macula-boot` 仓库更新对应本地分支，再执行：
+更新 latest 的来源文档：
 
 ```bash
-python3 scripts/sync-boot-docs.py
-# 或指定 Boot 仓库位置
-python3 scripts/sync-boot-docs.py --boot-repo /path/to/macula-boot
-npm run build
+python3 scripts/sync-boot-docs.py --version latest --boot-repo ../macula-boot
 ```
 
-5.x、latest 两个版本保持一致的栏目层级，以 `content/zh-cn/docs/5.x/` 为基准，包括平台简介、平台能力、开发规范、开发指引、运维指引和关于。latest 在“框架基础”下额外声明独立的 `Commons.md` 和 `Async.md`，各自同步对应分支的模块 README；栏目 `_index.md` 只保留简介与章节导航。源码模块路径只用于内容映射，不会生成另一套文档目录。
+同步只读取 Boot 分支的已提交内容。先在临时副本比较差异；标记 `manual_content: true` 的人工页面会保留，新增章节需登记同步映射。
 
-latest 的组件章节同时核对 main 中实际存在的 Starter POM（包含 Cloud 下的嵌套模块），缺少显式映射的新模块会使同步失败。已删除模块不再从 5.x 回填；TSF 旧地址跳转至微服务栏目，Loggers、Metrics、Tracing 旧地址跳转至独立的 `生产准备/Observability.md`。生产准备首页只提供分类导览。历史版本继续保留各自内容。仅更新当前版本时运行 `python3 scripts/sync-boot-docs.py --version latest`。
+更新 GitHub Releases 快照：
 
-5.x、latest 的组件页统一使用“概览、组件坐标、使用配置、核心功能、依赖引入、版权说明”六个二级标题；版本差异与各自示例保留在对应小节。`scripts/module_docs.py` 在同步时整理 README 层级与合并章节，并将相邻的 Maven 依赖片段集中为一个代码块，保留依赖内容；缺少的组件坐标和直接依赖从该分支 POM 提取。人工维护的组件页面也遵循这套结构，3.1、4.0 归档文档保持原貌。
+```bash
+npm run sync:releases
+```
 
-Macula Cloud 的管理端与后端同仓，入口为 `macula-cloud/macula-cloud-admin`。首页管理端链接指向该目录。latest 的快速开始、平台部署与 Sentinel 指引设置 `manual_content: true`，按当前源码维护；跨仓库资料使用 `source_repository`、`source_branch`、`source_commit` 和 `source_paths` 记录来源，后续同步不会覆盖这些说明。
+## 验证
 
-latest 的平台简介按“平台概述、快速开始、应用架构、应用分层、安全架构”展开，区分平台认知与开发操作。应用架构用本地 SVG 说明 Cloud 与业务应用的关系，历史架构 PNG 保留在可展开资料中；应用分层保留原 URL。具体创建、接入、扩展、测试与部署归入开发指引，详细配置归对应组件。组件页先集中配置示例，再用表格和文字解释关键项；不同文件、应用及互斥方案分别标注，同一应用同一方案合并根节点。
+修改内容后运行 `npm run build`；修改同步逻辑时另运行：
 
-latest 的快速开始采用“下载并启动 Macula Cloud → 下载 Macula Boot 并运行 Examples → 调用接口验证”的简短流程，再介绍 Gateway / Consumer（BFF）/ Provider（Service）三个角色，末尾提供 Archetype 创建自有单仓项目的简要命令与参数说明。IAM introspection、Cloud endpoint 与应用网关 JWK 只说明关键方向，详细配置链接到安全架构与组件页。
+```bash
+python3 -m unittest discover -s scripts/tests -v
+```
 
-Samples 开发指引以 [macula-samples](https://github.com/macula-projects/macula-samples) 单仓的已提交源码为准，按创建示例平台、部署 Macula Cloud、首次接入、示例模块说明（含示例配置）、创建示例服务、运行与测试、打包部署排列；多仓模式只在“创建示例平台”的获取源码部分简要提及并链接 macula-samples-workspace。开发指引与微服务栏目首页只显示自动章节目录，不放说明正文；微服务依赖与配置归入对应模块，TSF 移除说明放在升级指南。人工维护页使用 `manual_content: true`，通过 `source_refs` 记录来源提交与文件。开发业务服务连接到通用应用分层规范，并保留原有分层图、工程目录图和模型传递图。`LATEST_CHAPTERS` 显式声明当前版本的新增章节，历史版本保持各自内容。
-
-同步 latest 时，普通 Examples 文档链接进入快速开始，专项 Docker / 可观测性说明链接回 Boot 源码中的完整 README；不会再将 Examples 全文覆盖到 Samples 的“运行与测试”或“打包部署”中。核对 Samples 时只读取固定提交，不使用其工作区中尚未提交的业务扩展作为文档依据。
-
-latest 的“平台简介 → 安全架构”用原理图概述网关认证、角色 / URL 规则、内部 JWT 和微服务方法 / 数据授权。原理图由 `assets/diagrams/security-architecture.svg` 与 `security-architecture` 短码直接渲染，支持文字描述、键盘焦点和窄屏横向滚动，不依赖远程绘图库。Gateway 与 Security 两章按固定源码提交人工维护细节，使用 `manual_content: true` 保留说明；其中明确区分 Token、AK/SK、API Key 的实际分支以及 CheckOwner 两种校验时机。
-
-原理图文字使用共享的正文 / 代码字号变量，并保持 720px 原生画布，避免在宽屏随容器拉伸而放大字号。窄屏在图形区域内横向滚动。Web 的“授权列表的资源凭证扩展”归入“核心功能 → 全局返回结构处理”，同步时也保持该归类。
-
-latest 的“平台简介 → 应用分层”复用应用分层章节的 `layer-model.png`、`model2.png` 原图，概要介绍 Query、Form、DTO、VO、BO、Entity 的命名、服务内传递及跨服务契约转换。图片与原规范保持共用，支持放大查看；新增章节通过 `LATEST_CHAPTERS` 显式声明，使用 `manual_content: true` 保留人工维护内容。
-
-Gateway 组件说明同时覆盖 README 中的完整能力：HTTP / WebSocket 路由、认证授权、内部 JWT、CryptoService 与接口加解密 / 签名、System Redis 扩展、Token 缓存管理、Trace ID 和灰度标签。页面直接介绍组件接入与使用，使用通用服务名和环境变量；协议细节对照 CryptoService、过滤器与配置属性，`source_paths` 记录相应来源。功能覆盖检查用于防止组件页在后续整理中遗漏这些内容。
-
-3.1、4.0 分别独立维护在 `content/zh-cn/docs/3.1/`、`content/zh-cn/docs/4.0/`，保留各自历史目录结构，直接从顶部版本菜单进入，不再嵌套或复制到其他版本中。它们在版本配置中标记为 `archived: true`，同步工具会跳过历史版本。原始 `/docs/98_old/<版本>/` 及曾使用的 `/docs/<5.x|6.0.x|latest>/98_old/<版本>/` 章节地址均跳转到独立历史文档；旧图片地址通过 Hugo 静态挂载保留。原有“历史文档”目录入口跳转到 4.0 首页。
-
-同步工具只读取 Git 已提交内容，不切换或修改 Boot 工作区。`scripts/sync-boot-docs.py` 中的 `MAPPING` 将分支 README 映射到已有章节或 `EXTRA_CHAPTERS` 显式声明的独立组件页；已有章节保留 5.x 的标题、导航名和排序，新增组件页单独维护标题与排序。同步页记录来源分支、提交和文件路径，编辑链接指向对应 Boot 分支。
-
-暂无对应分支资料的章节沿用 5.x 内容并明确标注尚未核对，历史归档保持原文。执行同步会重新生成 latest 文档；人工修订应同步维护生成规则。生成器会检查文件路径符合基础章节与显式组件页声明，不会为新模块自动添加新的栏目，也不应将组件说明混入栏目首页。文档快照随官网保存，构建及部署无需再次访问 Boot 仓库。
-
-人工编写的版本专属章节可在 Front Matter 中设置 `manual_content: true`，同步工具会完整保留该页面。latest 的“运维指引 → 升级指南”直接记录从 5.x 升级到 main 的步骤、分支对照提交和参考源码，整合 Java/Jakarta、最新技术栈、可观测性和任务等变更，不要求经过未发布的中间版本。latest 概述同步时会移除 README 中“从 6.0 升级到 6.1”的详细迁移章节，仅保留指向统一升级指南的入口。后续分支升级说明变化时，应同步维护对应指南及此提取规则。
-
-历史版本名称与正式路径统一不带 `v` 前缀，原 `/docs/v3.1/`、`/docs/v4.0/` 及其章节地址保留跳转，图片等资源地址继续可用。
-
-### 使用者文档与搜索
-
-latest 的接入步骤按快速开始、首次接入 Cloud、业务开发及生产交付分别维护，人工页面标记 `manual_content: true`；新增章节同步登记到 `scripts/sync-boot-docs.py`。本地搜索使用 Hugo 生成的静态索引，默认当前文档版本，运行 `node --test scripts/tests/site-search.test.cjs` 验证中文、版本范围与结果顺序。分层图的 SVG 为清晰补充，原始 PNG 保留。
+修改页面交互后检查桌面与手机显示，搜索逻辑可运行 `node --test scripts/tests/site-search.test.cjs`。不提交生成的 `public/`、`resources/` 或本地环境文件。

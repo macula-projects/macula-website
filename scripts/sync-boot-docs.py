@@ -27,6 +27,12 @@ EXTRA_CHAPTERS = {
 }
 
 LATEST_CHAPTERS = {
+    '03_devrules/后端开发规范/Java开发规范.md': {
+        'title': 'Java开发规范', 'linkTitle': 'Java开发规范', 'weight': 1,
+    },
+    '03_devrules/后端开发规范/数据库规约.md': {
+        'title': '数据库规约', 'linkTitle': '数据库规约', 'weight': 8,
+    },
     '04_devmanual/首次接入Macula Cloud.md': {
         'title': '首次接入', 'linkTitle': '首次接入', 'weight': 3,
     },

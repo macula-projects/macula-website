@@ -1,14 +1,14 @@
 ---
 title: "阿里规范"
 linkTitle: "阿里规范"
-weight: 1
+weight: 9
 manual_content: true
 source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "dcd7fd36ee55ea43e17958264d0c6609455bb114", "paths": ["content/zh-cn/docs/latest/03_devrules/后端开发规范/阿里规范/_index.md"]}]
 ---
 
-以下是已归档的《Java 开发手册（黄山版）》参考资料，不是 Spring Boot 4 的配置手册。团队沿用其中命名、集合、异常、SQL 与安全原则；API、依赖和配置以当前源码为准。框架源码的 JavaDoc、版权头与验证命令见[贡献规范](/docs/latest/11_about/贡献规范/)。
+本目录保留《Java 开发手册（黄山版）》作为参考原文，来源见 [alibaba/p3c 官方仓库](https://github.com/alibaba/p3c)。上级目录按 Macula 场景整理的规约属于项目约定；API、依赖、配置和具体工具要求以目标分支为准。框架源码的 Javadoc、版权头、内置 Formatter 与验证命令见[贡献规范](/docs/latest/11_about/贡献规范/)。
 
-* [前言](./Java开发手册(黄山版).pdf#前言)
+* [前言](./Java开发手册(黄山版).pdf#page=2)
 * 一、编程规约
   - [（一）命名风格](./Java开发手册(黄山版).pdf#page=4)
   - [（二）常量定义](./Java开发手册(黄山版).pdf#page=6)
