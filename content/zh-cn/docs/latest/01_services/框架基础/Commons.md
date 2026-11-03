@@ -79,6 +79,13 @@ throw new BizException(ApiResultCode.BIZ_ERROR, "订单状态不允许此操作"
 
 `ResourceAccessDenied` 是跨模块的资源拒绝标记，`ResourceAccessException` 提供无安全库依赖的拒绝异常；现有 Web 异常 Advice 将其转换为 HTTP 403 / A0312。签名密钥、当前身份与实际验签留在 Security Starter，不放入 DTO 或公共模块。
 
+### 验证与排障
+
+| 检查 | 预期与定位方法 |
+| --- | --- |
+| 模型与 HTTP | Commons 提供 Result 等契约；Servlet 返回自动包装由 Web Starter 完成，不能仅引入 Commons 就期待所有接口被拦截。 |
+| 公共异常 | 构造一个受控业务异常，通过实际使用的 Web 异常处理链验证错误码与信息，避免暴露内部堆栈。 |
+
 ## 依赖引入
 
 以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。

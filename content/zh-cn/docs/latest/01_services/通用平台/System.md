@@ -91,6 +91,14 @@ public class SystemController {
 
 `macula-cloud-system` 需独立部署，并通过网关暴露 `/system` 路由；应用标识、密钥及用户权限由服务端维护。
 
+### 验证与排障
+
+| 检查 | 预期与定位方法 |
+| --- | --- |
+| 应用关联 | 以当前应用的 AK / SK 请求 Cloud，确认用户、菜单与操作权限属于正确应用。 |
+| 菜单为空 | 依次核对 endpoint、app-key、应用菜单归属与用户角色；菜单可见仍需独立验证服务端操作权限。 |
+| 请求失败 | 区分 IAM Client 与平台应用凭据，检查 endpoint 是否 Cloud Gateway，以及是否重复添加了 /system。 |
+
 ## 依赖引入
 
 ```xml

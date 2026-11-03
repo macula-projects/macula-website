@@ -286,6 +286,15 @@ public class UserFallbackFactory extends AbstractProviderFallbackFactory {
 }
 ```
 
+### 验证与排障
+
+| 检查 | 预期与定位方法 |
+| --- | --- |
+| 真实远程调用 | 经过 Gateway 调用一个会访问提供端的接口，在提供端确认收到请求；只 Mock Feign 接口不能验证服务发现。 |
+| 身份与上下文 | 在下游验签后确认身份，检查请求 ID 与灰度标签；自定义头仅按可信白名单传递。 |
+| 超时与失败 | 对超时、目标服务不存在和业务失败分别验证；先看注册名 / namespace，再看 URL、网络和客户端超时。 |
+| 异步调用 | 无原始 Servlet 请求时验证实际采用的身份方案，不假定 Authorization 自动透传。 |
+
 ## 依赖引入
 
 ```xml

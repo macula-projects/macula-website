@@ -8,6 +8,18 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "
 
 Macula 是面向 Java 业务应用的模块化微服务开发平台。它将通用技术组件、统一身份与权限等平台服务，以及业务应用的参考工程组合起来，帮助团队统一基础能力，把主要开发工作放在业务上。
 
+## 从哪里开始
+
+| 你的目标 | 选择与下一步 | 是否需要 Cloud |
+| --- | --- | --- |
+| 在已有 Spring 应用使用缓存、数据访问、对象转换等能力 | 先看[依赖接入](/docs/latest/00_introduce/快速开始/#依赖接入)，再选对应 Starter | 独立技术组件通常不需要；仍需其数据库、Redis 等外部依赖 |
+| 先了解框架组件如何协作 | 按[快速开始](/docs/latest/00_introduce/快速开始/)运行 Boot Examples | 本站示例主线先启动 Cloud，再验证 Gateway / Consumer / Provider |
+| 从零创建自己的业务工程 | 用 Archetype 生成骨架，按[开发指引](/docs/latest/04_devmanual/)接入和开发 | 需要平台登录、菜单等能力时接入 |
+| 阅读完整业务工程 | 参考单仓 Samples，重点看[示例模块说明](/docs/latest/04_devmanual/模块说明/)和[创建示例服务](/docs/latest/04_devmanual/创建服务模块/) | 当前 Samples 依赖 Cloud 的身份与权限服务 |
+| 扩展框架或修改默认行为 | 阅读[定制与扩展](/docs/latest/04_devmanual/创建服务模块/#定制与扩展)，先选配置、Bean 或扩展接口 | 取决于被扩展的组件 |
+
+Examples 用于验证组件；Samples 展示业务应用；Archetype 用于生成你自己的工程。三者不需要依次复制到同一个项目中。latest 是开发快照，正式部署前确认目标版本与组件兼容性。
+
 ## 平台组成
 
 | 组成 | 职责 | 使用方式 |

@@ -3,7 +3,7 @@ title: "首次接入"
 linkTitle: "首次接入"
 weight: 3
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["macula-cloud-iam/README.md", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/OAuth2ClientConfigServiceImpl.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/config/ProtocolOAuth2Configuration.java", "macula-cloud-admin/src/views/system/application/save.vue", "macula-cloud-admin/src/views/system/oauth2Client/index.vue", "macula-cloud-system/src/main/resources/db/migration/V2__admin_identity_security_settings.sql"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["macula-samples-admin/src/views/common/login/components/passwordForm.vue", "macula-samples-admin/src/config/index.js", "macula-samples-gateway/src/main/resources/application.yml", "macula-samples-admin-bff/src/main/resources/application.yml", "macula-samples-admin-bff/src/main/java/dev/macula/samples/admin/bff/controller/ApplicationController.java"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["macula-cloud-iam/README.md", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/OAuth2ClientConfigServiceImpl.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/config/ProtocolOAuth2Configuration.java", "macula-cloud-admin/src/views/system/application/save.vue", "macula-cloud-admin/src/views/system/oauth2Client/index.vue", "macula-cloud-system/src/main/resources/db/migration/V2__admin_identity_security_settings.sql"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["macula-samples-admin/src/views/common/login/components/passwordForm.vue", "macula-samples-admin/src/config/index.js", "macula-samples-gateway/src/main/resources/application.yml", "macula-samples-admin-bff/src/main/resources/application.yml", "macula-samples-admin-bff/src/main/java/dev/macula/samples/admin/bff/controller/ApplicationController.java", "macula-samples-admin/src/api/model/common/auth.js", "deploy/.env.example"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["deploy/.env.example", "deploy/docker-compose.yml", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/OAuth2ClientConfigServiceImpl.java"]}]
 ---
 
 本页以本机启动的 Cloud 与 Samples 为例，说明从平台登记到受保护接口验证。先完成[平台部署](/docs/latest/04_devmanual/部署macula平台/)及[创建示例平台](/docs/latest/04_devmanual/创建应用平台/)。端口如有覆盖，以实际配置为准。
@@ -27,6 +27,26 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", 
 
 进入“IAM接入应用”（`/system/oauth2-client`）。填写 Client ID、应用名称、所属租户和用户类型；选择终端和登录方式，再配置回调与高级协议字段。
 
+### 先跑通当前 Samples
+
+本章运行主线使用当前 Samples 的本地兼容登录。其 `src/views/common/login/components/passwordForm.vue` 将 Client ID、Secret 和 scope 放在表单中，向 IAM 请求 `grant_type=password`；应登记与这个实际请求一致的本地测试 Client。
+
+| 登记字段 | 本地 Samples 的要求 |
+| --- | --- |
+| Client ID | 与 `VITE_APP_OAUTH_CLIENT_ID` 一致，例如自建 `samples-local-web` |
+| 认证方式 | `client_secret_post`，匹配前端表单中的 client_secret |
+| 授权方式 | `password`；需要刷新时另允许 `refresh_token` |
+| Secret | 与 `VITE_APP_OAUTH_CLIENT_SECRET` 一致、至少 16 字符的本地测试值；不要使用生产凭据 |
+| Scopes | 与 `VITE_APP_OAUTH_SCOPE` 一致；多个 scope 在请求中以空格分隔 |
+| 用户类型与租户 | 与测试用户所属类型、租户一致；选择平台中实际存在的值 |
+| 浏览器允许 Origin | 本地使用 `http://127.0.0.1:5800`，与浏览器实际打开的地址一致 |
+
+同步修改 Samples 的 `deploy/.env`。完整容器模式重建 / 重启 Admin 使运行配置生效；IDE + Vite 模式按[示例配置](/docs/latest/04_devmanual/模块说明/#env-与前端配置的边界)加载对应前端变量，并重启开发服务器。先从浏览器 Network 确认 `/oauth2/token` 返回 `access_token`，再检查用户与菜单接口。
+
+这条兼容流程仅用于运行现有本地示例。新应用应采用授权码 + S256 PKCE 或由服务端 BFF 管理令牌；OAuth 安全实践已不允许以密码模式作为新接入方案，见 [RFC 9700](https://www.rfc-editor.org/rfc/rfc9700.html#section-2.4)。
+
+### 新应用使用授权码与 PKCE
+
 新浏览器应用使用授权码与 S256 PKCE。以下为新建客户端的配置示例，**回调页面需由业务应用实际实现**：
 
 | 字段 | 示例 / 规则 |
@@ -41,7 +61,9 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", 
 
 `localhost` 与 `127.0.0.1` 是不同 Origin，回调也必须与授权请求一致。应用应校验 state，OIDC 客户端还应校验 ID Token；授权码只能使用一次，不能省略 PKCE 校验。协议要求见 [OAuth 安全实践](https://www.rfc-editor.org/rfc/rfc9700.html)。
 
-**当前 Samples 的兼容边界**：已提交的 `passwordForm.vue` 仍使用 `grant_type=password`，配置项为 `VITE_APP_OAUTH_CLIENT_ID`、`VITE_APP_OAUTH_CLIENT_SECRET`、`VITE_APP_OAUTH_SCOPE`；它没有上述 PKCE 回调实现。现有本地示例若继续使用该流程，需为其单独登记允许 `password` 的兼容 Client，认证方式与 IAM 请求保持一致、scope 必须是该 Client 允许值。当前 Cloud 保留此兼容扩展，但不应把浏览器携带 Secret 的示例直接作为生产接入方案。新应用需实现授权码登录，或采用服务端 BFF 管理令牌，不能只改 Client 配置就声称完成迁移。
+当前 Samples 尚未提供上述 PKCE 回调页面。采用这条新应用方案时，需要实际实现发起授权、保存并验证 state / code_verifier、处理回调、换取及管理令牌、退出等逻辑；请求 OIDC 时还需验证 ID Token。不能只修改 Client 登记字段就宣称已完成迁移。若由服务端 BFF 管理令牌，浏览器使用会话，服务端持有机密材料。
+
+完成这条方案的验证后，再使用对应的访问令牌执行下方第 5 步；不要把本地兼容 Client 的 Secret 复制到新浏览器应用。
 
 ## 3. 对齐三个连接方向
 
@@ -51,7 +73,7 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", 
 | BFF → Cloud | `macula.cloud.endpoint` / `app-key` / `secret-key` | Cloud Gateway，默认 `http://127.0.0.1:9000`；填第 1 步的应用凭据 |
 | BFF / Service → 应用 Gateway | `spring.security.oauth2.resourceserver.jwt.jwk-set-uri` | Samples Gateway 的 JWK 地址，详见[请求链路](/docs/latest/00_introduce/请求链路/) |
 
-Gateway 的 System Redis 应指向 **Cloud System 实际使用的同一 Redis 与数据库**，应用自身 Redis 则独立配置。Samples 默认 System Redis 端口 `16379`，Cloud 标准 Compose 默认 `6379`，请按部署覆盖 `MACULA_CLOUD_REDIS_PORT`。同样区分本机地址、容器 DNS 与浏览器可访问地址；IDE 不自动加载 `.env`。完整键名见[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
+Gateway 的 System Redis 应指向 **Cloud System 实际使用的同一 Redis 与数据库**，应用自身 Redis 则独立配置。当前 Samples 与 Cloud 的 `deploy/.env.example` 均使用宿主机 Redis 端口 `16379`；如果自己的部署改了端口或库号，同步覆盖 `MACULA_CLOUD_REDIS_PORT` 及相关连接配置。同样区分本机地址、容器 DNS 与浏览器可访问地址；IDE 不自动加载 `.env`。完整键名见[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
 
 ## 4. 配置菜单与用户角色
 

@@ -18,3 +18,7 @@ mvn clean verify -Pprd -Dgpg.skip=true
 该命令会执行单元与集成测试，需先按[运行与测试](/docs/latest/04_devmanual/运行与测试/)准备外部依赖；缺少环境时不得将跳过集成测试标为验证通过。Admin 在其目录执行 `npm ci` 与 `npm run build`；前端构建环境按 Vite 配置选择，不使用 Maven profile 推断。
 
 检查目标模块的可运行 JAR、镜像构建文件及前端 dist。镜像使用不可变标签或 digest，与源码提交建立对应关系；不要部署 `latest` 可变标签来代替发布记录。后续按[服务配置](/docs/latest/05_ops/服务配置/)注入环境，按[服务部署](/docs/latest/05_ops/服务部署/)验证和回滚。
+
+## 制品交付检查
+
+核对业务 JAR 含本次契约与迁移、Admin 包含本次页面，并记录镜像 digest。测试必须对应同一源码与依赖版本；不要在完成测试后无记录地更新快照依赖。一次具体的工作项发布示例见[服务部署](/docs/latest/05_ops/服务部署/#一次发布演练)。

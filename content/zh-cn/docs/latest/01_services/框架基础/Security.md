@@ -187,6 +187,15 @@ public void cancel(String orderId) {
 
 更多返回包装、参数解析与 Passkey 扩展说明见 [Security 源码 README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-starters/macula-boot-starter-security)。实际应用组织参见 [Samples 模块说明](/docs/latest/04_devmanual/模块说明/)和[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
 
+### 验证与排障
+
+| 检查 | 预期与定位方法 |
+| --- | --- |
+| 身份与方法权限 | 分别使用有效身份、过期 Token、无角色身份调用同一业务入口；确认拒绝发生在写入之前。 |
+| PMS 权限 | 调用带操作权限表达式的方法，分别授予 / 撤销对应权限；角色校验成功不代表 PMS 按钮权限也成功。 |
+| 资源范围 | 用两个真实用户验证列表查询范围与单资源归属；Passkey 验证通过不能替代列表、租户及业务状态约束。 |
+| 方法未被拦截 | 核对目标是否 Spring Bean、是否经过代理、注解声明的位置及调用方式，再看认证上下文，不能直接改成匿名放行。 |
+
 ## 依赖引入
 
 以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
