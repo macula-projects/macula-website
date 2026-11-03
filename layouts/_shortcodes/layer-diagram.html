@@ -1,7 +1,13 @@
 {{ $name := .Get "name" }}
 {{ $source := printf "static/diagrams/%s.svg" $name }}
-<div class="layer-diagram" role="region" aria-label="{{ .Get "title" }}，可横向滚动" tabindex="0">
-  {{ readFile $source | safeHTML }}
-</div>
-<p><a href="{{ printf "/diagrams/%s.svg" $name | relURL }}" target="_blank" rel="noopener">独立查看清晰图</a> · <a href="{{ .Get "original" }}">查看原始 PNG</a></p>
-<details><summary>原始分层图（保留）</summary><a href="{{ .Get "original" }}" data-fancybox="layer-original"><img src="{{ .Get "original" }}" alt="{{ .Get "title" }}原始图" loading="lazy"></a></details>
+<figure>
+  <a href="{{ .Get "original" }}" data-fancybox="layer-original"><img src="{{ .Get "original" }}" alt="{{ .Get "title" }}原始图" loading="lazy"></a>
+  <figcaption><a href="{{ .Get "original" }}" target="_blank" rel="noopener">独立查看原图</a>，点击图片可放大。</figcaption>
+</figure>
+<details>
+  <summary>补充示意图</summary>
+  <div class="layer-diagram" role="region" aria-label="{{ .Get "title" }}补充示意图，可横向滚动" tabindex="0">
+    {{ readFile $source | safeHTML }}
+  </div>
+  <p><a href="{{ printf "/diagrams/%s.svg" $name | relURL }}" target="_blank" rel="noopener">独立查看补充示意图</a></p>
+</details>

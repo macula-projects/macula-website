@@ -81,7 +81,7 @@
   - `content/zh-cn/docs/latest/03_devrules/后端开发规范/images/layer-model.png`
   - `content/zh-cn/docs/latest/03_devrules/后端开发规范/images/model2.png`
 - 说明 Controller、Service、Mapper、Converter 的职责，Query、Form、DTO、VO、BO、Entity 的语义，以及 BFF、业务服务和 API 契约的边界。
-- “平台简介 → 值对象与分层”以原有 `layer-model.png`、`model2.png` 两图为主，概要说明命名、服务内传递和跨服务转换；复用原图并保留放大查看，详细规范仍在应用分层章节。稳定 API 契约可包含 Query/Form/VO，不强制跨服务全部改成 DTO，也不要求每层机械复制对象。
+- “平台简介 → 应用分层”以原有 `layer-model.png` 泳道图、`model2.png` 跨服务图为正文主图，直接展示并支持放大查看；补充矢量图放在折叠区，不能将原图折叠后用简化箭头图取代。概要说明命名、服务内传递和跨服务转换，详细规范仍在应用分层章节。稳定 API 契约可包含 Query/Form/VO，不强制跨服务全部改成 DTO，也不要求每层机械复制对象。
 - 经典三层是可选的基础组织方式，不将某一示例工程的做法写成 Macula 强制的唯一架构。
 
 ## Gateway、安全与生产准备
