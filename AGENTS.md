@@ -96,7 +96,7 @@
 - 不把 AK/SK、API Key 应用身份写成登录用户身份，不声称它们自动具有用户角色；具体权限路径按实际实现说明。
 - 不混淆 IAM introspection、Macula Cloud Gateway endpoint、应用 Gateway JWK 地址。
 - 请求链路按入口、网关校验、身份转接、BFF、服务调用、业务执行与响应观测展开；IAM、System、Redis、JWK 是支撑连接。只说明原理与连接方向，参数、配置、注解用法与协议细节放在 Gateway Starter、Security Starter 等组件页，不把原有两章机械拼接。旧安全架构 URL 保持跳转。
-- main / 5.x 已移除 `@CheckOwner`；返回后归属检查使用标准 `@PostAuthorize`，资源凭证使用 MVC Controller 参数级 `@Passkey`（DTO 为 JavaBean 属性路径，不是 SpEL）。两者分别解释，不能把资源凭证当作列表过滤、按钮权限或租户数据范围的替代。变更说明时核对当前注解和实现。
+- 正文只介绍当前用法，不补充旧注解名称或替换历史。返回后归属检查使用标准 `@PostAuthorize`，资源凭证使用 MVC Controller 参数级 `@Passkey`（DTO 为 JavaBean 属性路径，不是 SpEL）。两者分别解释，不能把资源凭证当作列表过滤、按钮权限或租户数据范围的替代。变更说明时核对当前注解和实现。
 - 生产准备包含 **Observability**，说明指标、链路、日志及其配置；不能只剩审计，也不能将已删除的旧可观测性 Starter 作为 main 的当前方案。
 
 ## 来源、同步与变更历史

@@ -298,8 +298,6 @@ public void update(@RequestBody @Valid @Passkey("orderId") UpdateOrderRequest re
 - 凭证只从 Header/Query 读取，不读取表单或 DTO 字段；重复、冲突和空值拒绝。使用现有异常 Advice 时，凭证拒绝返回 HTTP 403/A0312。
 - 仅保护 MVC Controller 请求；操作权限和返回值鉴权分别使用 `@PreAuthorize`、`@PostAuthorize`。凭证到期前可复用，不能代替业务状态、租户或实时权限检查。
 
-旧 `@CheckOwner` 已移除：返回值归属改用 `@PostAuthorize`，资源凭证改用 Controller 参数上的 `@Passkey`，不能沿用旧方法注解与 SpEL。5.x 已启用 Spring Security 方法鉴权，无需再为这些示例切换到 main 的方法安全配置。
-
 ### 内部接口注解@Inner
 
 默认情况下依赖了本模块的接口都要有token才能访问，对于一些内部接口，比如定时任务调用的接口，没有经过网关，没有token，这个时候你可以在你的Controller上的方法上加上@Inner注解。调用方需要设置请求header为`from=Y`
@@ -311,7 +309,6 @@ public interface SystemFeignClient {
     @GetMapping(value = "/system/api/v1/menus/routes", headers = SecurityConstants.HEADER_FROM_IN)
     List<RouteVO> listRoutes();
 }
-
 
 public class TestController {
     @Operation(summary = "路由列表")

@@ -255,8 +255,6 @@ public void update(@RequestBody @Valid @Passkey("orderId") UpdateOrderRequest re
 - 网关放行、ROOT / ADMIN 角色不代表自动通过资源凭证校验。列表、分页、统计和导出仍须在查询条件中落实用户、租户和数据范围。
 - 凭证到期前可复用；授权变化不会自动撤销已有凭证，签名不包含租户或 action，写操作仍应检查实时业务状态与权限。
 
-旧 `@CheckOwner` 已移除：返回值归属检查使用本页 `@PostAuthorize` 示例，资源凭证检查使用 Controller 参数级 `@Passkey`；不能只改注解名称而保留原方法位置与 SpEL。
-
 实际应用组织参见 [Samples 模块说明](/docs/latest/04_devmanual/模块说明/)和[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
 
 ### 验证与排障
