@@ -57,7 +57,13 @@ latest 跟随 Macula Boot main，当前版本为 **6.1.0-SNAPSHOT**，基于 Jav
 
 ## 技术架构
 
-平台组成与请求链路的主图统一放在[应用架构](/docs/latest/00_introduce/应用架构/)；身份与权限的原理图见[安全架构](/docs/latest/00_introduce/安全架构/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再按需要阅读这两部分原理。
+下图展示 Macula 的整体技术架构：Macula Boot 提供基础组件，Macula Cloud 提供公共平台服务，业务应用按需组合这些能力，并结合基础设施与微服务治理平台运行。
+
+![Macula 整体技术架构：基础设施、Macula Boot、Macula Cloud、业务应用与微服务治理平台](/img/structure-diagram.png)
+
+[独立查看原图](/img/structure-diagram.png)。图中保留了早期架构的组件名称，TSF、SkyWalking 等不代表 latest 仍提供同名 Starter；当前可用组件以本页“核心能力”和[平台能力](/docs/latest/01_services/)为准。
+
+业务模块职责与请求链路见[应用架构](/docs/latest/00_introduce/应用架构/)；身份与权限的原理图见[安全架构](/docs/latest/00_introduce/安全架构/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再按需要阅读这两部分原理。
 
 实际创建、接入和修改业务应用，按[开发指引](/docs/latest/04_devmanual/)操作；框架源码构建、测试与贡献要求见[贡献规范](/docs/latest/11_about/贡献规范/)。
 
