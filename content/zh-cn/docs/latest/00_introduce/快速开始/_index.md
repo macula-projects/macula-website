@@ -82,7 +82,7 @@ mvn archetype:generate \
 
 将 `groupId`、`package` 和 `artifactId` 换成自己的组织、包名与项目名；`version` 是业务项目版本，`archetypeVersion` 是模板版本，两者独立。
 
-生成后进入 `demo-app/`，按其中的 `deploy/README.md` 配置 Macula Cloud 应用与 OAuth Client，再运行项目。模板参数见 [Archetype README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-archetype)，业务开发见[开发指引](/docs/latest/04_devmanual/)，认证配置见[安全架构](/docs/latest/00_introduce/安全架构/)。
+生成后进入 `demo-app/`，按其中的 `deploy/README.md` 配置 Macula Cloud 应用与 OAuth Client，再运行项目。模板参数见 [Archetype README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-archetype)，业务开发见[开发指引](/docs/latest/04_devmanual/)，认证配置见[请求链路](/docs/latest/00_introduce/应用架构/)。
 
 自己的应用还需在 Cloud 注册应用与 OAuth Client，按[首次接入 Macula Cloud](/docs/latest/04_devmanual/首次接入macula-cloud/)完成登录和受保护接口验证。
 
