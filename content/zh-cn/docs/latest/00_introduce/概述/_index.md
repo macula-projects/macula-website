@@ -8,6 +8,18 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "
 
 Macula 是面向 Java 业务应用的模块化微服务开发平台。它将通用技术组件、统一身份与权限等平台服务，以及业务应用的参考工程组合起来，帮助团队统一基础能力，把主要开发工作放在业务上。
 
+## 技术架构
+
+下图展示 Macula 的整体技术架构：Macula Boot 提供基础组件，Macula Cloud 提供公共平台服务，业务应用按需组合这些能力，并结合基础设施与微服务治理平台运行。
+
+![Macula 当前整体技术架构：Macula Cloud 与业务应用、Macula Boot、服务治理与可观测性、基础设施](/diagrams/platform-architecture.svg)
+
+图中组件按需组合；右侧治理与可观测系统、底层运行环境不要求全部部署。任务调度与重试统一基于 SnailJob，可观测性通过统一组件采集指标、链路与日志并以 OTLP 导出。完整配置见[平台能力](/docs/latest/01_services/)。
+
+一次请求从入口到业务服务的路由、身份传递和逐层授权，见[请求链路](/docs/latest/00_introduce/请求链路/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再结合链路理解各模块的协作。
+
+实际创建、接入和修改业务应用，按[开发指引](/docs/latest/04_devmanual/)操作；框架源码构建、测试与贡献要求见[贡献规范](/docs/latest/11_about/贡献规范/)。
+
 ## 从哪里开始
 
 | 你的目标 | 选择与下一步 | 是否需要 Cloud |
@@ -66,18 +78,6 @@ Macula 提供技术基础和平台公共服务。业务团队仍需定义领域�
 latest 跟随 Macula Boot main，当前版本为 **6.1.0-SNAPSHOT**，基于 Java 17、Spring Boot 4.0 和 Spring Cloud 2025.1。latest 是开发快照；正式版本以[变更历史](/docs/latest/11_about/更新日志/)及 GitHub Releases 为准，6.0 系列不建议使用。
 
 业务项目优先继承 Macula Boot Parent，再按需选择 Starter，由 Parent 管理版本与构建约定。已有其他 Parent 的项目需要显式管理 Macula 制品及第三方依赖，不能只填一个版本号。具体 POM 示例见[快速开始 → 依赖接入](/docs/latest/00_introduce/快速开始/#依赖接入)。
-
-## 技术架构
-
-下图展示 Macula 的整体技术架构：Macula Boot 提供基础组件，Macula Cloud 提供公共平台服务，业务应用按需组合这些能力，并结合基础设施与微服务治理平台运行。
-
-![Macula 当前整体技术架构：Macula Cloud 与业务应用、Macula Boot、服务治理与可观测性、基础设施](/diagrams/platform-architecture.svg)
-
-图中组件按需组合；右侧治理与可观测系统、底层运行环境不要求全部部署。任务调度与重试统一基于 SnailJob，可观测性通过统一组件采集指标、链路与日志并以 OTLP 导出。完整配置见[平台能力](/docs/latest/01_services/)。
-
-一次请求从入口到业务服务的路由、身份传递和逐层授权，见[请求链路](/docs/latest/00_introduce/请求链路/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再结合链路理解各模块的协作。
-
-实际创建、接入和修改业务应用，按[开发指引](/docs/latest/04_devmanual/)操作；框架源码构建、测试与贡献要求见[贡献规范](/docs/latest/11_about/贡献规范/)。
 
 ## License
 
