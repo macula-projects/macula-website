@@ -39,11 +39,11 @@ LATEST_CHAPTERS = {
     '01_services/生产准备/Observability.md': {
         'title': 'Observability：统一可观测性', 'linkTitle': 'Observability', 'weight': 1,
     },
-    '00_introduce/值对象与分层.md': {
-        'title': '应用分层', 'linkTitle': '应用分层', 'weight': 4,
+    '00_introduce/应用架构/_index.md': {
+        'title': '应用架构', 'linkTitle': '应用架构', 'weight': 3,
     },
-    '00_introduce/应用架构.md': {
-        'title': '请求链路', 'linkTitle': '请求链路', 'weight': 3,
+    '00_introduce/应用架构/请求链路.md': {
+        'title': '请求链路', 'linkTitle': '请求链路', 'weight': 1,
     },
     '04_devmanual/模块说明.md': {
         'title': '示例模块说明', 'linkTitle': '示例模块说明', 'weight': 4,
@@ -189,7 +189,7 @@ def main():
                 content = content.replace('从 6.0 迁移请参考', '从 5.x 迁移请参考')
                 content = content.replace('[统一可观测性迁移指南]', '[从 5.x 迁移到 latest 的升级指南]')
                 content = content.replace('## 核心能力',
-                    '网关入口认证、内部 JWT 与方法 / 数据授权的分层关系，见[请求链路](/docs/latest/00_introduce/应用架构/)。\n\n## 核心能力', 1)
+                    '网关入口认证、内部 JWT 与方法 / 数据授权的分层关系，见[请求链路](/docs/latest/00_introduce/应用架构/请求链路/)。\n\n## 核心能力', 1)
 
             if version['id'] == 'latest' and source.endswith('/macula-boot-starter-cache/README.md'):
                 content = re.sub(r'(?m)^(#{2,3}) 从 6\.0 升级到 6\.1$',

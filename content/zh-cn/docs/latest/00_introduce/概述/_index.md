@@ -24,7 +24,7 @@ Boot 支持按需组合组件；只使用部分技术 Starter 时，不要求部
 
 Macula 提供技术基础和平台公共服务。业务团队仍需定义领域模型、业务规则、接口契约、数据范围与页面，并负责测试和部署验证。
 
-业务应用通常由前端、应用 Gateway、BFF 和业务服务协作完成请求。模块职责与 Cloud 的连接关系见[请求链路](/docs/latest/00_introduce/应用架构/)；代码和对象如何分层见[应用分层](/docs/latest/00_introduce/值对象与分层/)。
+业务应用通常由前端、应用 Gateway、BFF 和业务服务协作完成请求。模块职责与 Cloud 的连接关系见[请求链路](/docs/latest/00_introduce/应用架构/请求链路/)；代码和对象如何分层见[应用架构](/docs/latest/00_introduce/应用架构/)。
 
 ## 核心能力
 
@@ -63,7 +63,7 @@ latest 跟随 Macula Boot main，当前版本为 **6.1.0-SNAPSHOT**，基于 Jav
 
 [独立查看架构图](/diagrams/platform-architecture.svg)，点击图片可放大。图中组件按需组合；右侧治理与可观测系统、底层运行环境不要求全部部署。任务调度与重试统一基于 SnailJob，可观测性通过统一组件采集指标、链路与日志并以 OTLP 导出。完整配置见[平台能力](/docs/latest/01_services/)。
 
-一次请求从入口到业务服务的路由、身份传递和逐层授权，见[请求链路](/docs/latest/00_introduce/应用架构/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再结合链路理解各模块的协作。
+一次请求从入口到业务服务的路由、身份传递和逐层授权，见[请求链路](/docs/latest/00_introduce/应用架构/请求链路/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再结合链路理解各模块的协作。
 
 实际创建、接入和修改业务应用，按[开发指引](/docs/latest/04_devmanual/)操作；框架源码构建、测试与贡献要求见[贡献规范](/docs/latest/11_about/贡献规范/)。
 

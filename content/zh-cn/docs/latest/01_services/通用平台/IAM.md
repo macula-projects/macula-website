@@ -10,7 +10,7 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", 
 
 Macula Cloud IAM 是统一身份认证与授权中心，提供 OAuth 2.1 / OpenID Connect 登录、令牌签发、刷新、撤销、内省及公钥发布。用户名、手机号、邮箱、验证码以及第三方身份的接入按 OAuth Client 与 Provider 注册配置管理。
 
-IAM 管理身份与外部令牌；Gateway 负责入口认证、角色/菜单/URL 控制并签发内部 JWT；BFF 和服务通过 Security 实施方法与资源权限。参见[请求链路](/docs/latest/00_introduce/应用架构/)。
+IAM 管理身份与外部令牌；Gateway 负责入口认证、角色/菜单/URL 控制并签发内部 JWT；BFF 和服务通过 Security 实施方法与资源权限。参见[请求链路](/docs/latest/00_introduce/应用架构/请求链路/)。
 
 ## 组件坐标
 
