@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1130" viewBox="0 0 1600 1130" role="img" aria-labelledby="platform-title platform-desc">
+<title id="platform-title">Macula 整体技术架构 · latest</title>
+<desc id="platform-desc">沿用原图分层布局。上层为 Macula Cloud 公共平台及业务应用，中层为 Macula Boot 基础框架，右侧为按需接入的服务治理和可观测性，底层为基础设施。Cloud 包含 Gateway、IAM、System、TinyID、SnailJob、RocketMQ、Seata、Docs 及同仓 Admin。Boot 基于 Java 17、Spring Boot 4.0、Spring Cloud 2025.1，按需引入组件。</desc>
+<rect width="1600" height="1130" rx="20" fill="#ffffff"/>
+<g font-family="system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif" fill="#243b53">
+<text x="32" y="44" font-size="32" fill="#0876de" font-weight="750" text-anchor="start">MACULA</text>
+<text x="204" y="43" font-size="27" fill="#243b53" font-weight="650" text-anchor="start">整体技术架构</text>
+<text x="1568" y="42" font-size="20" fill="#52677d" font-weight="400" text-anchor="end">latest · 6.1.0-SNAPSHOT</text>
+<rect x="24" y="70" width="896" height="398" rx="14" fill="#f0f6ff" stroke="#bfd4ee"/>
+<text x="48" y="109" font-size="27" fill="#1465b5" font-weight="700" text-anchor="start">Macula Cloud</text>
+<text x="260" y="108" font-size="22" fill="#243b53" font-weight="400" text-anchor="start">公共平台服务</text>
+<rect x="48" y="127" width="848" height="54" rx="9" fill="#176dd1" stroke="#176dd1"/>
+<text x="472" y="162" font-size="22" fill="#fff" font-weight="650" text-anchor="middle">Cloud Gateway · 平台服务访问入口 / 认证与路由</text>
+<rect x="48" y="197" width="272" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="184.0" y="227" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">IAM</text>
+<text x="184.0" y="254" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">OAuth2 / OIDC 统一认证</text>
+<rect x="336" y="197" width="272" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="472.0" y="227" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">System</text>
+<text x="472.0" y="254" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">租户 / 应用 / 用户 / 权限</text>
+<rect x="624" y="197" width="272" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="760.0" y="227" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">TinyID</text>
+<text x="760.0" y="254" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">分布式 ID</text>
+<rect x="48" y="289" width="272" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="184.0" y="319" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">SnailJob</text>
+<text x="184.0" y="346" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">任务调度 / 重试</text>
+<rect x="336" y="289" width="272" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="472.0" y="319" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">RocketMQ / Seata</text>
+<text x="472.0" y="346" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">消息 / 分布式事务集成</text>
+<rect x="624" y="289" width="272" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="760.0" y="319" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">Docs</text>
+<text x="760.0" y="346" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">文档服务</text>
+<rect x="48" y="383" width="848" height="60" rx="9" fill="#dfeeff" stroke="#bfd4ee"/>
+<text x="72" y="409" font-size="21" fill="#1465b5" font-weight="650" text-anchor="start">Cloud Admin · 管理控制台</text>
+<text x="72" y="433" font-size="18" fill="#52677d" font-weight="400" text-anchor="start">Vue 3 / Vite · 位于 macula-cloud 同仓</text>
+<rect x="940" y="70" width="344" height="398" rx="14" fill="#f0f6ff" stroke="#bfd4ee"/>
+<text x="964" y="109" font-size="27" fill="#1465b5" font-weight="700" text-anchor="start">业务应用</text>
+<rect x="964" y="127" width="296" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="1112.0" y="157" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">业务前端 / 管理端</text>
+<text x="1112.0" y="184" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">业务页面与交互</text>
+<rect x="964" y="215" width="296" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="1112.0" y="245" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">应用 Gateway → BFF</text>
+<text x="1112.0" y="272" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">业务入口 / 页面接口聚合</text>
+<rect x="964" y="303" width="296" height="76" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="1112.0" y="333" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">业务 Service / API 契约</text>
+<text x="1112.0" y="360" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">业务规则 / 事务 / 服务调用</text>
+<text x="1112" y="413" font-size="20" fill="#1465b5" font-weight="650" text-anchor="middle">Samples 参考工程</text>
+<text x="1112" y="442" font-size="20" fill="#52677d" font-weight="400" text-anchor="middle">Archetype 快速创建</text>
+<rect x="1304" y="70" width="272" height="870" rx="14" fill="#f6f8fb" stroke="#d8e3ee"/>
+<text x="1440" y="109" font-size="25" fill="#243b53" font-weight="700" text-anchor="middle">治理与可观测</text>
+<text x="1440" y="140" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">按需部署与接入</text>
+<rect x="1324" y="164" width="232" height="106" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="1440" y="198" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">注册与配置</text>
+<text x="1440" y="228" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">Nacos / Polaris</text>
+<rect x="1324" y="292" width="232" height="106" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="1440" y="326" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">流量与容错</text>
+<text x="1440" y="356" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">Sentinel / Polaris</text>
+<rect x="1324" y="420" width="232" height="184" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="1440" y="454" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">统一采集与导出</text>
+<text x="1440" y="484" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">Micrometer / OTel</text>
+<text x="1440" y="513" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">Metrics · Traces · Logs</text>
+<text x="1440" y="542" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">OTLP → Collector</text>
+<rect x="1324" y="626" width="232" height="140" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="1440" y="660" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">观测后端</text>
+<text x="1440" y="690" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">按需选择指标、链路</text>
+<text x="1440" y="719" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">与日志存储 / 展示系统</text>
+<rect x="1324" y="786" width="232" height="106" rx="14" fill="#fff" stroke="#d8e3ee"/>
+<text x="1440" y="820" font-size="21" fill="#243b53" font-weight="650" text-anchor="middle">治理接入组件</text>
+<text x="1440" y="850" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">Alibaba / Tencent</text>
+<text x="1440" y="879" font-size="18" fill="#52677d" font-weight="400" text-anchor="middle">含网关适配与灰度</text>
+<rect x="24" y="490" width="1260" height="450" rx="14" fill="#f3f9f6" stroke="#c9dfd4"/>
+<text x="48" y="530" font-size="27" fill="#247455" font-weight="700" text-anchor="start">Macula Boot</text>
+<text x="250" y="529" font-size="22" fill="#243b53" font-weight="400" text-anchor="start">基础框架 · Parent 统一依赖 / Starter 按需引入</text>
+<text x="48" y="565" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">Java 17    /    Spring Boot 4.0    /    Spring Cloud 2025.1</text>
+<rect x="48" y="585" width="390" height="92" rx="10" fill="#fff" stroke="#c9dfd4"/>
+<text x="64" y="614" font-size="21" fill="#247455" font-weight="650" text-anchor="start">Web 与安全</text>
+<text x="64" y="640" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">web · security · crypto</text>
+<text x="64" y="663" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">springdoc · system</text>
+<rect x="450" y="585" width="390" height="92" rx="10" fill="#fff" stroke="#c9dfd4"/>
+<text x="466" y="614" font-size="21" fill="#247455" font-weight="650" text-anchor="start">数据与缓存</text>
+<text x="466" y="640" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">mybatis-plus · jpa</text>
+<text x="466" y="663" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">redis · cache · binlog4j</text>
+<rect x="852" y="585" width="408" height="92" rx="10" fill="#fff" stroke="#c9dfd4"/>
+<text x="868" y="614" font-size="21" fill="#247455" font-weight="650" text-anchor="start">服务调用与治理</text>
+<text x="868" y="640" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">feign · dubbo · cloud-gateway</text>
+<text x="868" y="663" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">cloud-alibaba · cloud-tencent</text>
+<rect x="48" y="691" width="390" height="92" rx="10" fill="#fff" stroke="#c9dfd4"/>
+<text x="64" y="720" font-size="21" fill="#247455" font-weight="650" text-anchor="start">消息与任务</text>
+<text x="64" y="746" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">rocketmq · kafka · sender</text>
+<text x="64" y="769" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">task（SnailJob）</text>
+<rect x="450" y="691" width="390" height="92" rx="10" fill="#fff" stroke="#c9dfd4"/>
+<text x="466" y="720" font-size="21" fill="#247455" font-weight="650" text-anchor="start">分布式与业务编排</text>
+<text x="466" y="746" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">lock4j · idempotent · leaderelection</text>
+<text x="466" y="769" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">seata · springretry · liteflow · statemachine</text>
+<rect x="852" y="691" width="408" height="92" rx="10" fill="#fff" stroke="#c9dfd4"/>
+<text x="868" y="720" font-size="21" fill="#247455" font-weight="650" text-anchor="start">集成与可观测</text>
+<text x="868" y="746" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">oss · tinyid · wechat · websocket</text>
+<text x="868" y="769" font-size="18" fill="#3c5d50" font-weight="400" text-anchor="start">observability · auditlog · operationlog</text>
+<rect x="48" y="797" width="1212" height="54" rx="9" fill="#e0efe7" stroke="#c9dfd4"/>
+<text x="654" y="831" font-size="21" fill="#247455" font-weight="650" text-anchor="middle">公共基础：commons · async · mapstruct</text>
+<text x="48" y="884" font-size="19" fill="#52677d" font-weight="400" text-anchor="start">治理适配：Alibaba / Tencent 的网关适配；Alibaba 灰度组件</text>
+<text x="48" y="915" font-size="19" fill="#52677d" font-weight="400" text-anchor="start">开发配套：Examples 验证组件接入，Archetype 创建业务工程，Samples 展示完整业务链路</text>
+<rect x="24" y="962" width="1552" height="138" rx="14" fill="#eef3f8" stroke="#d8e3ee"/>
+<text x="48" y="1002" font-size="25" fill="#243b53" font-weight="700" text-anchor="start">基础设施与交付环境</text>
+<text x="48" y="1040" font-size="22" fill="#243b53" font-weight="400" text-anchor="start">数据库：MySQL 等     缓存：Redis     消息：RocketMQ / Kafka     对象存储：OSS / S3 兼容服务</text>
+<text x="48" y="1078" font-size="20" fill="#52677d" font-weight="400" text-anchor="start">运行与交付：容器 / Docker Compose / Kubernetes / CI/CD（按项目需要选用）</text>
+</g></svg>

@@ -3,7 +3,7 @@ title: "平台概述"
 linkTitle: "平台概述"
 weight: 1
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["README.md", "pom.xml", "macula-boot-parent/pom.xml"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["README.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["README.md"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["README.md", "pom.xml", "macula-boot-parent/pom.xml", "macula-boot-starters/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/pom.xml", "macula-boot-starters/macula-boot-starter-observability/README.md", "macula-boot-starters/macula-boot-starter-task/README.md"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["README.md", "pom.xml"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["README.md"]}]
 ---
 
 Macula 是面向 Java 业务应用的模块化微服务开发平台。它将通用技术组件、统一身份与权限等平台服务，以及业务应用的参考工程组合起来，帮助团队统一基础能力，把主要开发工作放在业务上。
@@ -59,9 +59,9 @@ latest 跟随 Macula Boot main，当前版本为 **6.1.0-SNAPSHOT**，基于 Jav
 
 下图展示 Macula 的整体技术架构：Macula Boot 提供基础组件，Macula Cloud 提供公共平台服务，业务应用按需组合这些能力，并结合基础设施与微服务治理平台运行。
 
-![Macula 整体技术架构：基础设施、Macula Boot、Macula Cloud、业务应用与微服务治理平台](/img/structure-diagram.png)
+![Macula 当前整体技术架构：Macula Cloud 与业务应用、Macula Boot、服务治理与可观测性、基础设施](/diagrams/platform-architecture.svg)
 
-[独立查看原图](/img/structure-diagram.png)。图中保留了早期架构的组件名称，TSF、SkyWalking 等不代表 latest 仍提供同名 Starter；当前可用组件以本页“核心能力”和[平台能力](/docs/latest/01_services/)为准。
+[独立查看架构图](/diagrams/platform-architecture.svg)，点击图片可放大。图中组件按需组合；右侧治理与可观测系统、底层运行环境不要求全部部署。任务调度与重试统一基于 SnailJob，可观测性通过统一组件采集指标、链路与日志并以 OTLP 导出。完整配置见[平台能力](/docs/latest/01_services/)。
 
 业务模块职责与请求链路见[应用架构](/docs/latest/00_introduce/应用架构/)；身份与权限的原理图见[安全架构](/docs/latest/00_introduce/安全架构/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再按需要阅读这两部分原理。
 
