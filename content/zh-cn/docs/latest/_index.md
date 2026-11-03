@@ -15,10 +15,11 @@ content:
     - 快速开始:
         - name: 了解Macula
           links:
-            - '[概述](00_introduce/概述/)'
+            - '[平台概述](00_introduce/概述/)'
             - '[快速开始](00_introduce/快速开始)'
+            - '[应用架构](00_introduce/应用架构)'
+            - '[应用分层](00_introduce/值对象与分层)'
             - '[安全架构](00_introduce/安全架构)'
-            - '[值对象与分层](00_introduce/值对象与分层)'
         - name: 了解Macula框架和平台能力
           links:
             - '[框架基础](01_services/框架基础/)'

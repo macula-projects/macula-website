@@ -12,7 +12,7 @@ manual_content: true
 ## 概览
 
 该模块主要依赖阿里开源的RocketMQ。[RocketMQ](https://github.com/apache/rocketmq-spring/wiki/%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C)
-支持同步、异步发送消息，半事务消息等，具体可以参考官方文档。
+支持同步、异步发送消息及事务消息等，具体可以参考官方文档。
 
 ## 组件坐标
 
@@ -28,7 +28,11 @@ manual_content: true
 
 ## 使用配置
 
-### 生产者配置建议
+### 配置示例
+
+以下集中列出本页涉及的配置。不同应用、文件或替代方案分别标注，请按场景选用。
+
+#### 生产者 application.yml
 
 ```yaml
 rocketmq:
@@ -42,7 +46,52 @@ rocketmq:
 demo:
   rocketmq:
     stringRequestTopic: stringRequestTopic:tagA
+
+# 可选灰度能力，按需调整；此处为组件默认值
+macula:
+  rocketmq:
+    gray:
+      enabled: false
+      gray-consume-main: false
+      main-consume-gray: false
 ```
+
+#### Push 消费者 application.yml
+
+```yaml
+rocketmq:
+  name-server: localhost:9876
+demo:
+  rocketmq:
+    stringRequestTopic: stringRequestTopic
+    taga: TagA
+```
+
+#### Pull 消费者 application.yml
+
+```yaml
+rocketmq:
+  name-server: localhost:9876
+  consumer: # 只用于pull模式
+    namespace: ${spring.profiles.active} # 建议与环境保持一致${spring.profiles.active}
+    group: ${spring.application.name}    # 建议采用${spring.application.name}
+    topic: stringRequestTopic
+    selectorExpression: tagA
+    enableMsgTrace: true                 # 消息轨迹开启，根据需要来决定
+```
+
+### 关键配置
+
+| 配置 | 说明 |
+| --- | --- |
+| `rocketmq.name-server` | 生产者与消费者均需填写的 NameServer 地址。 |
+| `rocketmq.producer.*` | 生产者分组、命名空间、超时和轨迹设置。 |
+| `rocketmq.consumer.*` | 示例中的 Pull 消费设置；Push 订阅信息由监听注解声明。 |
+| `demo.rocketmq.*` | 示例业务属性，由下文 Java 代码读取，不是 Starter 内置配置。 |
+
+## 核心功能
+
+### 生产者用法
 
 ```java
 public class Test {
@@ -55,20 +104,9 @@ public class Test {
 }
 ```
 
-### 消费者配置建议
-
 #### Push模式
 
 Push的namespace、topic等都是配置在@RocketMQMessageListener注解里面的
-
-```yaml
-rocketmq:
-  name-server: localhost:9876
-demo:
-  rocketmq:
-    stringRequestTopic: stringRequestTopic
-    taga: TagA
-```
 
 ```java
 @SpringBootApplication
@@ -80,7 +118,7 @@ public class ConsumerApplication {
 
     @Slf4j
     @Service
-    @RocketMQMessageListener(topic = "${demo.rocketmq.stringRequestTopic}", selectorExpression = "${deom.rocketmq.taga}",
+    @RocketMQMessageListener(topic = "${demo.rocketmq.stringRequestTopic}", selectorExpression = "${demo.rocketmq.taga}",
             namespace = "${spring.profiles.active}", consumerGroup = "${spring.application.name}")
     public class MyConsumer1 implements RocketMQListener<String> {
         public void onMessage(String message) {
@@ -101,18 +139,7 @@ public class ConsumerApplication {
 
 #### Pull模式
 
-**从RocketMQ Spring 2.2.0开始，RocketMQ Srping支持Pull模式消费，自己单线程或者多线程获取消息，实时性不高**
-
-```yaml
-rocketmq:
-  name-server: localhost:9876
-  consumer: # 只用于pull模式
-    namespace: ${spring.profiles.active} # 建议与环境保持一致${spring.profiles.active}
-    group: ${spring.application.name}    # 建议采用${spring.application.name}
-    topic: stringRequestTopic
-    selectorExpression: tagA
-    enableMsgTrace: true                 # 消息轨迹开启，根据需要来决定
-```
+RocketMQ Spring 支持 Pull 模式消费，由应用主动拉取消息；拉取频率、并发和消费进度由应用管理。
 
 ```java
 @SpringBootApplication
@@ -183,7 +210,7 @@ public class ProducerApplication implements CommandLineRunner{
 }
 ```
 
-默认情况下，@RocketMQTranscationListenner只能有一个，不过可以指定rocketMQTemplateBeanName来定义多个Listener，通过@ExtRocketMQTemplateConfiguration扩展RocketMQTemplate
+默认情况下，@RocketMQTransactionListener只能有一个，不过可以指定rocketMQTemplateBeanName来定义多个Listener，通过@ExtRocketMQTemplateConfiguration扩展RocketMQTemplate
 
 ```java
 @ExtRocketMQTemplateConfiguration
@@ -197,8 +224,6 @@ public class ExtRocketMQTemplate extends RocketMQTemplate {
 可以参考[rocketmq-samples](https://github.com/apache/rocketmq-spring/blob/master/rocketmq-spring-boot-samples/rocketmq-produce-demo/src/main/java/org/apache/rocketmq/samples/springboot/ProducerApplication.java)
 
 {{% /alert %}}
-
-## 核心功能
 
 ### 消息序列化
 

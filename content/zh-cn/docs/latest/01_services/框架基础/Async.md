@@ -38,6 +38,31 @@ Micrometer Context Propagation。
 
 ## 使用配置
 
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
+
+```yaml
+spring:
+  reactor:
+    context-propagation: auto
+  task:
+    execution:
+      pool:
+        core-size: 8           # 示例容量，按业务负载调整
+        max-size: 32
+        queue-capacity: 1000
+      thread-name-prefix: async-
+    scheduling:
+      pool:
+        size: 2
+      thread-name-prefix: scheduling-
+```
+
+### 关键配置
+
 本模块没有独立的 `macula.async.*` 配置。Spring Boot 自动创建的线程池使用以下属性；自行声明 Executor 时需自行应用配置与 TaskDecorator。
 
 | 属性 | 说明 |
@@ -47,7 +72,7 @@ Micrometer Context Propagation。
 | `spring.task.execution.thread-name-prefix` | 异步线程名前缀 |
 | `spring.task.scheduling.pool.size` | 定时任务线程池大小 |
 | `spring.task.scheduling.thread-name-prefix` | 定时任务线程名前缀 |
-| `spring.reactor.context-propagation` | Reactor 传播模式，WebFlux/Gateway 按下文设为 `auto` |
+| `spring.reactor.context-propagation` | Reactor 传播模式，WebFlux/Gateway 设置为 `auto` |
 
 ## 核心功能
 
@@ -98,13 +123,7 @@ executor.submit(() -> {
 
 ### Reactor 上下文传播
 
-WebFlux 和 Gateway 应开启 Reactor 自动上下文传播：
-
-```yaml
-spring:
-  reactor:
-    context-propagation: auto
-```
+WebFlux 和 Gateway 应开启 Reactor 自动上下文传播，见本页[配置示例](#配置示例)。
 
 开启后，已注册的 Observation、Trace/MDC、Tenant 和 GrayVersion 上下文可跨 `publishOn`、
 `subscribeOn` 等线程切换恢复。
@@ -128,30 +147,24 @@ Starter 提供的 `TaskDecorator` 使用最高优先级。用户可以继续声�
 
 ## 依赖引入
 
-以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
 
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-commons</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>context-propagation</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context-support</artifactId>

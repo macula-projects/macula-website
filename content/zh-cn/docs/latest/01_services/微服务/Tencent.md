@@ -40,20 +40,11 @@ Tencent 接入面向 Java 17、Spring Boot 4 与 Spring Cloud 2025.1，提供 Po
 
 ## 使用配置
 
-以下按当前 [Tencent Provider application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-tencent-provider/src/main/resources/application.yml) 精简；网关差异见 [Tencent Gateway application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-tencent-gateway/src/main/resources/application.yml)。
+### 配置示例
 
-| 属性 | 示例值 / 说明 |
-| --- | --- |
-| `spring.config.import` | `optional:polaris`，通过 Config Data 导入配置 |
-| `spring.profiles.group.docker` | `local`，Docker 复用本地默认配置 |
-| `spring.cloud.polaris.config.enabled` / `auto-refresh` | 示例均为 `true`，启用配置中心和刷新 |
-| `spring.cloud.polaris.config.groups[].name` | 应用名对应的配置组 |
-| `spring.cloud.polaris.discovery.enabled` / `register` | 示例均为 `true`，启用发现和注册 |
-| `spring.cloud.polaris.address` | local：`grpc://127.0.0.1:38091`；docker：`grpc://polaris:8091` |
-| `spring.cloud.polaris.namespace` | `POLARIS_NAMESPACE`，示例为 `macula-dev` |
-| `spring.cloud.nacos.discovery.server-addr` | Polaris Nacos 兼容地址：local `127.0.0.1:38849`，docker `polaris:8848` |
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
 
-本模块无额外自有属性；表中地址和开关是 samples 配置，不是所有应用的默认值。
+#### application.yml
 
 ```yaml
 server:
@@ -103,6 +94,23 @@ spring:
       namespace: ${POLARIS_NAMESPACE:macula-dev}
 ```
 
+### 关键配置
+
+以下按当前 [Tencent Provider application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-tencent-provider/src/main/resources/application.yml) 精简；网关差异见 [Tencent Gateway application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-tencent-gateway/src/main/resources/application.yml)。
+
+| 属性 | 示例值 / 说明 |
+| --- | --- |
+| `spring.config.import` | `optional:polaris`，通过 Config Data 导入配置 |
+| `spring.profiles.group.docker` | `local`，Docker 复用本地默认配置 |
+| `spring.cloud.polaris.config.enabled` / `auto-refresh` | 示例均为 `true`，启用配置中心和刷新 |
+| `spring.cloud.polaris.config.groups[].name` | 应用名对应的配置组 |
+| `spring.cloud.polaris.discovery.enabled` / `register` | 示例均为 `true`，启用发现和注册 |
+| `spring.cloud.polaris.address` | local：`grpc://127.0.0.1:38091`；docker：`grpc://polaris:8091` |
+| `spring.cloud.polaris.namespace` | `POLARIS_NAMESPACE`，示例为 `macula-dev` |
+| `spring.cloud.nacos.discovery.server-addr` | Polaris Nacos 兼容地址：local `127.0.0.1:38849`，docker `polaris:8848` |
+
+本模块无额外自有属性；表中地址和开关是 samples 配置，不是所有应用的默认值。
+
 `dev/stg/pet/prd` 仅保留配置中心连接信息，其他配置由 Polaris 配置组提供。`optional:polaris` 只放宽配置导入，不代表服务发现等依赖可以完全离线运行。
 
 Redis 连接使用 `spring.data.redis.*`，详见 [Redis](/docs/latest/01_services/框架基础/redis/)；可观测性导出使用 `management.*`，详见 [Observability](/docs/latest/01_services/生产准备/observability/)。云平台示例普通 profile 默认关闭 OTLP 网络导出，叠加 `observability` profile 时开启。
@@ -119,38 +127,26 @@ Polaris、Redis 与 IAM 等运行服务需单独部署；启动和本地容器�
 
 ## 依赖引入
 
-微服务模块
+以下为角色组合 Starter 的主要依赖组成。应用按上方组件坐标选择角色 Starter 即可，无需重复声明这些传递依赖；业务服务和网关各自使用对应条目。
 
 ```xml
-
 <dependencies>
-    <!-- Spring Cloud -->
+    <!-- 业务服务与网关共同使用，由相应组合 Starter 引入 -->
+    <dependency>
+        <groupId>com.tencent.cloud</groupId>
+        <artifactId>spring-cloud-starter-tencent-all</artifactId>
+    </dependency>
+
+    <!-- 业务服务角色 -->
     <dependency>
         <groupId>dev.macula.boot</groupId>
         <artifactId>macula-boot-starter-feign</artifactId>
     </dependency>
 
-    <!-- Spring Cloud Tencent -->
-    <dependency>
-        <groupId>com.tencent.cloud</groupId>
-        <artifactId>spring-cloud-starter-tencent-all</artifactId>
-    </dependency>
-</dependencies>
-```
-
-网关模块
-
-```xml
-
-<dependencies>
+    <!-- 网关角色 -->
     <dependency>
         <groupId>dev.macula.boot</groupId>
         <artifactId>macula-boot-starter-cloud-gateway</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>com.tencent.cloud</groupId>
-        <artifactId>spring-cloud-starter-tencent-all</artifactId>
     </dependency>
 </dependencies>
 ```

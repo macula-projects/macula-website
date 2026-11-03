@@ -5,10 +5,26 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from module_docs import SECTIONS, normalize_module, pom_defaults
+from module_docs import SECTIONS, normalize_module, pom_defaults, consolidate_dependency_blocks
 
 
 class ModuleDocsTest(unittest.TestCase):
+    def test_dependency_listing_is_one_snippet_and_keeps_all_coordinates(self):
+        source = ('```xml\n<dependency><groupId>a</groupId><artifactId>one</artifactId></dependency>\n```\n\n'
+                  '```xml\n<dependency><groupId>b</groupId><artifactId>two</artifactId></dependency>\n```')
+        result = consolidate_dependency_blocks(source)
+        self.assertEqual(result.count('```xml'), 1)
+        self.assertIn('<artifactId>one</artifactId>', result)
+        self.assertIn('<artifactId>two</artifactId>', result)
+        self.assertEqual(result, consolidate_dependency_blocks(result))
+
+    def test_dependency_consolidation_preserves_alternatives_and_other_xml(self):
+        dependency = '```xml\n<dependency><groupId>a</groupId><artifactId>one</artifactId></dependency>\n```'
+        alternative = dependency + '\n\n两种方案择一。\n\n' + dependency
+        configuration = dependency + '\n\n```xml\n<configuration><setting/></configuration>\n```'
+        self.assertEqual(alternative, consolidate_dependency_blocks(alternative))
+        self.assertEqual(configuration, consolidate_dependency_blocks(configuration))
+
     def test_web_passkey_extension_belongs_to_response_processing(self):
         source = ('## 核心功能\n\n### 全局返回结构处理\n\n响应包装\n'
                   '\n#### Controller示例\n\n示例\n\n### 国际化\n\n语言\n'

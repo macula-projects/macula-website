@@ -81,65 +81,49 @@ throw new BizException(ApiResultCode.BIZ_ERROR, "订单状态不允许此操作"
 
 ## 依赖引入
 
-以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
 
 ```xml
 <dependency>
     <groupId>tools.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.jspecify</groupId>
     <artifactId>jspecify</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>io.swagger.core.v3</groupId>
     <artifactId>swagger-annotations</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>context-propagation</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.bouncycastle</groupId>
     <artifactId>bcpkix-jdk18on</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>jakarta.validation</groupId>
     <artifactId>jakarta.validation-api</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.baomidou</groupId>
     <artifactId>mybatis-plus-annotation</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>

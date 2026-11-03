@@ -27,7 +27,11 @@ lock4j是一个基于redisson的分布式锁组件，其提供了多种不同的
 
 ## 使用配置
 
-理论是支持 [macula-boot-starter-redis](/docs/latest/01_services/框架基础/redis/)全部配置
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
 
 ```yaml
 spring:
@@ -35,7 +39,22 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+lock4j:
+  acquire-timeout: 3000 #默认值3s，可不设置
+  expire: 30000 #默认值30s，可不设置
+  primary-executor: com.baomidou.lock.executor.RedisTemplateLockExecutor #默认redisson>redisTemplate>zookeeper，可不设置
+  lock-key-prefix: lock4j #锁key前缀, 默认值lock4j，可不设置
 ```
+
+### 关键配置
+
+| 配置 | 说明 |
+| --- | --- |
+| `spring.data.redis.*` | Redis 连接信息。 |
+| `lock4j.acquire-timeout / expire` | 获取锁超时与锁有效期，单位为毫秒。 |
+| `lock4j.primary-executor / lock-key-prefix` | 锁执行器及键前缀。 |
+
+Redis 连接配置沿用 [Redis Starter](/docs/latest/01_services/框架基础/redis/)。
 
 ## 核心功能
 
@@ -95,13 +114,7 @@ public @interface Lock4j {
 | `primary-failure-strategy` | 未指定 | 按顺序选择失败策略，或指定实现类 |
 | `primary-key-builder` | 未指定 | 按顺序选择键生成器，或指定实现类 |
 
-```yaml
-lock4j:
-  acquire-timeout: 3000 #默认值3s，可不设置
-  expire: 30000 #默认值30s，可不设置
-  primary-executor: com.baomidou.lock.executor.RedisTemplateLockExecutor #默认redisson>redisTemplate>zookeeper，可不设置
-  lock-key-prefix: lock4j #锁key前缀, 默认值lock4j，可不设置
-```
+配置见本页[配置示例](#配置示例)。
 
 - acquire-timeout：
   可以理解为排队时长，超过这个时才就退出排队，抛出获取锁超时异常。为什么必须要有这个参数？现实你会一直排队等下去吗？所有人都一直排队有没有问题 ？

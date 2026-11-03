@@ -28,7 +28,11 @@ Macula Boot 6.1 起，本模块不再依赖 Resilience4j。Redis 连接、资源
 
 ## 使用配置
 
-### 配置两级缓存
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
 
 ```yaml
 spring:
@@ -55,6 +59,10 @@ spring:
         max-size: 2000
         expiry-jitter: 50
 ```
+
+### 关键配置
+
+#### 配置两级缓存
 
 `expiry-jitter` 表示本地缓存过期时间的随机偏移百分比，用于避免大量缓存同时失效，取值必须大于等于 `0` 且小于 `100`。
 
@@ -126,30 +134,24 @@ spring:
 
 ## 依赖引入
 
-以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
 
 ```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-redis</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-cache</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.github.ben-manes.caffeine</groupId>
     <artifactId>caffeine</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-core</artifactId>

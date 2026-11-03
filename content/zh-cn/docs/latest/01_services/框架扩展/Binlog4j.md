@@ -11,10 +11,7 @@ manual_content: true
 
 ## 概览
 
-该模块演示 `macula-boot-starter-binlog4j` 的 MySQL binlog 订阅。`UserEventHandler` 监听 `macula-system.sys_user` 表的新增、修改和删除事件，并将解析后的数据输出到控制台。
-
-
-binlog4j是一个读取MySQL binlog的组件，以slave的方式接入mysql，将binlog转为事件。
+该组件以 MySQL 复制客户端的方式订阅 binlog，将表数据变更转换为事件；支持 Redis 位点持久化和集群主备协调。下文以 `macula-system.sys_user` 的订阅示例说明接入与验证。
 
 ## 组件坐标
 
@@ -30,27 +27,64 @@ binlog4j是一个读取MySQL binlog的组件，以slave的方式接入mysql，�
 
 ## 使用配置
 
-### 前置条件
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
+
+```yaml
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: ${REDIS_PORT:36379}
+      password: ${REDIS_PASSWORD}
+binlog4j:
+  client-configs:
+    master:
+      host: ${MYSQL_HOST:127.0.0.1}
+      port: ${MYSQL_PORT:33306}
+      username: ${BINLOG_USERNAME}
+      password: ${BINLOG_PASSWORD}
+      server-id: 1990
+      mode: cluster
+      persistence: true
+      inaugural: false
+      keep-alive: true
+      keep-alive-interval: 60000
+      connect-timeout: 3000
+      heartbeat-interval: 5000
+      time-offset: 0
+      # 以下 GTID 选项按 MySQL 配置选择
+      gtid-mode: false
+      gtid-purged: true
+      # gtid-set-default: "<起始GTID集合>"
+```
+
+### 关键配置
+
+#### 前置条件
 
 - MySQL `127.0.0.1:33306`，开启 binlog，建议使用 `ROW` 格式。
 - 订阅账号具有 replication 权限。
 - Redis `127.0.0.1:36379`，用于集群模式的状态协调。
 - 数据库 `macula-system` 中存在 `sys_user` 表。
 
-### 配置与启动
+#### 配置与启动
 
-配置前缀 `binlog4j.client-configs.master` 定义 MySQL 连接，默认用户 `root`、密码为空，必须按实际环境覆盖。
+配置前缀 `binlog4j.client-configs.master` 定义 MySQL 连接，复制账号及密码由环境变量提供。
 
 | 属性 | 示例值 | 说明 |
 | --- | --- | --- |
-| `binlog4j.client-configs.master.host` / `port` | `127.0.0.1` / `33306` | MySQL 地址，端口可用 `MYSQL_PORT` 覆盖 |
+| `binlog4j.client-configs.master.host` / `port` | 环境提供 / `33306` | MySQL 地址，端口可用 `MYSQL_PORT` 覆盖 |
 | `binlog4j.client-configs.master.username` / `password` | 环境提供 | 复制账号及密码 |
-| `binlog4j.client-configs.master.server-id` | `1991` | 复制客户端 ID，避免冲突 |
+| `binlog4j.client-configs.master.server-id` | `1990` | 复制客户端 ID，避免冲突 |
 | `binlog4j.client-configs.master.mode` | `cluster` | 本示例使用 Redis 协调主备 |
-| `binlog4j.client-configs.master.persistence` / `gtid-mode` | `true` / `true` | 持久化位点 / 使用 GTID，MySQL 需启用 GTID |
+| `binlog4j.client-configs.master.persistence` / `gtid-mode` | `true` / `false` | 本例持久化位点；启用 GTID 前需同步配置 MySQL |
 | `spring.data.redis.host` / `port` / `password` | 按环境配置 | Boot 4 Redis 连接属性 |
 
-注意：当前示例文件仍写为旧的 `spring.redis.*`，运行前需在本地配置中改用 `spring.data.redis.*` 或通过启动参数覆盖。连接 Examples Compose 的 Redis 时使用端口 `36379` 和对应密码。完整配置见 [Binlog4j Starter](/docs/latest/01_services/框架扩展/binlog4j/)。
+注意：当前示例文件仍写为旧的 `spring.redis.*`，运行前需在本地配置中改用 `spring.data.redis.*` 或通过启动参数覆盖。连接 Examples Compose 的 Redis 时使用端口 `36379` 和对应密码。本页集中配置已使用 `spring.data.redis.*`，示例工程启动前仍需核对其自身配置。
 
 ```bash
 # 在仓库根目录先安装所需框架依赖，再只启动当前应用
@@ -61,25 +95,7 @@ mvn -f macula-boot-examples/macula-example-binlog4j/pom.xml spring-boot:run
 启动后对 `sys_user` 执行 `INSERT`、`UPDATE` 或 `DELETE`，控制台应输出对应事件。如果复制示例监听其他表，同步修改 `@BinlogSubscriber` 的 `database` / `table` 和事件实体字段。
 
 
-
-
 先开启 MySQL ROW 格式 binlog 并授予专用账号必要的复制权限；使用持久化或集群选举时还需可用的 Redis。
-
-```yaml
-spring:
-  data:
-    redis:
-      host: 127.0.0.1
-      port: 6379
-binlog4j:
-  client-configs:
-    master:
-      host: 127.0.0.1
-      username: ${BINLOG_USERNAME}
-      password: ${BINLOG_PASSWORD}
-      server-id: 1990
-      persistence: true
-```
 
 每个客户端独立配置，前缀为 `binlog4j.client-configs.<名称>`，名称需与 `@BinlogSubscriber.clientName` 一致。
 
@@ -155,8 +171,7 @@ Redis 位点使用另一个独立 Mapper，保留 `serverId`、`position`、`fil
 
 同一个应用多个实例时要启用集群模式，serverId同一个应用保持一致，不同应用千万不要重复。否则前面的应用会被踢出。同一时刻同一个serverId只能有一个实例与MySQL连接。
 
-本模块的高可用原理是通过redis锁，集群中某个实例先连上mysql后，后hold
-redis锁，其他实例会单独一个线程等待锁，如果前面的实力出现异常宕机，redis锁释放，则其他实例会自动重连，并且从redis恢复binlog的postion，从而实现高可用。
+本模块的高可用原理是通过redis锁，集群中某个实例先连上mysql后，持有 Redis 锁，其他实例会单独一个线程等待锁，如果前面的实例出现异常宕机，redis锁释放，则其他实例会自动重连，并且从redis恢复binlog 的 position，从而实现高可用。
 
 ## 依赖引入
 

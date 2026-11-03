@@ -27,6 +27,26 @@ manual_content: true
 
 ## 使用配置
 
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
+
+```yaml
+springdoc:
+  # packages-to-scan: com.example.business.controller
+  # paths-to-match: /api/**
+  api-docs:
+    path: /v3/api-docs
+    enabled: true  # 默认是true，用于开关API文档
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: false # 默认是true，用于开关API UI
+```
+
+### 关键配置
+
 无自有配置前缀；生产环境按需关闭文档入口或限制访问。
 
 | 属性 | 默认值 | 说明 |
@@ -37,14 +57,6 @@ manual_content: true
 | `springdoc.swagger-ui.path` | `/swagger-ui.html` | UI 入口路径 |
 | `springdoc.packages-to-scan` | 未设置 | 限定扫描包 |
 | `springdoc.paths-to-match` | 未设置 | 限定文档接口路径 |
-
-```yaml
-springdoc:
-  api-docs:
-    enabled: true  # 默认是true，用于开关API文档
-  swagger-ui:
-    enabled: false # 默认是true，用于开关API UI
-```
 
 ## 核心功能
 

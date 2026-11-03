@@ -27,12 +27,21 @@ manual_content: true
 
 ## 使用配置
 
-HTTP 客户端配置使用 `spring.cloud.openfeign.*` 前缀，不再使用旧的 `feign.*`。
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
 
 ```yaml
 spring:
   cloud:
     openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000  # 示例值，单位毫秒
+            readTimeout: 60000
       httpclient:
         hc5:
           enabled: false
@@ -46,6 +55,10 @@ macula:
       enabled: false
       headers: []
 ```
+
+### 关键配置
+
+HTTP 客户端配置使用 `spring.cloud.openfeign.*` 前缀，不再使用旧的 `feign.*`。
 
 | 属性 | 默认值 / 示例 | 说明 |
 | --- | --- | --- |

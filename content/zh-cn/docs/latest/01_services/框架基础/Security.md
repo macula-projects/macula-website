@@ -25,9 +25,11 @@ Security Starter 运行在 BFF 和业务微服务中：验证网关 JWT、建立
 
 ## 使用配置
 
-### JWT 验签配置
+### 配置示例
 
-Samples 中，BFF、Service1、Basic、OpenAPI、Thirdparty 均指向本应用 Gateway 的公钥集：
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml：JWT 验签与可选 Passkey
 
 ```yaml
 spring:
@@ -35,11 +37,31 @@ spring:
     oauth2:
       resourceserver:
         jwt:
+          # 按实际签发方式择一；接入应用网关优先使用 jwk-set-uri
+          # public-key-location: classpath:gateway-public.pem
+          # issuer-uri: https://issuer.example.com
+          jws-algorithms: RS256
           jwk-set-uri: http://127.0.0.1:6000/oauth2/jwks
 macula:
   security:
     ignore-urls: []
+    # 可选功能；下方 true 为启用示例，不使用时设为 false
+    passkey:
+      enabled: true
+      ttl: 5m
+      secret-base64: ${PASSKEY_SECRET_BASE64}
 ```
+
+### 关键配置
+
+| 配置 | 说明 |
+| --- | --- |
+| `macula.security.passkey.enabled` | 资源凭证签发与执行前验证的开关；示例按启用场景配置，默认关闭。 |
+| `macula.security.passkey.ttl / secret-base64` | 凭证有效期与服务端签名密钥。 |
+
+#### JWT 验签配置
+
+Samples 中，BFF、Service1、Basic、OpenAPI、Thirdparty 均指向本应用 Gateway 的公钥集：
 
 容器环境将 JWK 地址改为 `http://macula-samples-gateway:6000/oauth2/jwks`；其他应用按自己的网关地址配置。
 
@@ -133,14 +155,7 @@ public OrderView getById(String orderId) {
 
 业务先按当前用户、租户和数据范围查询授权列表。列表 DTO 实现 Commons 的 `dev.macula.boot.security.PasskeyResource`，提供稳定、全局唯一的 resourceId 和 passkey 字段，Web Starter 的响应 Advice 才能为授权列表签发凭证。
 
-```yaml
-macula:
-  security:
-    passkey:
-      enabled: true
-      ttl: 5m
-      secret-base64: ${PASSKEY_SECRET_BASE64}
-```
+配置见本页[配置示例](#配置示例)。
 
 | 配置 | 默认 / 约束 |
 | --- | --- |
@@ -174,37 +189,29 @@ public void cancel(String orderId) {
 
 ## 依赖引入
 
-以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
 
 ```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-commons</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-aspectj</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.nimbusds</groupId>
     <artifactId>oauth2-oidc-sdk</artifactId>

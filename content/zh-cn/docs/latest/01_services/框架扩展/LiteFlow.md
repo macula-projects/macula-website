@@ -27,7 +27,11 @@ manual_content: true
 
 ## 使用配置
 
-### 基本配置
+### 配置示例
+
+以下集中列出本页涉及的配置。不同应用、文件或替代方案分别标注，请按场景选用。
+
+#### application.yml：基本配置
 
 ```yaml
 liteflow:
@@ -78,11 +82,7 @@ liteflow:
     period: 300000
 ```
 
-### Nacos规则源配置
-
-`liteflow-rule-nacos` 为 optional 依赖，使用 Nacos 规则源时应用需显式引入，并提供连接地址和认证信息；仅使用本地规则文件则无需引入。
-
-依赖了插件包之后，你无需再配置`liteflow.ruleSource`路径。
+#### application.yml：Nacos 规则源选项
 
 ```yaml
 liteflow:
@@ -94,6 +94,21 @@ liteflow:
     username: nacos
     password: nacos
 ```
+
+### 关键配置
+
+| 配置 | 说明 |
+| --- | --- |
+| `liteflow.rule-source` | 本地规则文件位置。 |
+| `liteflow.rule-source-ext-data-map` | 使用 Nacos 规则源时的连接与数据定位参数。 |
+| `liteflow.*executor* / when-*` | 线程池与并行执行选项。 |
+| `liteflow.monitor.*` | 简易监控日志开关、队列容量和采样周期。 |
+
+#### Nacos规则源配置
+
+`liteflow-rule-nacos` 为 optional 依赖，使用 Nacos 规则源时应用需显式引入，并提供连接地址和认证信息；仅使用本地规则文件则无需引入。
+
+引入插件后，根据所选规则源核对 `liteflow.rule-source`，不要同时保留无效的本地文件路径。
 
 其他规则源配置可以参考[官方文档](https://liteflow.yomahub.com/pages/6fa87e/)
 

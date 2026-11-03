@@ -26,21 +26,41 @@ manual_content: true
 
 ## 使用配置
 
-本模块沿用 `spring.kafka.*`，无自有配置前缀。下列为示例值，不是所有属性的默认值；生产环境需按吞吐、重试及重复消费要求选择。
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml：基础连接与可选批量消费
 
 ```yaml
 spring:
   kafka:
     bootstrap-servers: 127.0.0.1:9092
     producer:
+      retries: 3               # 示例重试次数，按投递要求调整
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
       batch-size: 16384
       buffer-memory: 33554432
     consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: example-consumer
       auto-offset-reset: earliest
       max-poll-records: 500
       enable-auto-commit: false
+      # auto-commit-interval: 5s  # 仅启用自动提交时使用
+    listener:
+      ack-mode: BATCH
+      # 下文单条监听示例保留默认类型；批量监听时才启用以下配置
+      # type: batch
+      # concurrency: 3  # 不超过分区数，并将监听方法入参改为批量类型
 ```
+
+### 关键配置
+
+本模块沿用 `spring.kafka.*`，无自有配置前缀。下列为示例值，不是所有属性的默认值；生产环境需按吞吐、重试及重复消费要求选择。
 
 | 属性（前缀 `spring.kafka`） | 说明 |
 | --- | --- |
@@ -102,15 +122,7 @@ public class BigDataTopicListener {
 
 ### 批量消费模式
 
-增加如下配置：
-
-```yaml
-spring:
-  kafka:
-    listener:
-      type: BATCH
-      concurrency: 3                                  # 批消费并发量，小于或等于Topic的分区数
-```
+启用集中配置中的 `spring.kafka.listener.type: batch`，并将监听方法入参改为匹配的集合类型；并发度按分区数和处理能力设置。
 
 ## 依赖引入
 

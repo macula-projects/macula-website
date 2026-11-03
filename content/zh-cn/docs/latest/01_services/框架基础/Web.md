@@ -27,12 +27,30 @@ manual_content: true
 
 ## 使用配置
 
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
+
 ```yaml
 macula:
+  jackson:
+    long-to-string: true
+    null-to-empty: false
+    # 以下为可选格式示例，不配置时使用组件默认行为
+    # local-date-time-format: yyyy-MM-dd HH:mm:ss
+    # local-date-format: yyyy-MM-dd
+    # local-time-format: HH:mm:ss
   web:
     exception-advice: true  # 统一异常处理器，默认true
     response-advice: true   # 统一响应处理器，默认true
+spring:
+  jackson:
+     date-format: yyyy-MM-dd HH:mm:ss        # 该配置只会影响java.util.Date类型
 ```
+
+### 关键配置
 
 | 属性 | 默认值 | 说明 |
 | --- | --- | --- |
@@ -256,11 +274,7 @@ enum ISO {
 
 如果是POST请求的application/json时，则由jackson的配置来完成
 
-```yaml
-spring:
-  jackson:
-     date-format: yyyy-MM-dd HH:mm:ss        # 该配置只会影响java.util.Date类型
-```
+配置见本页[配置示例](#配置示例)。
 
 {{% alert title="提示" color="primary" %}}
 
@@ -522,11 +536,11 @@ public class HaveNoBlankValidator implements ConstraintValidator<HaveNoBlank, St
 
 * MOBILE：手机号，如：138****2359
 * CHINESE_NAME：中文名 ，如：黄**
-* ID_CARD：身份证号，如：如511623********0537
+* ID_CARD：身份证号，如：511623********0537
 * FIXED_PHONE：座机号，如：****1234
 * ADDRESS：地址，如：广东省广州市天河区****
 * EMAIL：电子邮件，如：g**@163.com
-* BANK_CARD：银行卡，如：如622848*********5579
+* BANK_CARD：银行卡，如：622848*********5579
 * CUSTOM_HIDE：自定义，有多少个字符替换成多少个*
 * CUSTOM_RETAIN_HIDE：保留方式隐藏
 * CUSTOM_OVERLAY：自定义,只替换成指定个*

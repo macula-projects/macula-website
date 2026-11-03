@@ -39,9 +39,11 @@ Micrometer Tracing 和 OpenTelemetry 实现 Metrics、Traces、Logs 三类信号
 
 ## 使用配置
 
-### 基础配置
+### 配置示例
 
-引入组件后，根据需要开启三类 OTLP 导出。以下配置默认把数据发送到本机 OpenTelemetry Collector：
+以下集中列出本页涉及的配置。不同应用、文件或替代方案分别标注，请按场景选用。
+
+#### 应用 application.yml
 
 ```yaml
 management:
@@ -81,12 +83,52 @@ logging:
     format:
       console: logstash
       file: logstash
+macula:
+  observability:
+    enabled: true
+    logging:
+      capture-mdc-attributes:
+        - tenantId
+        - requestId
+spring:
+  reactor:
+    context-propagation: auto
 ```
+
+#### otel-collector.yml：验证环境
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+exporters:
+  debug:
+    verbosity: basic
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      exporters: [debug]
+    logs:
+      receivers: [otlp]
+      exporters: [debug]
+```
+
+### 关键配置
+
+#### 基础配置
+
+引入组件后，根据需要开启三类 OTLP 导出。上方应用配置默认把数据发送到本机 OpenTelemetry Collector：
 
 OTLP/HTTP endpoint 必须分别包含 `/v1/metrics`、`/v1/traces`、`/v1/logs`。普通环境默认采样率为
 `0.1`，应根据业务流量和存储容量调整；仅端到端验收环境建议使用 `1.0` 全采样。
 
-### 功能开关
+#### 功能开关
 
 | 自有属性 | 默认值 | 说明 |
 | --- | --- | --- |
@@ -112,16 +154,7 @@ OTLP 网络发送；`macula.observability.enabled=false` 只关闭 Macula 的指
 `logback-spring.xml` 中声明同名官方 `OpenTelemetryAppender` 时，Starter 会向其注入当前
 `OpenTelemetry` 实例，但不会重复挂载或接管其生命周期。
 
-默认不导出额外 MDC 属性。如需导出，必须显式配置 allowlist：
-
-```yaml
-macula:
-  observability:
-    logging:
-      capture-mdc-attributes:
-        - tenantId
-        - requestId
-```
+默认不导出额外 MDC 属性。集中配置中的 `capture-mdc-attributes` 是显式 allowlist 示例，只保留经过评估的属性。
 
 Trace ID 和 Span ID 由 OpenTelemetry 当前上下文提供，无需使用 `*` 捕获全部 MDC。请勿将 Token、
 Cookie、请求体、响应体或个人信息加入 allowlist。
@@ -146,13 +179,7 @@ CompletableFuture.runAsync(() -> {
 }, taskExecutor);
 ```
 
-WebFlux 和 Gateway 应开启 Reactor 自动上下文传播：
-
-```yaml
-spring:
-  reactor:
-    context-propagation: auto
-```
+WebFlux 和 Gateway 使用集中配置中的 `spring.reactor.context-propagation: auto` 开启 Reactor 自动上下文传播。
 
 原生 `ExecutorService` 可使用 `ContextExecutorService.wrap(...)` 显式接入。直接创建的 `Thread`、
 未包装的 `Executors.*`、未指定 Executor 的 `CompletableFuture.*Async` 以及第三方私有线程池不会自动传播。
@@ -166,29 +193,9 @@ spring:
 
 ### 验证三类信号
 
-先为预发布部署独立 Collector。以下是仅用于受控验证的 `otel-collector.yml`，通过 debug exporter 检查三种数据是否到达；生产替换为实际存储 exporter，不将遥测接收端口暴露到公网。
+先为预发布部署独立 Collector。上方集中提供的 `otel-collector.yml` 仅用于受控验证，通过 debug exporter 检查三种数据是否到达；生产替换为实际存储 exporter，不将遥测接收端口暴露到公网。
 
-```yaml
-receivers:
-  otlp:
-    protocols:
-      http:
-        endpoint: 0.0.0.0:4318
-exporters:
-  debug:
-    verbosity: basic
-service:
-  pipelines:
-    traces:
-      receivers: [otlp]
-      exporters: [debug]
-    metrics:
-      receivers: [otlp]
-      exporters: [debug]
-    logs:
-      receivers: [otlp]
-      exporters: [debug]
-```
+配置见本页[配置示例](#配置示例)。
 
 使用已固定版本的 OpenTelemetry Collector 镜像/二进制并挂载该文件，以 `--config` 加载；不要使用可变镜像标签作为发布记录。应用启用上文的 metrics/traces/logs 三个导出开关，HTTP endpoint 分别以 `/v1/metrics`、`/v1/traces`、`/v1/logs` 结尾。宿主机应用使用宿主机映射端口，容器内使用 Collector 服务名。
 
@@ -201,30 +208,24 @@ service:
 
 ## 依赖引入
 
-以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
 
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-opentelemetry</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>io.opentelemetry.instrumentation</groupId>
     <artifactId>opentelemetry-logback-appender-1.0</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-configuration-processor</artifactId>

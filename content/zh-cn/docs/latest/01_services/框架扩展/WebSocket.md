@@ -26,19 +26,11 @@ manual_content: true
 
 ## 使用配置
 
-### websocket服务模块配置
+### 配置示例
 
-配置前缀为 `macula.websocket`。
+以下集中列出本页涉及的配置。不同应用、文件或替代方案分别标注，请按场景选用。
 
-| 属性 | 默认值 | 说明 |
-| --- | --- | --- |
-| `enabled` | `true` | 启用 WebSocket 自动配置 |
-| `permit-test` | `true` | 放行内置测试消息路径；生产环境应设为 `false` |
-| `endpoint` | `[/websocket]` | STOMP 握手端点列表 |
-| `broker-destination-prefixes` | `[/topic, /queue]` | 消息代理处理的目标前缀 |
-| `app-destination-prefixes` | `[/app]` | 应用消息处理前缀 |
-| `user-destination-prefix` | `/user` | 用户定向消息前缀 |
-| `heartbeat` | `[10000, 10000]` | 服务端发送 / 期望客户端发送的心跳间隔，单位毫秒 |
+#### WebSocket 服务 application.yml
 
 ```yaml
 macula:
@@ -52,7 +44,7 @@ macula:
     heartbeat: [10000, 10000]
 ```
 
-### 网关需要配置路由
+#### 网关 application.yml
 
 ```yaml
 spring:
@@ -73,6 +65,28 @@ macula:
       only-auth-urls: [/websocket/**]
 ```
 
+### 关键配置
+
+| 配置 | 说明 |
+| --- | --- |
+| `macula.websocket.*` | 配置在 WebSocket 服务中，声明端点、消息前缀与心跳。 |
+| `spring.cloud.gateway.server.webflux.routes` | 配置在网关中，将 WebSocket 请求路由到服务。 |
+| `macula.gateway.security.only-auth-urls` | 网关对相应 WebSocket 路径执行仅认证策略。 |
+
+#### websocket服务模块配置
+
+配置前缀为 `macula.websocket`。
+
+| 属性 | 默认值 | 说明 |
+| --- | --- | --- |
+| `enabled` | `true` | 启用 WebSocket 自动配置 |
+| `permit-test` | `true` | 放行内置测试消息路径；生产环境应设为 `false` |
+| `endpoint` | `[/websocket]` | STOMP 握手端点列表 |
+| `broker-destination-prefixes` | `[/topic, /queue]` | 消息代理处理的目标前缀 |
+| `app-destination-prefixes` | `[/app]` | 应用消息处理前缀 |
+| `user-destination-prefix` | `/user` | 用户定向消息前缀 |
+| `heartbeat` | `[10000, 10000]` | 服务端发送 / 期望客户端发送的心跳间隔，单位毫秒 |
+
 ## 核心功能
 
 ### Spring Websocket核心流程
@@ -87,7 +101,6 @@ macula:
 框架本身已经实现WebSocketMessageBrokerConfigurer接口，如果需要再次定制实现该接口，请不要添加@EnableWebSocketMessageBroker。
 
 {{% /alert %}}
-
 
 
 本模块基于websocket之上使用STOMP协议实现广播、点对点消息发送功能，具体示例如下：
@@ -571,7 +584,6 @@ page {
 }
 
 ```
-
 
 
 #### 服务端

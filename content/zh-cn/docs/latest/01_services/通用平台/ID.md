@@ -26,7 +26,11 @@ manual_content: true
 
 ## 使用配置
 
-与 system starter 共用网关配置：
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
 
 ```yaml
 macula:
@@ -36,9 +40,13 @@ macula:
     secret-key: ${MACULA_CLOUD_SECRET_KEY}
 ```
 
+### 关键配置
+
+与 System Starter 共用 `macula.cloud.*` 网关配置，地址及应用凭据填写方式相同。
+
 服务端需预先配置 `bizType`，应用需具有号段接口访问权限。无需 TinyID 专用 token 或超时配置。
 
-### 升级说明
+#### 升级说明
 
 - 移除旧 `macula.cloud.tinyid.server/token/connect-timeout/read-timeout`，改用统一网关配置。
 - 网关将 `/tinyid/api/v1/id/nextSegmentIdSimple` 经 `StripPrefix=1` 转发；Server 不设 `/tinyid` 上下文，该接口使用 JWT 认证。

@@ -28,49 +28,38 @@ Alibaba 接入面向 Java 17、Spring Boot 4 与 Spring Cloud 2025.1，组合 Na
 `macula-boot-starter-cloud` 本身只是 packaging 为 `pom` 的聚合模块，不会自动启用全部云组件。子模块的 groupId 为 `dev.macula.boot`，版本由 Macula Boot Parent 管理；未采用统一版本管理时显式指定版本。
 
 ```xml
+<!-- 角色组合或独立灰度模块，按需选择 -->
 <!-- 微服务模块依赖 -->
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-cloud-alibaba</artifactId>
 </dependency>
 
-        <!-- 网关模块依赖 -->
+<!-- 网关模块依赖 -->
 <dependency>
-<groupId>dev.macula.boot</groupId>
-<artifactId>macula-boot-starter-cloud-alibaba-scg</artifactId>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-cloud-alibaba-scg</artifactId>
 </dependency>
-```
 
-
-### 按需独立引入灰度模块
-
-```xml
+<!-- 角色组合或独立灰度模块，按需选择 -->
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-cloud-alibaba-gray</artifactId>
 </dependency>
 ```
 
+
+### 按需独立引入灰度模块
+
 通常直接选择 [Alibaba Starter](/docs/latest/01_services/微服务/alibaba/) 或 `macula-boot-starter-cloud-alibaba-scg`，二者已传递引入本模块，无需重复声明。单独引入时还需提供 Nacos Discovery、Spring Cloud LoadBalancer；它们在本模块 POM 中为 optional 依赖。
 
 ## 使用配置
 
-### 基础接入：Nacos 与环境配置
+### 配置示例
 
-以下按当前 [Alibaba Provider application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml) 精简，Gateway / Consumer 使用相同的配置中心组织方式。示例值不是 Starter 默认值。
+以下集中列出基础接入、网关灰度与 Sentinel 选项。后两部分按需选用并合并到相应应用配置，不能将网关配置直接套用于业务服务。
 
-| 属性 | 示例值 / 说明 |
-| --- | --- |
-| `spring.profiles.active` | `@profile.active@` 由 Maven 资源过滤，默认构建 profile 为 local |
-| `spring.profiles.group.docker` | `local`，Docker 复用本地配置并覆盖连接信息 |
-| `spring.config.import` | 导入应用及应用-profile 两个 Nacos Data ID |
-| `spring.config.nacos.*` | 示例自定义连接属性，按 profile 提供；通过占位符传入 `spring.cloud.nacos.*` |
-| `spring.cloud.nacos.server-addr` / `username` / `password` | Nacos 地址与认证信息 |
-| `spring.cloud.nacos.discovery.enabled` / `namespace` | 启用注册发现并显式指定命名空间 |
-| `spring.cloud.nacos.discovery.metadata.version` | 示例为 `v1`，服务实例版本标签 |
-| `spring.cloud.nacos.discovery.register-enabled` / `register-delayed` | 本模块延迟注册扩展，仅显式配置 `false` / `true` 时启用 |
-| `spring.cloud.sentinel.transport.dashboard` / `port` | Sentinel 控制台地址 / 客户端通信端口 |
-| `spring.cloud.sentinel.datasource.<名称>.nacos.*` | Sentinel 规则的 Nacos 地址、Data ID、namespace、data-type 和 rule-type |
+#### application.yml：基础接入与可选灰度
 
 ```yaml
 server:
@@ -94,9 +83,13 @@ spring:
       password: ${spring.config.nacos.password}
       discovery:
         enabled: true
+        # 延迟注册仅在需要时同时启用以下两项
+        # register-enabled: false
+        # register-delayed: true
         namespace: ${spring.cloud.nacos.namespace}
         metadata:
           version: v1
+          # grayversion: v2  # 灰度实例按需启用，基线实例不设置
 ---
 spring:
   config:
@@ -119,6 +112,62 @@ spring:
       password: ${NACOS_PASSWORD:nacos}
 ```
 
+#### 网关 application.yml：可选灰度上下文
+
+```yaml
+spring:
+  reactor:
+    context-propagation: auto
+macula:
+  cloud:
+    gray:
+      enabled: true
+  gateway:
+    gray:
+      enabled: true
+```
+
+#### application.yml：可选 Sentinel 接入
+
+```yaml
+spring:
+  cloud:
+    sentinel:
+      transport:
+        dashboard: ${SENTINEL_DASHBOARD}
+        port: ${SENTINEL_CLIENT_PORT:8719}
+      datasource:
+        flow-rules:
+          nacos:
+            server-addr: ${NACOS_SERVER_ADDR}
+            username: ${NACOS_USERNAME}
+            password: ${NACOS_PASSWORD}
+            namespace: ${NACOS_NAMESPACE}
+            data-id: ${spring.application.name}-flow-rules
+            group-id: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+```
+
+### 关键配置
+
+#### 基础接入：Nacos 与环境配置
+
+以下按当前 [Alibaba Provider application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml) 精简，Gateway / Consumer 使用相同的配置中心组织方式。示例值不是 Starter 默认值。
+
+| 属性 | 示例值 / 说明 |
+| --- | --- |
+| `spring.profiles.active` | `@profile.active@` 由 Maven 资源过滤，默认构建 profile 为 local |
+| `spring.profiles.group.docker` | `local`，Docker 复用本地配置并覆盖连接信息 |
+| `spring.config.import` | 导入应用及应用-profile 两个 Nacos Data ID |
+| `spring.config.nacos.*` | 示例自定义连接属性，按 profile 提供；通过占位符传入 `spring.cloud.nacos.*` |
+| `spring.cloud.nacos.server-addr` / `username` / `password` | Nacos 地址与认证信息 |
+| `spring.cloud.nacos.discovery.enabled` / `namespace` | 启用注册发现并显式指定命名空间 |
+| `spring.cloud.nacos.discovery.metadata.version` | 示例为 `v1`，服务实例版本标签 |
+| `spring.cloud.nacos.discovery.register-enabled` / `register-delayed` | 本模块延迟注册扩展，仅显式配置 `false` / `true` 时启用 |
+| `spring.cloud.sentinel.transport.dashboard` / `port` | Sentinel 控制台地址 / 客户端通信端口 |
+| `spring.cloud.sentinel.datasource.<名称>.nacos.*` | Sentinel 规则的 Nacos 地址、Data ID、namespace、data-type 和 rule-type |
+
 `local` 使用 `NACOS_SERVER_PORT` 覆盖本机端口；远程地址可直接覆盖 `spring.config.nacos.server-addr`。`docker` 及共享环境使用 `NACOS_SERVER_ADDR` 提供完整地址。`dev/stg/pet/prd` 只保留配置中心连接信息，业务配置由对应 Data ID 提供；完整 Redis、Sentinel 和可观测性配置见上面的源文件。
 
 `optional:` 仅表示导入可选，不保证注册中心等其他依赖不可用时应用仍可启动；生产环境是否允许缺失配置需明确选择。
@@ -126,19 +175,10 @@ spring:
 Redis 连接使用 `spring.data.redis.*`，详见 [Redis](/docs/latest/01_services/框架基础/redis/)；Metrics、Traces、Logs 使用 `management.*` 配置，详见 [Observability](/docs/latest/01_services/生产准备/observability/)。云平台示例的普通 profile 默认关闭 OTLP 网络导出，叠加 `observability` profile 时开启。
 
 
-### 进阶：灰度发布
+#### 进阶：灰度发布
 
 
 沿用最新 [Alibaba Provider application.yml](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml) 的注册发现配置，在需要灰度发布的实例上追加：
-
-```yaml
-spring:
-  cloud:
-    nacos:
-      discovery:
-        metadata:
-          grayversion: v2
-```
 
 同一服务的基线实例不配置 `grayversion`，灰度实例配置如 `v2`。samples 中已有的 `metadata.version: v1` 不是灰度匹配键，不能代替 `metadata.grayversion`。
 
@@ -151,21 +191,12 @@ spring:
 | `macula.gateway.gray.enabled` | `false` | **Gateway 模块**读取请求头并设置灰度上下文的开关 |
 | `spring.reactor.context-propagation` | samples 为 `auto` | WebFlux/Gateway 上下文传播配置，不是实例筛选开关 |
 
-需要网关灰度上下文处理时，在 [Gateway 示例](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml) 上补充：
-
-```yaml
-macula:
-  cloud:
-    gray:
-      enabled: true
-  gateway:
-    gray:
-      enabled: true
-```
+网关灰度上下文使用上方网关专用配置，与业务服务的 Nacos 实例标签分别配置。
 
 本模块没有独立的 `enabled` 属性。关闭上述网关开关既不会卸载 `GrayRoundRobinLoadBalancer`，也不会移除原始请求头；负载均衡器仍可直接读取请求中的 `grayversion`。如需停用本模块，可通过 `spring.autoconfigure.exclude` 排除 `dev.macula.boot.starter.cloud.alibaba.gray.config.GrayNacosAutoConfiguration`，并核对应用剩余的负载均衡配置。
 
 ## 核心功能
+
 ### 注册发现与服务调用
 
 通过 Nacos 加载配置并注册、发现服务，由 Feign 调用下游；Sentinel 提供流量控制与熔断接入，延迟注册由 `register-enabled=false` 与 `register-delayed=true` 显式启用。Alibaba 与 Alibaba SCG 均传递引入下述灰度扩展。
@@ -204,6 +235,7 @@ curl -H 'grayversion: v2' \
 请参考[官方文档](https://sca.aliyun.com/zh-cn/)
 
 ## 依赖引入
+
 应用直接引入本页“组件坐标”的角色对应 Starter 即可。下面是源码依赖清单，用于排查版本与能力组成；已传递引入的依赖无需逐项加入业务 POM。
 
 | 依赖 | 是否传递 | 用途 |
@@ -215,11 +247,8 @@ curl -H 'grayversion: v2' \
 
 默认负载均衡 Bean 可由应用自定义的 `ReactorLoadBalancer<ServiceInstance>` 替代，需在对应 LoadBalancer 子上下文中配置。
 
-
-微服务模块
-
 ```xml
-
+<!-- 按所选服务或网关角色了解依赖组成 -->
 <dependencies>
     <dependency>
         <groupId>dev.macula.boot</groupId>
@@ -252,12 +281,8 @@ curl -H 'grayversion: v2' \
     </dependency>
 
 </dependencies>
-```
 
-网关模块
-
-```xml
-
+<!-- 按所选服务或网关角色了解依赖组成 -->
 <dependencies>
     <dependency>
         <groupId>dev.macula.boot</groupId>
@@ -292,11 +317,7 @@ curl -H 'grayversion: v2' \
 ```
 
 ## 版权说明
+
 Macula Boot 使用 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/LICENSE)。
-
-本模块遵循仓库 [Apache License 2.0](https://github.com/macula-projects/macula-boot/blob/3fbd28dc74d683055d27b81929971c0e45047878/LICENSE)。
-
-
-
 
 - spring-cloud-alibaba：https://github.com/alibaba/spring-cloud-alibaba/blob/2021.x/LICENSE

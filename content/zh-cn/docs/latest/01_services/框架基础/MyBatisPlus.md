@@ -27,12 +27,18 @@ manual_content: true
 
 ## 使用配置
 
-默认自动加载MyBatisPlusAutoConfiguration，已经开启了EnableTransactionManagement事务注解
-可配置属性：
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
 
 ```yaml
 macula:
   mybatis-plus:
+    tenant-enable: true
+    data-permission-enable: true
+    max-limit: 1000
     tenant-id: 1                            # 默认租户 ID，YAML 使用整数，不加 L
     tenant-suffixes: [tenant, TENANT]        # 需要租户隔离的表名后缀
     audit:
@@ -40,7 +46,16 @@ macula:
       create-time-name: createTime            # 创建时间，默认createTime
       last-update-by-name: lastUpdateBy       # 最后更新人，默认lastUpdateBy
       last-update-time-name: lastUpdateTime   # 最后更新时间，默认lastUpdateTime
+mybatis-plus:
+  # MyBatis-Plus 3.5.2 起无需 type-enums-package；旧版配置示意：
+  # type-enums-package: com.example.business.enums
+  mapper-locations: classpath:/dev/macula/**/mapper/*Mapper.xml
 ```
+
+### 关键配置
+
+默认自动加载MyBatisPlusAutoConfiguration，已经开启了EnableTransactionManagement事务注解
+可配置属性：
 
 配置前缀为 `macula.mybatis-plus`；数据库连接使用 `spring.datasource.*`，MyBatis-Plus 原生选项使用 `mybatis-plus.*`。
 
@@ -110,7 +125,7 @@ IdType.INPUT： 如果要使用数据库的序列，要使用@KeySequence注解�
 
 #### （3）分配ID
 
-IdType.ASSIGN_ID和ASSIGN_UUID：默认使用系统提供的雪花算法，如要自定义雪花算法，则需要实现IdentifierGenerator接口，并且注册到Spring，但是不能与IKeyGenerator同时注册。
+IdType.ASSIGN_ID和ASSIGN_UUID：分别使用雪花算法和 UUID，如要自定义雪花算法，则需要实现IdentifierGenerator接口，并且注册到Spring，但是不能与IKeyGenerator同时注册。
 
 ### 逻辑删除
 
@@ -118,24 +133,16 @@ IdType.ASSIGN_ID和ASSIGN_UUID：默认使用系统提供的雪花算法，如�
 
 ### 通用枚举
 
-```yaml
-mybatis-plus:
-  type-enums-package: dev.macula.i18n-base.starter.mproot.test.entity.enums
-```
+配置见本页[配置示例](#配置示例)。
 
-要使用通用枚举，需要定义枚举类型，同时记得上述配置加入到你的应用配置中去，具体可参考[官方文档](https://baomidou.com/pages/8390a4/)
-
-> **注意：从mybatis-plus 3.5.2开始已经无需上述配置了。**
+定义业务枚举并按 MyBatis-Plus 的枚举映射规则使用，具体参考[官方文档](https://baomidou.com/pages/8390a4/)。当前版本无需配置 `type-enums-package`，集中示例仅以注释保留旧版写法。
 
 ### 复杂查询
 
 默认情况下自定义SQL的XML配置文件放在src/main/resources/mapper/*.xml目录下，不要放在src/main/java目录下，有可能编译的时候会忽略xml等资
 源文件。如果不是放在/mapper目录下，需要单独配置：
 
-```yaml
-mybatis-plus:
-  mapper-locations: classpath:/dev/macula/**/mapper/*Mapper.xml
-```
+配置见本页[配置示例](#配置示例)。
 
 ### 默认开启插件
 
@@ -241,7 +248,7 @@ public enum DataScopeEnum implements IBaseEnum<Integer> {
 
 默认设置了最大返回记录数不能超过1000条。
 
-在定义需要分页的API时，可以基于下面的类定义分页的属性，该基类用户查询VO请求入参，然后在Service实现中构造Mapper需要的Page实例。
+在定义需要分页的API时，可以基于下面的类定义分页的属性，该基类用于查询请求入参，然后在Service实现中构造Mapper需要的Page实例。
 
 ```java
 /**
@@ -274,8 +281,7 @@ public class BasePageQuery {
 
 #### 乐观锁插件
 
-引入OptimisticLockerInnerInterceptor乐观锁插件，更新具有@Version注解的实体时会自动加上version=xx条件，这种情况下需要判断update的返回值是否是>
-=1或者是否是true，以判断更新是否成功，具体可参考[官方文档](https://baomidou.com/pages/0d93c0)
+引入OptimisticLockerInnerInterceptor乐观锁插件，更新具有@Version注解的实体时会自动加上version=xx条件，这种情况下需要判断update的返回值是否大于等于 1或者是否是true，以判断更新是否成功，具体可参考[官方文档](https://baomidou.com/pages/0d93c0)
 
 #### 防全表更新与删除插件
 
@@ -283,7 +289,7 @@ public class BasePageQuery {
 
 #### 自动填充审计字段
 
-默认的审计字段名称是createTime, lastUpdateTime, createBy, lastUpdateBy。数据库中的字段请转换为下划线。该名称有配置属性决定。
+默认的审计字段名称是createTime, lastUpdateTime, createBy, lastUpdateBy。数据库中的字段请转换为下划线。该名称由配置属性决定。
 如果你先于MyBatisPlusAutoConfiguration定义MetaObjectHandler，则会使用你定义的类。
 
 #### Duration类型映射

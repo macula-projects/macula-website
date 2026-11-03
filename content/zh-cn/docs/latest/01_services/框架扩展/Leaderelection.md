@@ -26,19 +26,29 @@ manual_content: true
 
 ## 使用配置
 
-必须配置 `spring.application.name`，本模块以 `leader-lock-<应用名>` 为锁键。同一选举组的实例应共用 Redis 和应用名，不同业务组使用不同名称；无独立 `macula.leaderelection.*` 属性。
+### 配置示例
 
-### 配置redis
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
 
-理论是支持 [macula-boot-starter-redis](/docs/latest/01_services/框架基础/redis/)全部配置
+#### application.yml
 
 ```yaml
 spring:
+  application:
+    name: ${APP_NAME:business-service}
   data:
     redis:
       host: 127.0.0.1
       port: 6379
 ```
+
+### 关键配置
+
+必须配置 `spring.application.name`，本模块以 `leader-lock-<应用名>` 为锁键。同一选举组的实例应共用 Redis 和应用名，不同业务组使用不同名称；无独立 `macula.leaderelection.*` 属性。
+
+#### Redis 连接
+
+Redis 连接配置沿用 [Redis Starter](/docs/latest/01_services/框架基础/redis/)。
 
 ## 核心功能
 

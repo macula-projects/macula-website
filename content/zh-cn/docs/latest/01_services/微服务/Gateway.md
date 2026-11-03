@@ -27,16 +27,16 @@ Gateway 是应用的统一入口，基于 Spring Cloud Gateway WebFlux 提供路
 
 ## 组件坐标
 
+按实际云平台选择一种 SCG Starter：Alibaba / Nacos 或 Tencent / Polaris，不同时引入。
+
 ```xml
+<!-- Alibaba / Nacos：与下方 Tencent 方案择一 -->
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-cloud-alibaba-scg</artifactId>
 </dependency>
-```
 
-上例选择 Alibaba / Nacos 网关；Tencent / Polaris 网关选择下面的组合，按实际云平台使用其中一种：
-
-```xml
+<!-- Tencent / Polaris：与上方 Alibaba 方案择一 -->
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-cloud-tencent-scg</artifactId>
@@ -47,9 +47,11 @@ Gateway 是应用的统一入口，基于 Spring Cloud Gateway WebFlux 提供路
 
 ## 使用配置
 
-### 网关基础配置与开关
+### 配置示例
 
-在网关应用中设置应用名、Redis、服务发现路由和 IAM introspection。下面的服务名、端口与环境变量替换为自己的部署值：
+以下集中列出本页涉及的配置。不同应用、文件或替代方案分别标注，请按场景选用。
+
+#### 网关 application.yml
 
 ```yaml
 server:
@@ -62,10 +64,22 @@ spring:
       host: ${REDIS_HOST:127.0.0.1}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:}
+      # 独立 System Redis 可选；需配合“独立 System Redis”的 Java Bean
+      system:
+        host: ${SYSTEM_REDIS_HOST:127.0.0.1}
+        port: ${SYSTEM_REDIS_PORT:6379}
+        password: ${SYSTEM_REDIS_PASSWORD}
   cloud:
     gateway:
       server:
         webflux:
+          # 如需跨域，按实际来源配置 globalcors，避免照搬通配来源
+          # globalcors:
+          #   cors-configurations:
+          #     "[/**]":
+          #       allowed-origins: ["https://admin.example.com"]
+          #       allowed-methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+          #       allowed-headers: [Authorization, Content-Type]
           routes:
             - id: business-api
               uri: lb://business-service
@@ -88,7 +102,53 @@ spring:
           introspection-uri: ${IAM_INTROSPECTION_URI}
   reactor:
     context-propagation: auto
+macula:
+  gateway:
+    # 接口保护可选；启用时还需提供 CryptoService Bean
+    sign-switch: true
+    crypto-switch: true
+    force-sign: true
+    force-crypto: true
+    protect-urls:
+      sign:
+        - /api/**
+      crypto:
+        - /api/**
+    security:
+      ignore-urls: []
+      only-auth-urls: []
+      default-url-require-check: true
+    trace-id-response-header-enabled: true
+    rm-opaque-token:
+      enabled: true
+    rm-opaque-token-endpoint: /gateway/rm/opaqueToken
+    force-hmac-rm-opaque-token-endpoint: true
+    apikey:
+      enabled: true
+    # 灰度能力按需开启
+    gray:
+      enabled: true
+  cloud:
+    gray:
+      enabled: true
 ```
+
+#### 下游 BFF / Service application.yml
+
+```yaml
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${GATEWAY_JWK_SET_URI}
+```
+
+### 关键配置
+
+#### 网关基础配置与开关
+
+在网关应用中设置应用名、Redis、服务发现路由和 IAM introspection。示例中的服务名、端口与环境变量应替换为自己的部署值。
 
 路由中的服务名对应注册中心里的应用名；注册发现及配置中心接入见 [Alibaba](/docs/latest/01_services/微服务/alibaba/) / [Tencent](/docs/latest/01_services/微服务/tencent/)。IAM Client 与凭据由平台登记，URL 权限规则按下文配置。
 
@@ -122,23 +182,9 @@ Metrics、Traces、Logs 的采集及导出见 [Observability](/docs/latest/01_se
 
 灰度过滤器的创建另受 `macula.cloud.gray.enabled` 控制（默认 `true`），与 `macula.gateway.gray.enabled` 的运行开关不同。应用还需提供 `spring.application.name`，OAuth2 凭证和签名材料须由部署环境注入。
 
-### 接口保护配置
+#### 接口保护配置
 
-注册 CryptoService Bean 后，配置需要保护的**原始入口路径**。以下示例显式要求命中的接口同时提交签名和加密参数；`force-crypto` 默认是 `false`，示例将其设为 `true`：
-
-```yaml
-macula:
-  gateway:
-    sign-switch: true
-    crypto-switch: true
-    force-sign: true
-    force-crypto: true
-    protect-urls:
-      sign:
-        - /api/**
-      crypto:
-        - /api/**
-```
+注册 CryptoService Bean 后，配置需要保护的**原始入口路径**。上方示例显式要求命中的接口同时提交签名和加密参数；`force-crypto` 默认是 `false`，示例将其设为 `true`：
 
 `protect-urls.sign` 与 `protect-urls.crypto` 分别管理签名和加密范围，可以按业务配置不同清单。只有 CryptoService 存在时，接口签名、加解密及保护规则 / 公钥端点才会注册；仅设置 YAML 不会创建密钥实现。
 
@@ -164,16 +210,9 @@ Token 请求按以下流程接入：
 
 System 维护角色、菜单、按钮与接口关联；网关读取 System Redis 中的 URL 角色规则。当前实现用 `spring.application.name:HTTP方法:请求路径` 匹配规则，再与认证身份的角色比较。
 
-```yaml
-macula:
-  gateway:
-    security:
-      ignore-urls: []
-      only-auth-urls: []
-      default-url-require-check: true
-```
+配置见本页[配置示例](#配置示例)。
 
-上例显式选择严格的未匹配 URL 策略。启用前先在 System 中维护与应用名、请求方法、路径对应的 URL 角色规则。配置项含义与默认值为：
+集中配置中的 `default-url-require-check: true` 显式选择严格的未匹配 URL 策略。启用前先在 System 中维护与应用名、请求方法、路径对应的 URL 角色规则。配置项含义与默认值为：
 
 | 配置 | 默认值 | 含义 |
 | --- | --- | --- |
@@ -218,14 +257,9 @@ Authorization: Bearer sk-<平台签发的APIKey>
 
 `ApiKeyAuthenticationFilter` 在 System Redis 查找 `macula:cloud:system:application:apikey:<完整APIKey>` 对应的 Hash 记录，读取 `applicationCode`、`applicationId` 和可选 `tenantId`。校验成功后建立 `authType=apikey` 的认证上下文，再由 JWT 过滤器向下游传递内部 Token。
 
-```yaml
-macula:
-  gateway:
-    apikey:
-      enabled: true
-```
+配置见本页[配置示例](#配置示例)。
 
-该开关默认 `true`，控制默认过滤器是否创建。API Key 需由平台维护有效应用记录，任意 `sk-` 字符串不会通过认证。
+`macula.gateway.apikey.enabled` 默认 `true`，控制默认过滤器是否创建。API Key 需由平台维护有效应用记录，任意 `sk-` 字符串不会通过认证。
 
 当前 API Key 使用应用身份，默认没有用户角色，不走 Token 的菜单 / URL 角色匹配分支；所需的应用操作限制应明确落实在服务端授权规则中。
 
@@ -241,14 +275,7 @@ JWT 携带对应 Principal 的可信声明；Token 可带用户角色 / scope，
 
 网关公开 `/oauth2/jwks` 供下游验签。后端微服务配置本应用网关的公钥地址：
 
-```yaml
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${GATEWAY_JWK_SET_URI}
-```
+配置见本页[配置示例](#配置示例)。
 
 `GATEWAY_JWK_SET_URI` 填写可访问的网关公钥 URL，例如 `http://application-gateway:8080/oauth2/jwks`；它用于验证网关签发的 JWT，与 IAM 的 introspection 地址分别配置。
 
@@ -390,20 +417,9 @@ signature = hex(Digest(algorithm, plain))
 
 ### 独立 System Redis
 
-网关自身的 Redis 保存认证缓存与签名 nonce，System Redis 提供角色与应用信息。两者独立部署时，在应用中提供两套连接及模板。下面的 `spring.data.redis.system.*` 为应用手动绑定的自定义前缀，需要配合下方 Java Bean 声明。
+网关自身的 Redis 保存认证缓存与签名 nonce，System Redis 提供角色与应用信息。两者独立部署时，在应用中提供两套连接及模板。集中配置中的 `spring.data.redis.system.*` 为应用手动绑定的自定义前缀，需要配合下方 Java Bean 声明。
 
-```yaml
-spring:
-  data:
-    redis:
-      host: 127.0.0.1
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
-      system:
-        host: ${SYSTEM_REDIS_HOST:127.0.0.1}
-        port: ${SYSTEM_REDIS_PORT:6379}
-        password: ${SYSTEM_REDIS_PASSWORD}
-```
+配置见本页[配置示例](#配置示例)。
 
 `SYSTEM_REDIS_*` 连接信息由部署环境注入。
 
@@ -488,15 +504,7 @@ Content-Type: application/json
 
 ### 灰度标签传递
 
-```yaml
-macula:
-  cloud:
-    gray:
-      enabled: true
-  gateway:
-    gray:
-      enabled: true
-```
+配置见本页[配置示例](#配置示例)。
 
 `macula.cloud.gray.enabled` 控制灰度过滤器是否创建（默认 `true`），`macula.gateway.gray.enabled` 控制其运行行为（默认 `false`）。开启后从请求头读取 `grayversion`，设置并传递灰度上下文，再在处理后清理。
 
@@ -504,58 +512,44 @@ macula:
 
 ## 依赖引入
 
-以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
 
 ```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-loadbalancer</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-redis</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-commons</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.nimbusds</groupId>
     <artifactId>oauth2-oidc-sdk</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.github.ben-manes.caffeine</groupId>
     <artifactId>caffeine</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-tracing</artifactId>

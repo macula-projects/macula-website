@@ -10,7 +10,7 @@ source_paths: ["macula-boot-examples/README.md", "macula-boot-examples/docker/RE
 source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-examples/README.md", "macula-boot-examples/docker/README.md", "macula-boot-examples/docker/scripts/compose.sh", "macula-boot-examples/docker/.env.example", "macula-boot-examples/docker/docker-compose.yml", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-consumer/src/main/resources/application.yml", "macula-boot-examples/macula-example-alibaba-provider1/src/main/resources/application.yml", "macula-boot-archetype/README.md", "macula-boot-archetype/pom.xml", "macula-boot-archetype/src/main/resources/META-INF/maven/archetype-metadata.xml", "macula-boot-archetype/src/main/resources/archetype-resources/README.md", "macula-boot-archetype/src/main/resources/archetype-resources/__rootArtifactId__-parent/pom.xml"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["deploy/README.md", "deploy/scripts/compose.sh", "deploy/.env.example"]}]
 ---
 
-准备好 Git 和 Docker Compose v2，按下面两步启动平台与 Alibaba 示例链路。
+准备好 Git 和 Docker Compose v2，按前两步启动平台与 Alibaba 示例链路；跑通后，可用 Archetype 创建自己的项目。
 
 ## 1. 下载并启动 Macula Cloud
 
@@ -85,3 +85,42 @@ mvn archetype:generate \
 生成后进入 `demo-app/`，按其中的 `deploy/README.md` 配置 Macula Cloud 应用与 OAuth Client，再运行项目。模板参数见 [Archetype README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-archetype)，业务开发见[开发指引](/docs/latest/04_devmanual/)，认证配置见[安全架构](/docs/latest/00_introduce/安全架构/)。
 
 自己的应用还需在 Cloud 注册应用与 OAuth Client，按[首次接入 Macula Cloud](/docs/latest/04_devmanual/首次接入macula-cloud/)完成登录和受保护接口验证。
+
+## 依赖接入
+
+Archetype 已生成 Parent 配置；已有项目接入时可展开下面的 POM 示例。完整平台登记和业务开发步骤继续参见[开发指引](/docs/latest/04_devmanual/)。
+
+<details>
+<summary>已有项目的 Parent 与版本配置</summary>
+
+优先继承 Macula Boot Parent，由其管理 Starter 版本及构建配置：
+
+```xml
+<parent>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-parent</artifactId>
+    <version>6.1.0-SNAPSHOT</version>
+    <relativePath/>
+</parent>
+```
+
+已有其他 Parent 的项目，可显式定义 Macula 版本，并在所选依赖上填写版本；第三方依赖需另按目标 Parent 的 dependencyManagement 对齐：
+
+```xml
+<properties>
+    <macula.version>6.1.0-SNAPSHOT</macula.version>
+</properties>
+
+<dependencies>
+    <!-- 示例：只引入实际需要的组件 -->
+    <dependency>
+        <groupId>dev.macula.boot</groupId>
+        <artifactId>macula-boot-starter-web</artifactId>
+        <version>${macula.version}</version>
+    </dependency>
+</dependencies>
+```
+
+仅导入依赖版本管理不会继承 Parent 的构建插件。新项目优先通过 Archetype 生成，已有项目按对应组件说明核对编译插件。快照无法远程解析时，使用前文的完整框架安装命令准备本地制品；跳过测试的安装不能作为验证结果。
+
+</details>

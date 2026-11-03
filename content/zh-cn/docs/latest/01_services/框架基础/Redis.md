@@ -26,21 +26,11 @@ manual_content: true
 
 ## 使用配置
 
-使用时有两种方式配置，一种是spring-boot默认的配置形式，另一种是redisson的配置形式。如下所示：
+### 配置示例
 
-| 属性 | 默认值 / 行为 | 说明 |
-| --- | --- | --- |
-| `spring.data.redis.host` / `port` | `localhost` / `6379` | 单机地址 |
-| `spring.data.redis.database` | `0` | 数据库编号，Cluster 不支持切库 |
-| `spring.data.redis.username` / `password` | 未设置 | Redis 认证信息 |
-| `spring.data.redis.timeout` | 未设置时本模块使用 `10000ms` | 自动构造 Redisson 时用作建连超时 |
-| `spring.data.redis.ssl.enabled` | `false` | 自动构造连接地址时启用 TLS |
-| `spring.data.redis.sentinel.master` / `nodes` | 未设置 | Sentinel 主节点名称 / 哨兵地址列表 |
-| `spring.data.redis.cluster.nodes` | 未设置 | Cluster 节点地址列表 |
-| `spring.redis.redisson.config` | 未设置 | 内嵌 Redisson YAML，优先于 `file` |
-| `spring.redis.redisson.file` | 未设置 | Redisson YAML 资源路径 |
+以下集中列出本页涉及的配置。不同应用、文件或替代方案分别标注，请按场景选用。
 
-两种命名空间有意不同；显式 Redisson YAML 与 `spring.data.redis.*` 不会逐项合并。
+#### application.yml：Spring Data 连接选项
 
 ```yaml
 spring:
@@ -49,6 +39,7 @@ spring:
       database:
       host:
       port:
+      username:
       password:
       ssl:
         enabled: false
@@ -60,14 +51,7 @@ spring:
         nodes:
 ```
 
-启用 `spring.data.redis.ssl.enabled` 时，单机、Sentinel 和 Cluster 地址都会使用 `rediss://`。
-当前自动构建的 Redisson 配置不支持 Spring Boot SSL Bundle；如需自定义证书或信任库，请使用下面的
-`spring.redis.redisson` YAML 配置并按 Redisson TLS 选项显式配置。
-
-redisson的配置方式如下，包括单点、主从、集群，下面是集群模式：
-
-Macula Boot 6.1 使用 Redisson 4，`spring.redis.redisson.config` 和 `file` 仅支持 Redisson YAML 格式；
-Redisson 4 已移除 JSON 配置解析。固定的 `retryInterval` 应迁移为 `retryDelay`，并显式选择延迟策略。
+#### application.yml：Redisson YAML 方案（与上一方案择一）
 
 ```yaml
 spring:
@@ -109,6 +93,63 @@ spring:
         transportMode: "NIO"
 ```
 
+#### application.yml：多连接 Redisson 方案
+
+```yaml
+spring:
+  redis:
+    redisson:
+      one:
+        config: |
+          singleServerConfig:
+            address: "redis://127.0.0.1:6379"
+      two:
+        config: |
+          singleServerConfig:
+            address: "redis://127.0.0.1:6380"
+```
+
+#### application.yml：多连接 Spring Data 方案
+
+```yaml
+spring:
+  data:
+    redis:
+      one:
+        host: ${REDIS_ONE_HOST:127.0.0.1}
+        port: ${REDIS_ONE_PORT:6379}
+      two:
+        host: ${REDIS_TWO_HOST:127.0.0.1}
+        port: ${REDIS_TWO_PORT:6380}
+```
+
+### 关键配置
+
+使用时有两种方式配置，一种使用 Spring Boot 连接属性，另一种使用 Redisson YAML。具体属性如下。
+
+| 属性 | 默认值 / 行为 | 说明 |
+| --- | --- | --- |
+| `spring.data.redis.host` / `port` | `localhost` / `6379` | 单机地址 |
+| `spring.data.redis.database` | `0` | 数据库编号，Cluster 不支持切库 |
+| `spring.data.redis.username` / `password` | 未设置 | Redis 认证信息 |
+| `spring.data.redis.timeout` | 未设置时本模块使用 `10000ms` | 自动构造 Redisson 时用作建连超时 |
+| `spring.data.redis.ssl.enabled` | `false` | 自动构造连接地址时启用 TLS |
+| `spring.data.redis.sentinel.master` / `nodes` | 未设置 | Sentinel 主节点名称 / 哨兵地址列表 |
+| `spring.data.redis.cluster.nodes` | 未设置 | Cluster 节点地址列表 |
+| `spring.redis.redisson.config` | 未设置 | 内嵌 Redisson YAML，优先于 `file` |
+| `spring.redis.redisson.file` | 未设置 | Redisson YAML 资源路径 |
+
+两种命名空间有意不同；显式 Redisson YAML 与 `spring.data.redis.*` 不会逐项合并。
+
+启用 `spring.data.redis.ssl.enabled` 时，单机、Sentinel 和 Cluster 地址都会使用 `rediss://`。
+当前自动构建的 Redisson 配置不支持 Spring Boot SSL Bundle；如需自定义证书或信任库，请使用上方的
+`spring.redis.redisson` YAML 配置并按 Redisson TLS 选项显式配置。
+
+Redisson 支持单机、主从和集群，上方配置示例展示集群模式。
+
+Macula Boot 6.1 使用 Redisson 4，`spring.redis.redisson.config` 和 `file` 仅支持 Redisson YAML 格式；
+Redisson 4 已移除 JSON 配置解析。固定的 `retryInterval` 应迁移为 `retryDelay`，并显式选择延迟策略。
+
 ## 核心功能
 
 ### 默认提供的Bean
@@ -124,21 +165,7 @@ spring:
 
 ### 多Redis源的配置-Redisson方式
 
-首先需要在配置文件中添加：
-
-```yaml
-spring:
-  redis:
-    redisson:
-      one:
-        file: classpath:redisson.yaml
-        config: |
-          xxxxx
-      two:
-        file: classpath:redisson.yaml
-        config: |
-          xxxxx
-```
+先采用[配置示例](#配置示例)中的“多连接 Redisson 方案”，为每个连接提供独立配置。
 
 然后添加配置Bean，注意其中一个要设置@Primary注解，以便给默认的RedisConnectionFactory使用
 
@@ -153,19 +180,19 @@ public class Config {
     @Primary
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClientOne(ApplicationContext ctx, RedissonProperties redissonPropertiesOne) throws Exception {
-        Config config = RedissonConfigBuilder.create().build(ctx, null, redissonProperties);
+        Config config = RedissonConfigBuilder.create().build(ctx, null, redissonPropertiesOne);
         return Redisson.create(config);
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.redis.redisson.tow")
+    @ConfigurationProperties(prefix = "spring.redis.redisson.two")
     public RedissonProperties redissonPropertiesTwo() {
         return new RedissonProperties();
     }
 
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClientTwo(ApplicationContext ctx, RedissonProperties redissonPropertiesTwo) throws Exception {
-        Config config = RedissonConfigBuilder.create().build(ctx, null, redissonProperties);
+        Config config = RedissonConfigBuilder.create().build(ctx, null, redissonPropertiesTwo);
         return Redisson.create(config);
     }
 }
@@ -173,17 +200,7 @@ public class Config {
 
 ### 多Redis源的配置-Redis方式
 
-首先在配置文件中添加
-
-```yaml
-spring:
-  data:
-    redis:
-      one:
-        xxx
-      two:
-        xxx
-```
+先采用[配置示例](#配置示例)中的“多连接 Spring Data 方案”，分别填写连接属性。
 
 然后添加配置Bean，注意其中一个要设置@Primary注解，以便给默认的RedisConnectionFactory使用
 
@@ -222,7 +239,7 @@ public class Config {
 
 {{% alert title="提示" color="primary" %}}
 
-注意：如果定义多个RedisConnectonFactory，需要标识其中一个为@Primary，否则会报错。你的配置需要保证在RedissonAutoConfiguration配置前，可以使用@AutoConfigureBefore注解。同时要注意bean的方法命名与构造注入时参数名称要一致。
+注意：如果定义多个RedisConnectionFactory，需要标识其中一个为@Primary，否则会报错。你的配置需要保证在RedissonAutoConfiguration配置前，可以使用@AutoConfigureBefore注解。同时要注意bean的方法命名与构造注入时参数名称要一致。
 
 {{% /alert %}}
 

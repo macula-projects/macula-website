@@ -26,15 +26,35 @@ def pom_defaults(poms):
                 dependencies.append(pair)
 
     def xml(items):
-        return '\n\n'.join('```xml\n<dependency>\n'
+        entries = '\n\n'.join('<dependency>\n'
             f'    <groupId>{group}</groupId>\n    <artifactId>{artifact}</artifactId>\n'
-            + '</dependency>\n```' for group, artifact in dict.fromkeys(items))
+            + '</dependency>' for group, artifact in dict.fromkeys(items))
+        return '```xml\n' + entries + '\n```' if entries else ''
 
     return {
         '组件坐标': xml(coordinates),
         '依赖引入': ('以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。\n\n'
                  + xml(dependencies)) if dependencies else '',
     }
+
+
+def consolidate_dependency_blocks(text):
+    """Join adjacent dependency snippets without combining alternatives or other XML."""
+    block = r'```xml\n(?:(?!^```)[\s\S])*?^```'
+    run = re.compile(r'(?m)' + block + r'(?:\s*\n\s*' + block + r')+')
+
+    def combine(match):
+        snippets = re.findall(r'(?m)```xml\n([\s\S]*?)^```', match[0])
+        for snippet in snippets:
+            try:
+                root = ET.fromstring('<dependencies>' + snippet + '</dependencies>')
+            except ET.ParseError:
+                return match[0]
+            if not len(root) or any(child.tag != 'dependency' for child in root):
+                return match[0]
+        return '```xml\n' + '\n\n'.join(s.strip() for s in snippets) + '\n```'
+
+    return run.sub(combine, text)
 
 
 def place_web_response_extension(body):
@@ -178,5 +198,7 @@ def normalize_module(body, defaults=None, component=''):
         text = '\n'.join(buckets[name]).strip()
         if not text:
             text = defaults.get(name) or fallbacks[name]
+        if name in {'组件坐标', '依赖引入'}:
+            text = consolidate_dependency_blocks(text)
         parts.append('## ' + name + '\n\n' + text)
     return '\n\n'.join(parts) + '\n'

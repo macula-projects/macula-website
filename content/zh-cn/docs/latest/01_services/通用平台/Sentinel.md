@@ -45,65 +45,49 @@ main 的云接入模块包括 Alibaba/Nacos、Tencent/Polaris 和共享 Gateway�
 
 ## 依赖引入
 
-以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
 
 ```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-feign</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-loadbalancer</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-web-server</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-cloud-alibaba-gray</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>com.alibaba.csp</groupId>
     <artifactId>sentinel-datasource-nacos</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-pool2</artifactId>

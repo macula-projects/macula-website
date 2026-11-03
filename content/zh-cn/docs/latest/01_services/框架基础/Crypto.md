@@ -27,6 +27,12 @@ manual_content: true
 
 ## 使用配置
 
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml：组件与加密属性示例
+
 ```yaml
 macula:
   crypto:
@@ -34,9 +40,19 @@ macula:
     algorithm: AES  # BASE64, AES, RSA, SM2, SM4
     encode: HEX     # BASE64, HEX
     password: xxx   # 对称加密的密钥
-    publicKey: xxx  # 非对称加密公钥
-    privateKey: xxx # 非对称解密私钥
+    public-key: xxx  # 非对称加密公钥
+    private-key: xxx # 非对称解密私钥
+test:
+  encrypt: mpw:Or0wNwIcctnekUyDfeN8cw==
 ```
+
+#### 启动参数：配置文件解密密钥
+
+```bash
+java -jar application.jar --macula.crypto.key="${CONFIG_DECRYPTION_KEY}"
+```
+
+### 关键配置
 
 配置前缀为 `macula.crypto`，密钥应由部署环境注入，不要提交到仓库。
 
@@ -55,17 +71,9 @@ macula:
 
 配置文件加密只支持AES（AES/ECB/PKCS5Padding）方式加密，密钥只能通过命令行的方式设置
 
-```
-在启动的时候加入密钥
---macula.crypto.key=password
-```
+启动时通过上方命令行参数提供 `macula.crypto.key`，不要将解密密钥与密文一起写入配置文件。
 
-***注意：配置文件的密文属性需要以 "mpw:" 开头***，例如：
-
-```yaml
-test:
-  encrypt: mpw:Or0wNwIcctnekUyDfeN8cw==
-```
+配置文件的密文属性需要以 `mpw:` 开头，见集中配置中的 `test.encrypt`。
 
 ### MyBatis的数据库字段加密
 
@@ -84,7 +92,7 @@ public @interface CryptoField {
     AlgorithmType algorithm() default AlgorithmType.DEFAULT;
 
     /**
-     * 秘钥。AES、SM4需要
+     * 密钥。AES、SM4需要
      */
     String password() default "";
 
@@ -106,9 +114,9 @@ public @interface CryptoField {
 }
 ```
 
-#### 举个栗子
+#### 使用示例
 
-定义一个java bean, 在 userName 上添加该注解
+定义一个 Java Bean， 在 userName 上添加该注解
 
 ```java
 public class User implements Serializable {

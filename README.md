@@ -79,9 +79,11 @@ npm run build
 
 latest 的组件章节同时核对 main 中实际存在的 Starter POM（包含 Cloud 下的嵌套模块），缺少显式映射的新模块会使同步失败。已删除模块不再从 5.x 回填；TSF 旧地址跳转至微服务栏目，Loggers、Metrics、Tracing 旧地址跳转至独立的 `生产准备/Observability.md`。生产准备首页只提供分类导览。历史版本继续保留各自内容。仅更新当前版本时运行 `python3 scripts/sync-boot-docs.py --version latest`。
 
-5.x、latest 的组件页统一使用“概览、组件坐标、使用配置、核心功能、依赖引入、版权说明”六个二级标题；版本差异与各自示例保留在对应小节。`scripts/module_docs.py` 在同步时整理 README 层级与合并章节，不改动代码块；缺少的组件坐标和直接依赖从该分支 POM 提取。人工维护的组件页面也遵循这套结构，3.1、4.0 归档文档保持原貌。
+5.x、latest 的组件页统一使用“概览、组件坐标、使用配置、核心功能、依赖引入、版权说明”六个二级标题；版本差异与各自示例保留在对应小节。`scripts/module_docs.py` 在同步时整理 README 层级与合并章节，并将相邻的 Maven 依赖片段集中为一个代码块，保留依赖内容；缺少的组件坐标和直接依赖从该分支 POM 提取。人工维护的组件页面也遵循这套结构，3.1、4.0 归档文档保持原貌。
 
 Macula Cloud 的管理端与后端同仓，入口为 `macula-cloud/macula-cloud-admin`。首页管理端链接指向该目录。latest 的快速开始、平台部署与 Sentinel 指引设置 `manual_content: true`，按当前源码维护；跨仓库资料使用 `source_repository`、`source_branch`、`source_commit` 和 `source_paths` 记录来源，后续同步不会覆盖这些说明。
+
+latest 的平台简介按“平台概述、快速开始、应用架构、应用分层、安全架构”展开，区分平台认知与开发操作。应用架构用本地 SVG 说明 Cloud 与业务应用的关系，历史架构 PNG 保留在可展开资料中；应用分层保留原 URL。具体创建、接入、扩展、测试与部署归入开发指引，详细配置归对应组件。组件页先集中配置示例，再用表格和文字解释关键项；不同文件、应用及互斥方案分别标注，同一应用同一方案合并根节点。
 
 latest 的快速开始采用“下载并启动 Macula Cloud → 下载 Macula Boot 并运行 Examples → 调用接口验证”的简短流程，再介绍 Gateway / Consumer（BFF）/ Provider（Service）三个角色，末尾提供 Archetype 创建自有单仓项目的简要命令与参数说明。IAM introspection、Cloud endpoint 与应用网关 JWK 只说明关键方向，详细配置链接到安全架构与组件页。
 
@@ -93,7 +95,7 @@ latest 的“平台简介 → 安全架构”用原理图概述网关认证、�
 
 原理图文字使用共享的正文 / 代码字号变量，并保持 720px 原生画布，避免在宽屏随容器拉伸而放大字号。窄屏在图形区域内横向滚动。Web 的“授权列表的资源凭证扩展”归入“核心功能 → 全局返回结构处理”，同步时也保持该归类。
 
-latest 的“平台简介 → 值对象与分层”复用应用分层章节的 `layer-model.png`、`model2.png` 原图，概要介绍 Query、Form、DTO、VO、BO、Entity 的命名、服务内传递及跨服务契约转换。图片与原规范保持共用，支持放大查看；新增章节通过 `LATEST_CHAPTERS` 显式声明，使用 `manual_content: true` 保留人工维护内容。
+latest 的“平台简介 → 应用分层”复用应用分层章节的 `layer-model.png`、`model2.png` 原图，概要介绍 Query、Form、DTO、VO、BO、Entity 的命名、服务内传递及跨服务契约转换。图片与原规范保持共用，支持放大查看；新增章节通过 `LATEST_CHAPTERS` 显式声明，使用 `manual_content: true` 保留人工维护内容。
 
 Gateway 组件说明同时覆盖 README 中的完整能力：HTTP / WebSocket 路由、认证授权、内部 JWT、CryptoService 与接口加解密 / 签名、System Redis 扩展、Token 缓存管理、Trace ID 和灰度标签。页面直接介绍组件接入与使用，使用通用服务名和环境变量；协议细节对照 CryptoService、过滤器与配置属性，`source_paths` 记录相应来源。功能覆盖检查用于防止组件页在后续整理中遗漏这些内容。
 

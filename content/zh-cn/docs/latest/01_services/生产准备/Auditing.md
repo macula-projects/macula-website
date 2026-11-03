@@ -4,7 +4,7 @@ linkTitle: "Auditing"
 weight: 4
 
 source_path: "macula-boot-starters/macula-boot-starter-auditlog/README.md"
-source_paths: ["macula-boot-starters/macula-boot-starter-auditlog/README.md", "macula-boot-starters/macula-boot-starter-operationlog/README.md"]
+source_paths: ["macula-boot-starters/macula-boot-starter-auditlog/README.md", "macula-boot-starters/macula-boot-starter-operationlog/README.md", "macula-boot-starters/macula-boot-starter-operationlog/src/main/java/dev/macula/boot/starter/operationlog/OperationLog.java", "macula-boot-starters/macula-boot-starter-operationlog/src/main/java/dev/macula/boot/starter/operationlog/OperationLogConstant.java", "macula-boot-starters/macula-boot-starter-operationlog/src/main/java/dev/macula/boot/starter/operationlog/OperationLogDTO.java", "macula-boot-starters/macula-boot-starter-operationlog/src/main/java/dev/macula/boot/starter/operationlog/OperationLogEvent.java", "macula-boot-starters/macula-boot-starter-operationlog/src/main/java/dev/macula/boot/starter/operationlog/OperationLogListener.java"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
@@ -12,15 +12,18 @@ manual_content: true
 
 ## 概览
 
-本模块通过 `@AuditLog` 采集审计事件，由应用监听 `OperLogEvent` 完成持久化。日志导出可结合 `macula-boot-starter-observability`，本模块不提供日志存储后端。
-
-
-操作日志功能模块，提供基于注解的操作日志记录功能。
+本页介绍 AuditLog 与 OperationLog 两个组件：前者通过 `@AuditLog` 采集审计事件，后者通过 `@OperationLog` 记录操作过程。应用可监听相应事件完成持久化；日志导出可结合 Observability，两个组件均不提供日志存储后端。
 
 ## 组件坐标
 
 下列坐标以继承 [Macula Boot Parent](/docs/latest/00_introduce/概述/#依赖基线) 为前提，由 Parent 管理版本；无需重复声明版本。独立接入时按该节显式定义版本和依赖管理。
 
+
+<!-- 操作过程日志，按需引入 -->
+<dependency>
+    <groupId>dev.macula.boot</groupId>
+    <artifactId>macula-boot-starter-operationlog</artifactId>
+</dependency>
 ```xml
 <!-- 日志审计 -->
 <dependency>
@@ -31,9 +34,26 @@ manual_content: true
 
 ## 使用配置
 
-无独立 YAML 配置项；记录范围由下文 `@AuditLog` 参数控制。默认保存请求和响应数据，敏感字段应通过 `excludeParamNames` 排除，或关闭对应记录。异步监听示例需启用 `@EnableAsync` 或引入 Async Starter。
+### 配置示例
 
-### AuditLog
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml：禁用操作日志自动配置（可选）
+
+```yaml
+spring:
+  autoconfigure:
+    exclude:
+      - dev.macula.boot.starter.operationlog.config.OperationLogAutoConfiguration
+```
+
+### 关键配置
+
+两个组件无独立 YAML 业务属性；上方示例仅展示可选的自动配置排除方式。AuditLog 的记录范围由下文 `@AuditLog` 参数控制。默认保存请求和响应数据，敏感字段应通过 `excludeParamNames` 排除，或关闭对应记录。异步监听示例需启用 `@EnableAsync` 或引入 Async Starter。
+
+## 核心功能
+
+### AuditLog 审计事件
 
 添加macula-boot-starter-auditlog依赖后，在需要审计的方法上加上@AuditLog注解，添加注解后调用方法会触发OperLogEvent事件，可以定义Listener监听事件用于持久化审计日志。
 
@@ -88,7 +108,7 @@ public @interface AuditLog {
 }
 ```
 
-Listenter定义参考：
+Listener定义参考：
 
 ```java
 @Component
@@ -125,7 +145,7 @@ public class AuditLogEventListener {
 }
 ```
 
-## 核心功能
+### OperationLog 操作记录
 
 - **注解驱动**：通过 `@OperationLog` 注解标记需要记录日志的方法
 - **分层记录**：支持 Controller、Service、Domain、Repository 等不同层级
@@ -143,16 +163,7 @@ public class AuditLogEventListener {
 
 ### 使用方法
 
-#### 1. 添加依赖
-
-```xml
-<dependency>
-    <groupId>dev.macula.boot</groupId>
-    <artifactId>macula-boot-starter-operationlog</artifactId>
-</dependency>
-```
-
-#### 2. 使用注解
+#### 使用注解
 
 仅在 Web 应用中自动配置，无独立 YAML 开关；记录内容由注解参数控制。`spring.application.name` 用作应用名，未设置时为 `unknown-app`。避免两个日志注解重复记录同一方法，并对参数和结果中的敏感信息脱敏。
 
@@ -167,7 +178,7 @@ public class UserController {
         module = "用户管理",
         description = "创建用户",
         operation = "ADD",     // 自定义类型
-        layer = "CONTROLLER",       // 自定义层级
+        scope = "CONTROLLER",       // 自定义层级
         logParameters = true,
         logResult = false
     )
@@ -182,8 +193,8 @@ public class UserController {
     @OperationLog(
         module = "用户管理",
         description = "查询用户详情",
-        operation = OperationLogConstant.OPERATION_TYPE_SELECT,
-        layer = OperationLogConstant.LAYER_CONTROLLER
+        operation = OperationLogConstant.TYPE_SELECT,
+        scope = OperationLogConstant.SCOPE_CONTROLLER
     )
     @GetMapping("/{id}")
     public Result<UserVO> getUser(@PathVariable Long id) {
@@ -202,8 +213,8 @@ public class UserService {
     @OperationLog(
         module = "用户服务",
         description = "删除用户",
-        operation = OperationLogConstant.OPERATION_TYPE_DELETE,
-        layer = OperationLogConstant.LAYER_SERVICE
+        operation = OperationLogConstant.TYPE_DELETE,
+        scope = OperationLogConstant.SCOPE_SERVICE
     )
     public void deleteUser(Long userId) {
         // 业务逻辑
@@ -212,8 +223,8 @@ public class UserService {
     @OperationLog(
         module = "用户服务",
         description = "更新用户信息",
-        operation = OperationLogConstant.OPERATION_TYPE_UPDATE,
-        layer = OperationLogConstant.LAYER_SERVICE,
+        operation = OperationLogConstant.TYPE_UPDATE,
+        scope = OperationLogConstant.SCOPE_SERVICE,
         logParameters = true,
         logResult = true
     )
@@ -233,8 +244,8 @@ public class UserDomainService {
     @OperationLog(
         module = "用户领域服务",
         description = "用户状态变更",
-        operation = OperationLogConstant.OPERATION_TYPE_UPDATE,
-        layer = OperationLogConstant.LAYER_DOMAIN
+        operation = OperationLogConstant.TYPE_UPDATE,
+        scope = OperationLogConstant.SCOPE_DOMAIN
     )
     public void changeUserStatus(Long userId, UserStatus status) {
         // 业务逻辑
@@ -249,7 +260,7 @@ public class UserDomainService {
     module = "认证服务",
     description = "用户登录",
     operation = "LOGIN",            // 自定义类型
-    layer = "CONTROLLER"             // 自定义层级
+    scope = "CONTROLLER"             // 自定义层级
 )
 ```
 
@@ -262,7 +273,7 @@ public class UserDomainService {
 | `module` | String | - | **必填**，模块名称 |
 | `description` | String | - | **必填**，操作描述 |
 | `operation` | String | "SELECT" | 操作类型：支持自定义字符串或使用常量 |
-| `layer` | String | "CONTROLLER" | 业务层级：支持自定义字符串或使用常量 |
+| `scope` | String | "CONTROLLER" | 业务层级：支持自定义字符串或使用常量 |
 | `logParameters` | boolean | true | 是否记录方法入参 |
 | `logResult` | boolean | false | 是否记录方法返回值 |
 
@@ -270,32 +281,36 @@ public class UserDomainService {
 
 #### 操作类型常量
 
-- `OperationLogConstant.OPERATION_TYPE_ADD` - 增加
-- `OperationLogConstant.OPERATION_TYPE_DELETE` - 删除
-- `OperationLogConstant.OPERATION_TYPE_UPDATE` - 更新
-- `OperationLogConstant.OPERATION_TYPE_SAVE_OR_UPDATE` - 新增或者修改
-- `OperationLogConstant.OPERATION_TYPE_SELECT` - 查询
+- `OperationLogConstant.TYPE_INSERT` - 增加
+- `OperationLogConstant.TYPE_DELETE` - 删除
+- `OperationLogConstant.TYPE_UPDATE` - 更新
+- `OperationLogConstant.TYPE_UPSERT` - 新增或者修改
+- `OperationLogConstant.TYPE_SELECT` - 查询
 
 #### 业务层级常量
 
-- `OperationLogConstant.LAYER_CONTROLLER` - 控制器层
-- `OperationLogConstant.LAYER_SERVICE` - 业务层
-- `OperationLogConstant.LAYER_DOMAIN` - 领域层
-- `OperationLogConstant.LAYER_REPOSITORY` - 仓储层级
+- `OperationLogConstant.SCOPE_CONTROLLER` - 控制器层
+- `OperationLogConstant.SCOPE_SERVICE` - 业务层
+- `OperationLogConstant.SCOPE_DOMAIN` - 领域层
+- `OperationLogConstant.SCOPE_REPOSITORY` - 仓储层级
 
 #### 使用方式
 
 ```java
 // 方式一：直接写字符串（推荐，最灵活）
 @OperationLog(
-    operationType = "LOGIN",     // 自定义类型
-    layer = "CONTROLLER"         // 自定义层级
+    module = "用户管理",
+    description = "业务操作",
+    operation = "LOGIN",     // 自定义类型
+    scope = "CONTROLLER"         // 自定义层级
 )
 
 // 方式二：使用常量类
 @OperationLog(
-    operationType = OperationLogConstant.OPERATION_TYPE_ADD,
-    layer = OperationLogConstant.LAYER_CONTROLLER
+    module = "用户管理",
+    description = "业务操作",
+    operation = OperationLogConstant.TYPE_INSERT,
+    scope = OperationLogConstant.SCOPE_CONTROLLER
 )
 ```
 
@@ -306,21 +321,21 @@ public class UserDomainService {
 ```
 [OperationLog] UserController.createUser ->
 {
-  "serviceId": "your-app-name",
-  "logType": {"type":1,"description":"正常日志"},
+  "application": "your-app-name",
+  "level": "INFO",
   "operation": "ADD",
-  "layer": "CONTROLLER",
+  "scope": "CONTROLLER",
   "module": "用户管理",
   "description": "创建用户",
   "clientIp": "127.0.0.1",
-  "requestMode": "POST",
+  "requestMethod": "POST",
   "requestUri": "/api/users",
   "method": "UserController.createUser",
-  "param": {"dto": {...}},
+  "parameters": {"dto": {...}},
   "result": {...},
   "startTime": "2023-12-01T10:30:00",
   "endTime": "2023-12-01T10:30:05",
-  "costTime": 5000,
+  "executionTimeMillis": 5000,
   "traceId": "...",
   "requestId": "..."
 }
@@ -348,14 +363,9 @@ public class CustomOperationLogListener {
 
 #### 禁用自动配置
 
-如果不需要自动配置，可以通过以下方式禁用：
+不需要 OperationLog 自动配置时，可使用集中配置中的 `spring.autoconfigure.exclude` 排除对应配置类。
 
-```yaml
-spring:
-  autoconfigure:
-    exclude:
-      - dev.macula.boot.starter.operationlog.config.OperationLogAutoConfiguration
-```
+配置见本页[配置示例](#配置示例)。
 
 ### 最佳实践
 
@@ -368,13 +378,13 @@ spring:
 
 #### 2. 参数控制
 
-- 生产环境中建议关闭 `isShowResult`，避免敏感信息泄露
-- 对于大数据量的操作，建议关闭 `isShowParam`，避免日志过大
+- 生产环境中建议关闭 `logResult`，避免敏感信息泄露
+- 对于大数据量的操作，建议关闭 `logParameters`，避免日志过大
 - 异常情况下会自动记录异常信息，无需额外处理
 
 #### 3. 模块划分
 
-建议按照业务模块来划分 `moduleName`：
+建议按照业务模块来划分 `module`：
 - 用户管理、订单管理、商品管理等业务模块
 - 支付服务、消息服务等基础服务模块
 
@@ -388,58 +398,44 @@ spring:
 
 ## 依赖引入
 
-以下为对应分支 POM 的直接依赖（不含测试依赖）；版本由父 POM / BOM 管理。
+以下为组件 POM 的直接依赖（不含测试依赖），用于了解依赖组成；引入上方 Starter 后由 Maven 传递解析，无需在应用中逐项重复声明。版本由父 POM / BOM 管理。
 
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-aspects</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>dev.macula.boot</groupId>
     <artifactId>macula-boot-starter-security</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>jakarta.servlet</groupId>
     <artifactId>jakarta.servlet-api</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-aspectj</artifactId>
 </dependency>
-```
 
-```xml
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>

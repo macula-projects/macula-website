@@ -26,13 +26,11 @@ manual_content: true
 
 ## 使用配置
 
-| 属性 | 默认值 | 说明 |
-| --- | --- | --- |
-| `macula.cloud.endpoint` | 无，必填 | 网关基础 URL，客户端自动追加 `/system` |
-| `macula.cloud.app-key` | 无，必填 | 在平台登记的应用标识 |
-| `macula.cloud.secret-key` | 无，必填 | HMAC 签名密钥，部署时注入 |
+### 配置示例
 
-请求超时通过 `spring.cloud.openfeign.client.config.systemFeignClient.*` 配置，参见 [Feign](/docs/latest/01_services/微服务/feign/)。
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
 
 ```yaml
 macula:
@@ -41,6 +39,16 @@ macula:
     app-key: example
     secret-key: example
 ```
+
+### 关键配置
+
+| 属性 | 默认值 | 说明 |
+| --- | --- | --- |
+| `macula.cloud.endpoint` | 无，必填 | 网关基础 URL，客户端自动追加 `/system` |
+| `macula.cloud.app-key` | 无，必填 | 在平台登记的应用标识 |
+| `macula.cloud.secret-key` | 无，必填 | HMAC 签名密钥，部署时注入 |
+
+请求超时通过 `spring.cloud.openfeign.client.config.systemFeignClient.*` 配置，参见 [Feign](/docs/latest/01_services/微服务/feign/)。
 
 ## 核心功能
 

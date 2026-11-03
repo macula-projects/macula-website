@@ -11,7 +11,7 @@ manual_content: true
 
 ## 概览
 
-基于[alibab cola statemachine](https://github.com/alibaba/COLA/tree/master/cola-components/cola-component-statemachine)
+基于[Alibaba COLA Statemachine](https://github.com/alibaba/COLA/tree/master/cola-components/cola-component-statemachine)
 的状态机模块，cola statemachine是简单、轻量、性能极高的状态机DSL实现，解决业务中的状态流转问题。
 
 ## 组件坐标
@@ -38,14 +38,9 @@ manual_content: true
 
 COLA状态机是在Github开源的，作者也写了介绍文章：https://blog.csdn.net/significantfrank/article/details/104996419。
 
-首先，状态机的实现应该可以非常的轻量，最简单的状态机用一个Enum就能实现，基本是零成本。其次，使用状态机的DSL来表达状态的流转，语义会更加清晰，会增强代码的可读性和可维护性。
+COLA 使用 Java DSL 声明状态、事件、条件与动作，适用于以明确状态流转为主的业务。状态机定义本身无状态，可复用同一份规则；业务实体的当前状态、持久化与并发控制由应用管理。
 
-开源状态机太复杂：就我们的项目而言（其实大部分项目都是如此）。我实在不需要那么多状态机的高级玩法：比如状态的嵌套（substate），状态的并行（parallel，fork，join）、子状态机等等。
-
-开源状态机性能差：这些开源的状态机都是有状态的（Stateful）的，因为有状态，状态机的实例就不是线程安全的，而我们的应用服务器是分布式多线程的，所以在每一次状态机在接受请求的时候，都不得不重新build一个新的状态机实例。
-
-所以COLA状态机设计的目标很明确，有两个核心理念：简洁的仅支持状态流转的状态机，不需要支持嵌套、并行等高级玩法。状态机本身需要是Stateless（无状态）的，这样一个Singleton
-Instance就能服务所有的状态流转请求了。
+其设计侧重简洁的状态流转，不提供嵌套、并行等全部高级状态机能力。选择时应结合业务需要，不能仅凭状态机定义无状态就认定业务动作可以任意并发执行。
 
 COLA 状态机的核心概念包括：
 

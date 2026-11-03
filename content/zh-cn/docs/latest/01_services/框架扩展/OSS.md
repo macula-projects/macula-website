@@ -11,7 +11,7 @@ manual_content: true
 
 ## 概览
 
-在 SpringBoot 中通过简单的方式将文件存储到 本地、FTP、SFTP、WebDAV、FastDFS、Minio、谷歌云存储、阿里云OSS、华为云OBS、七牛云Kodo、腾讯云COS、MinIO、
+在 Spring Boot 中通过简单的方式将文件存储到 本地、FTP、SFTP、WebDAV、FastDFS、谷歌云存储、阿里云OSS、华为云OBS、七牛云Kodo、腾讯云COS、MinIO、
 AWS S3及其它兼容 S3 协议的平台。详情可以参考[x-file-storage](https://x-file-storage.xuyanwu.cn/)官网
 
 ## 组件坐标
@@ -28,9 +28,11 @@ AWS S3及其它兼容 S3 协议的平台。详情可以参考[x-file-storage](ht
 
 ## 使用配置
 
-### 基础接入：一个本地存储实例
+### 配置示例
 
-先启用一个平台并让 `default-platform` 指向它，再使用下文的上传 API。以下只启用磁盘存储，不开放匿名 HTTP 文件访问；应用需有目录写权限，并自行提供鉴权下载接口。
+以下集中列出本页涉及的配置。不同应用、文件或替代方案分别标注，请按场景选用。
+
+#### application.yml：最小本地存储方案
 
 ```yaml
 macula:
@@ -44,39 +46,25 @@ macula:
         base-path: uploads/
 ```
 
-### 完整配置与多平台选项
+#### application.yml：多平台选项参考（替代最小方案，按需保留）
 
-以下选项按需使用，未启用的平台无需配置凭据，不需要复制全部存储平台。
-
-自有配置前缀为 `macula.oss`；默认平台必须指向一个已启用的平台标识，并不会自动创建名为 `local` 的存储实例。
-
-| 属性 | 默认值 | 说明 |
-| --- | --- | --- |
-| `default-platform` | `local` | 默认存储平台标识 |
-| `thumbnail-suffix` | `.min.jpg` | 缩略图后缀 |
-| `upload-not-support-metadata-throw-exception` / `upload-not-support-acl-throw-exception` | `true` | 上传时不支持元数据 / ACL 是否报错 |
-| `copy-not-support-metadata-throw-exception` / `copy-not-support-acl-throw-exception` | `true` | 复制时不支持元数据 / ACL 是否报错 |
-| `move-not-support-metadata-throw-exception` / `move-not-support-acl-throw-exception` | `true` | 移动时不支持元数据 / ACL 是否报错 |
-| `enable-byte-file-wrapper` | `true` | byte[] 输入适配器 |
-| `enable-uri-file-wrapper` | `true` | URI、URL、String 输入适配器 |
-| `enable-input-stream-file-wrapper` | `true` | InputStream 输入适配器 |
-| `enable-local-file-wrapper` | `true` | 本地文件输入适配器 |
-| `enable-http-servlet-request-file-wrapper` | `true` | Servlet 请求文件适配器，需 Servlet 环境 |
-| `enable-multipart-file-wrapper` | `true` | MultipartFile 输入适配器，需对应 Web 类 |
-| `<平台类型>[].enable-storage` | `false` | 启用该存储实例，未启用的条目不参与构建 |
-| `local-plus[].enable-access` | `false` | 启用本地文件 HTTP 访问，需注意访问控制 |
-| `local-plus[].path-patterns` | 空数组 | 本地 HTTP 路径映射 |
-
-平台列表默认均为空，支持 `local-plus`、`huawei-obs`、`aliyun-oss`、`qiniu-kodo`、`tencent-cos`、`baidu-bos`、`upyun-uss`、`minio`、`amazon-s3`、`ftp`、`sftp`、`webdav`、`google-cloud-storage`、`fastdfs`、`azure-blob`。旧 `local` 已废弃，同样支持 `enable-access` 和 `path-patterns`。平台内部账号、桶、路径等字段参见下面示例及上游文档，只保留实际使用的平台配置。
-
-{{% alert title="提示" color="primary" %}}
-注意官网默认配置是以dromara.x-file-storage，由于macula oss没有使用官网的starter，所以这里是以macula.oss开头，其他保持不变。
-{{% /alert %}}
 ```yaml
 # 默认存储由 default-platform 指定，与列表顺序无关
 macula:
   oss: #文件存储配置
     default-platform: local-1 #默认使用的存储平台
+    upload-not-support-metadata-throw-exception: true
+    upload-not-support-acl-throw-exception: true
+    copy-not-support-metadata-throw-exception: true
+    copy-not-support-acl-throw-exception: true
+    move-not-support-metadata-throw-exception: true
+    move-not-support-acl-throw-exception: true
+    enable-byte-file-wrapper: true
+    enable-uri-file-wrapper: true
+    enable-input-stream-file-wrapper: true
+    enable-local-file-wrapper: true
+    enable-http-servlet-request-file-wrapper: true
+    enable-multipart-file-wrapper: true
     thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
     local: # 本地存储（不推荐使用），不使用的情况下可以不写
       - platform: local-1 # 存储平台标识
@@ -195,23 +183,68 @@ macula:
         base-path: "" # 基础路径，强烈建议留空，详情查看兼容性说明章节
 ```
 
-注意配置每个平台前面都有个-号，通过以下方式可以配置多个：
+#### application.yml：同类型多实例示例
 
 ```yaml
-local:
-  - platform: local-1 # 存储平台标识
-    enable-storage: true
-    enable-access: true
-    domain: ""
-    base-path: D:/Temp/test/
-    path-patterns: /test/file/**
-  - platform: local-2 # 存储平台标识，注意这里不能重复
-    enable-storage: true
-    enable-access: true
-    domain: ""
-    base-path: D:/Temp/test2/
-    path-patterns: /test2/file/**
+macula:
+  oss:
+    local:
+      - platform: local-1 # 存储平台标识
+        enable-storage: true
+        enable-access: true
+        domain: ""
+        base-path: D:/Temp/test/
+        path-patterns: /test/file/**
+      - platform: local-2 # 存储平台标识，注意这里不能重复
+        enable-storage: true
+        enable-access: true
+        domain: ""
+        base-path: D:/Temp/test2/
+        path-patterns: /test2/file/**
 ```
+
+### 关键配置
+
+| 配置 | 说明 |
+| --- | --- |
+| `macula.oss.default-platform` | 默认存储实例的 platform 标识，与列表顺序无关。 |
+| `macula.oss.<存储类型>` | 该类型下的实例列表；按业务选用，凭据由环境提供。 |
+| `platform / enable-storage / enable-access` | 实例唯一标识、存储与本地访问开关。 |
+| `base-path / storage-path / domain` | 存储前缀、本地存储位置和访问域名，按具体存储类型填写。 |
+
+#### 基础接入：一个本地存储实例
+
+先启用一个平台并让 `default-platform` 指向它，再使用下文的上传 API。最小方案只启用磁盘存储，不开放匿名 HTTP 文件访问；应用需有目录写权限，并自行提供鉴权下载接口。
+
+#### 完整配置与多平台选项
+
+以下选项按需使用，未启用的平台无需配置凭据，不需要复制全部存储平台。
+
+自有配置前缀为 `macula.oss`；默认平台必须指向一个已启用的平台标识，并不会自动创建名为 `local` 的存储实例。
+
+| 属性 | 默认值 | 说明 |
+| --- | --- | --- |
+| `default-platform` | `local` | 默认存储平台标识 |
+| `thumbnail-suffix` | `.min.jpg` | 缩略图后缀 |
+| `upload-not-support-metadata-throw-exception` / `upload-not-support-acl-throw-exception` | `true` | 上传时不支持元数据 / ACL 是否报错 |
+| `copy-not-support-metadata-throw-exception` / `copy-not-support-acl-throw-exception` | `true` | 复制时不支持元数据 / ACL 是否报错 |
+| `move-not-support-metadata-throw-exception` / `move-not-support-acl-throw-exception` | `true` | 移动时不支持元数据 / ACL 是否报错 |
+| `enable-byte-file-wrapper` | `true` | byte[] 输入适配器 |
+| `enable-uri-file-wrapper` | `true` | URI、URL、String 输入适配器 |
+| `enable-input-stream-file-wrapper` | `true` | InputStream 输入适配器 |
+| `enable-local-file-wrapper` | `true` | 本地文件输入适配器 |
+| `enable-http-servlet-request-file-wrapper` | `true` | Servlet 请求文件适配器，需 Servlet 环境 |
+| `enable-multipart-file-wrapper` | `true` | MultipartFile 输入适配器，需对应 Web 类 |
+| `<平台类型>[].enable-storage` | `false` | 启用该存储实例，未启用的条目不参与构建 |
+| `local-plus[].enable-access` | `false` | 启用本地文件 HTTP 访问，需注意访问控制 |
+| `local-plus[].path-patterns` | 空数组 | 本地 HTTP 路径映射 |
+
+平台列表默认均为空，支持 `local-plus`、`huawei-obs`、`aliyun-oss`、`qiniu-kodo`、`tencent-cos`、`baidu-bos`、`upyun-uss`、`minio`、`amazon-s3`、`ftp`、`sftp`、`webdav`、`google-cloud-storage`、`fastdfs`、`azure-blob`。旧 `local` 已废弃，同样支持 `enable-access` 和 `path-patterns`。平台内部账号、桶、路径等字段参见上方配置示例及上游文档，只保留实际使用的平台配置。
+
+{{% alert title="提示" color="primary" %}}
+Macula 使用 `macula.oss` 前缀；上游示例的 `dromara.x-file-storage` 前缀不能直接照搬。
+{{% /alert %}}
+同类型可配置多个实例，每个列表项以 `-` 开头，`platform` 必须唯一；见上方“同类型多实例示例”。
 
 ## 核心功能
 

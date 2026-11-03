@@ -1,37 +1,30 @@
 ---
-title: "概述"
-linkTitle: "概述"
+title: "平台概述"
+linkTitle: "平台概述"
 weight: 1
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["README.md", "pom.xml", "macula-boot-parent/pom.xml"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["README.md", "pom.xml", "macula-boot-parent/pom.xml"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "6744045ab560a42af11a913cc59628a65ac9dd1a", "paths": ["README.md"]}, {"repository": "https://github.com/macula-projects/macula-samples", "branch": "main", "commit": "5770c37f5ae2c62a7d19ea8dd66a41d37c1ec41e", "paths": ["README.md"]}]
 ---
 
-<h2 align="center">Macula Boot</h2>
+Macula 是面向 Java 业务应用的模块化微服务开发平台。它将通用技术组件、统一身份与权限等平台服务，以及业务应用的参考工程组合起来，帮助团队统一基础能力，把主要开发工作放在业务上。
 
-<p align="center">
-  <strong>基于 Spring Boot 与 Spring Cloud 的模块化微服务开发框架</strong>
-</p>
+## 平台组成
 
-<p align="center">
-  <a href="https://github.com/macula-projects/macula-boot/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/macula-projects/macula-boot.svg" alt="License">
-  </a>
-  <a href="https://github.com/macula-projects/macula-boot/actions/workflows/verification.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/macula-projects/macula-boot/verification.yml?branch=main&label=verification&logo=github" alt="Verification">
-  </a>
-  <a href="https://central.sonatype.com/search?q=g%3Adev.macula.boot">
-    <img src="https://img.shields.io/maven-central/v/dev.macula.boot/macula-boot-parent" alt="Maven Central">
-  </a>
-  <img src="https://img.shields.io/badge/JDK-17+-green.svg" alt="JDK 17+">
-  <img src="https://img.shields.io/badge/Spring%20Boot-4.0-green.svg" alt="Spring Boot 4.0">
-  <img src="https://img.shields.io/badge/Spring%20Cloud-2025.1-green.svg" alt="Spring Cloud 2025.1">
-</p>
+| 组成 | 职责 | 使用方式 |
+| --- | --- | --- |
+| **Macula Boot** | 统一依赖、自动配置及 Web、安全、数据访问、消息等组件 | 在应用中按需引入 Parent 和 Starter |
+| **Macula Cloud** | 提供 IAM、应用、用户、角色、菜单及 ID、调度等平台服务 | 按需部署，通过协议或客户端组件接入 |
+| **Macula Samples** | 展示业务应用的模块组织、配置及完整调用链 | 作为业务开发参考，或使用 Archetype 创建自己的项目 |
 
-Macula Boot 面向 Java 微服务应用提供统一的依赖管理、自动配置和基础能力 Starter。项目同时支持 Spring Cloud Alibaba、Spring Cloud Tencent 等技术体系，业务项目可以按需引入模块，不必绑定完整平台。
+Cloud 的管理端位于同仓的 `macula-cloud-admin`，用于管理平台身份、应用和权限。业务应用可以拥有自己的管理前端和 BFF，通过 Cloud 复用公共平台能力。
 
-> Macula Boot 是 Macula 微服务平台的开发框架部分。通用技术服务参见 [Macula Cloud](https://github.com/macula-projects/macula-cloud)，管理端参见 [Macula Cloud Admin](https://github.com/macula-projects/macula-cloud/tree/main/macula-cloud-admin)。
+Boot 支持按需组合组件；只使用部分技术 Starter 时，不要求部署完整 Cloud。需要统一登录、菜单和平台权限等能力时，再接入相应平台服务。
 
-网关入口认证、内部 JWT 与方法 / 数据授权的分层关系，见[安全架构](/docs/latest/00_introduce/安全架构/)。
+## 业务开发边界
+
+Macula 提供技术基础和平台公共服务。业务团队仍需定义领域模型、业务规则、接口契约、数据范围与页面，并负责测试和部署验证。
+
+业务应用通常由前端、应用 Gateway、BFF 和业务服务协作完成请求。模块职责与 Cloud 的连接关系见[应用架构](/docs/latest/00_introduce/应用架构/)；代码和对象如何分层见[应用分层](/docs/latest/00_introduce/值对象与分层/)。
 
 ## 核心能力
 
@@ -50,50 +43,23 @@ Macula Boot 面向 Java 微服务应用提供统一的依赖管理、自动配�
 统一可观测性接入见 [`macula-boot-starter-observability`](/docs/latest/01_services/生产准备/observability/)，
 从 5.x 迁移请参考[从 5.x 迁移到 latest 的升级指南](/docs/latest/05_ops/升级指南/)。
 
-## 平台边界
+## 适用场景
 
-Macula Boot 提供可组合的开发组件；Macula Cloud 提供 IAM、用户、角色、菜单与平台管理服务，管理端位于同仓的 `macula-cloud-admin`；Macula Samples 是基于二者的业务应用示例。业务前端通过应用 Gateway 访问 BFF，BFF 编排业务服务。
+适合需要复用身份与权限管理、统一 Java 技术栈，同时允许各业务按需组合组件的团队。已有 Spring 应用可以选择独立 Starter；新业务可从 Samples 或 Archetype 建立工程。
+
+对于单一、简单的服务，应先评估实际边界和运维成本，不必为了套用模板而拆出全部微服务模块。应用架构是可组合的参考，不要求每个项目采用相同部署规模。
 
 ## 依赖基线
 
-latest 跟随 main，当前框架版本为 **6.1.0-SNAPSHOT**（开发快照），基于 Java 17、Spring Boot 4.0 和 Spring Cloud 2025.1。正式发行版本以[变更历史](/docs/latest/11_about/更新日志/)及 GitHub Releases 为准，6.0 系列不建议使用。
+latest 跟随 Macula Boot main，当前版本为 **6.1.0-SNAPSHOT**，基于 Java 17、Spring Boot 4.0 和 Spring Cloud 2025.1。latest 是开发快照；正式版本以[变更历史](/docs/latest/11_about/更新日志/)及 GitHub Releases 为准，6.0 系列不建议使用。
 
-业务项目先继承 Parent，再选择 Starter，Parent 已管理组件版本：
-
-```xml
-<parent>
-    <groupId>dev.macula.boot</groupId>
-    <artifactId>macula-boot-parent</artifactId>
-    <version>6.1.0-SNAPSHOT</version>
-    <relativePath/>
-</parent>
-```
-
-快照尚未发布或远程无法解析时，先在 **Macula Boot 源码根目录**安装完整框架及模板，然后构建业务项目：
-
-```bash
-mvn clean install -DskipTests=true -Dgpg.skip=true -Pdeploy
-```
-
-该命令跳过测试，只用于本地制品准备，不代表框架验证通过。只安装 `macula-boot-archetype` 不会同时安装所有 Starter。
-
-已有其他 Parent 的项目，可在自己的 POM 中定义版本，并为所选 Macula 依赖显式填写 `<version>${macula.version}</version>`：
-
-```xml
-<properties>
-    <macula.version>6.1.0-SNAPSHOT</macula.version>
-</properties>
-```
-
-这只是 Macula 制品版本声明；还需按对应 Parent 的 dependencyManagement 管理 Spring 与第三方依赖，避免混用不同 Boot/Cloud 主线。新项目优先用 Archetype 生成完整 Parent 配置。
-
-[快速开始](/docs/latest/00_introduce/快速开始/)提供启动与项目生成步骤；[首次接入](/docs/latest/04_devmanual/首次接入macula-cloud/)说明应用和 OAuth Client 注册；[贡献规范](/docs/latest/11_about/贡献规范/)保留框架源码构建、测试和代码规范。
+业务项目优先继承 Macula Boot Parent，再按需选择 Starter，由 Parent 管理版本与构建约定。已有其他 Parent 的项目需要显式管理 Macula 制品及第三方依赖，不能只填一个版本号。具体 POM 示例见[快速开始 → 依赖接入](/docs/latest/00_introduce/快速开始/#依赖接入)。
 
 ## 技术架构
 
-![Macula 技术架构](https://macula.dev/docs/00_introduce/%E6%A6%82%E8%BF%B0/images/macula-tech-diagram.png)
+平台组成与请求链路的主图统一放在[应用架构](/docs/latest/00_introduce/应用架构/)；身份与权限的原理图见[安全架构](/docs/latest/00_introduce/安全架构/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再按需要阅读这两部分原理。
 
-Macula Boot 特别适合拥有多条产品线、希望统一技术栈和基础组件，同时允许业务按需组合能力的研发团队。
+实际创建、接入和修改业务应用，按[开发指引](/docs/latest/04_devmanual/)操作；框架源码构建、测试与贡献要求见[贡献规范](/docs/latest/11_about/贡献规范/)。
 
 ## License
 

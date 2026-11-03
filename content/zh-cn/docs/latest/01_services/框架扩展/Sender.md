@@ -26,11 +26,19 @@ manual_content: true
 
 ## 使用配置
 
+### 配置示例
+
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
+
+#### application.yml
+
 ```yaml
 macula:
   sender:
     message-table: 你的表名 # 默认是MACULA_MSG
 ```
+
+### 关键配置
 
 唯一的自有属性 `macula.sender.message-table` 默认为 `MACULA_MSG`。应用需配置业务 `DataSource`、事务管理器及 RocketMQ 生产者，并自行建表、安排补偿任务；Starter 不会自动建表或启动定时补偿。RocketMQ 配置参考 [RocketMQ 模块](/docs/latest/01_services/框架基础/rocketmq/)。
 

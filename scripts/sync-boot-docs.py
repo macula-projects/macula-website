@@ -34,10 +34,13 @@ LATEST_CHAPTERS = {
         'title': 'Observability：统一可观测性', 'linkTitle': 'Observability', 'weight': 1,
     },
     '00_introduce/安全架构.md': {
-        'title': '安全架构', 'linkTitle': '安全架构', 'weight': 3,
+        'title': '安全架构', 'linkTitle': '安全架构', 'weight': 5,
     },
     '00_introduce/值对象与分层.md': {
-        'title': '值对象与分层', 'linkTitle': '值对象与分层', 'weight': 4,
+        'title': '应用分层', 'linkTitle': '应用分层', 'weight': 4,
+    },
+    '00_introduce/应用架构.md': {
+        'title': '应用架构', 'linkTitle': '应用架构', 'weight': 3,
     },
     '04_devmanual/模块说明.md': {
         'title': '示例模块说明', 'linkTitle': '示例模块说明', 'weight': 4,

@@ -28,20 +28,19 @@ JPA和Fenix作为数据库操作框架。[ Fenix](https://github.com/blinkfox/fe
 
 ## 使用配置
 
-本模块没有自有配置前缀，使用 `spring.datasource.*`、`spring.jpa.*` 和 `fenix.*`。
+### 配置示例
 
-| 属性 | 默认值 / 行为 | 说明 |
-| --- | --- | --- |
-| `spring.data.jpa.repositories.enabled` | `true` | 控制本模块 Repository 自动配置 |
-| `spring.data.jpa.repositories.bootstrap-mode` | `default` | 可选 `deferred` / `lazy`；异步初始化可使用应用提供的 AsyncTaskExecutor |
-| `spring.jpa.hibernate.ddl-auto` | 按环境决定 | 示例 `update` 仅供开发；生产使用 `none` 或按迁移方案选择 `validate` |
-| `spring.jpa.show-sql` | `false` | 输出 SQL，生产慎用 |
-| `fenix.debug` | `false` | 实时读取 SQL XML，仅限开发环境 |
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
 
-配置上没有太特殊的，主要是数据源配置以及fenix配置。
+#### application.yml
 
 ```yaml
 spring:
+  data:
+    jpa:
+      repositories:
+        enabled: true
+        bootstrap-mode: default
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/xxx?serverTimezone=Asia/Shanghai&characterEncoding=utf-8
@@ -76,6 +75,20 @@ fenix:
   # v2.7.0 新增的配置项，表示带前缀下划线转换时要移除的自定义前缀，多个值用英文逗号隔开，通常你不用配置这个值.
   underscore-transformer-prefix:
 ```
+
+### 关键配置
+
+本模块没有自有配置前缀，使用 `spring.datasource.*`、`spring.jpa.*` 和 `fenix.*`。
+
+| 属性 | 默认值 / 行为 | 说明 |
+| --- | --- | --- |
+| `spring.data.jpa.repositories.enabled` | `true` | 控制本模块 Repository 自动配置 |
+| `spring.data.jpa.repositories.bootstrap-mode` | `default` | 可选 `deferred` / `lazy`；异步初始化可使用应用提供的 AsyncTaskExecutor |
+| `spring.jpa.hibernate.ddl-auto` | 按环境决定 | 示例 `update` 仅供开发；生产使用 `none` 或按迁移方案选择 `validate` |
+| `spring.jpa.show-sql` | `false` | 输出 SQL，生产慎用 |
+| `fenix.debug` | `false` | 实时读取 SQL XML，仅限开发环境 |
+
+数据源和 Fenix 规则需与业务数据库及查询文件保持一致。
 
 ## 核心功能
 

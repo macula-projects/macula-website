@@ -18,11 +18,11 @@ IAM 为独立部署的 `macula-cloud-iam` 服务，不是业务工程的 Maven �
 
 ## 使用配置
 
-### 首次接入
+### 配置示例
 
-先启动 Cloud，再登记业务应用及 OAuth Client，区分 AK/SK 和 Client Secret，完成菜单/角色分配。具体字段、兼容 Samples 登录方式及验证命令见[首次接入 Macula Cloud](/docs/latest/04_devmanual/首次接入macula-cloud/)。
+以下集中列出本页涉及的配置。可选能力按需保留，环境值按实际部署填写。
 
-### Gateway 验证外部 Token
+#### application.yml
 
 ```yaml
 spring:
@@ -35,9 +35,17 @@ spring:
           client-secret: ${IAM_INTROSPECTION_CLIENT_SECRET}
 ```
 
+### 关键配置
+
+#### 首次接入
+
+先启动 Cloud，再登记业务应用及 OAuth Client，区分 AK/SK 和 Client Secret，完成菜单/角色分配。具体字段、兼容 Samples 登录方式及验证命令见[首次接入 Macula Cloud](/docs/latest/04_devmanual/首次接入macula-cloud/)。
+
+#### Gateway 验证外部 Token
+
 内省 Client 在平台登记并配置允许的认证方式，凭据只留服务端。BFF 的 Cloud endpoint 指向 Cloud Gateway，内部服务的 JWK 指向应用 Gateway，不能将这三个地址混用。
 
-### IAM 服务端
+#### IAM 服务端
 
 按 Cloud `deploy/README.md` 配置环境与数据库迁移；生产使用稳定的 `IAM_ISSUER_URI`、HTTPS、持久化签名密钥和加密密码。变更 issuer 或签名材料会影响既有令牌，发布前核对回调、密钥和缓存策略。
 

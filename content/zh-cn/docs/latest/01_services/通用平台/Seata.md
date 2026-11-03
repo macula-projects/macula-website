@@ -26,21 +26,11 @@ manual_content: true
 
 ## 使用配置
 
-本模块不增加独立的配置前缀，客户端沿用 `seata.*`；示例使用 Nacos，须先部署对应服务。
+### 配置示例
 
-| 属性 | 配置说明 |
-| --- | --- |
-| `seata.enabled` | Seata 客户端开关 |
-| `seata.application-id` | 应用标识，通常使用 `spring.application.name` |
-| `seata.tx-service-group` | 事务组，须与服务端 `service.vgroupMapping.*` 映射一致 |
-| `seata.enable-auto-data-source-proxy` | 是否自动代理数据源，按所用事务模式选择 |
-| `seata.saga.enabled` | 仅使用 Saga 状态机时开启 |
-| `seata.config.type` / `seata.registry.type` | 配置中心 / 注册中心类型 |
-| `seata.config.nacos.*` / `seata.registry.nacos.*` | 对应 Nacos 地址、命名空间和认证信息 |
+以下集中列出本页涉及的配置。不同应用、文件或替代方案分别标注，请按场景选用。
 
-AT 模式还需在业务库准备与 Seata 版本对应的 `undo_log` 表；引入 Starter 不代表服务端或业务表已就绪。
-
-客户端加入如下配置
+#### 应用 application.yml
 
 ```yaml
 seata:
@@ -66,14 +56,32 @@ seata:
       password: 'nacos'
 ```
 
-在nacos的seata.properties中增加需要的如下[事务群组配置](https://seata.io/zh-cn/docs/user/configurations.html)
+#### Nacos 配置 seata.properties
 
 ```properties
-   service.vgroupMapping.order-service-tx-group=default					# 示例
+service.vgroupMapping.order-service-tx-group=default					# 示例
    service.vgroupMapping.account-service-tx-group=default				# 示例
    service.vgroupMapping.business-service-tx-group=default			# 示例
    service.vgroupMapping.storage-service-tx-group=default				# 示例
 ```
+
+### 关键配置
+
+本模块不增加独立的配置前缀，客户端沿用 `seata.*`；示例使用 Nacos，须先部署对应服务。
+
+| 属性 | 配置说明 |
+| --- | --- |
+| `seata.enabled` | Seata 客户端开关 |
+| `seata.application-id` | 应用标识，通常使用 `spring.application.name` |
+| `seata.tx-service-group` | 事务组，须与服务端 `service.vgroupMapping.*` 映射一致 |
+| `seata.enable-auto-data-source-proxy` | 是否自动代理数据源，按所用事务模式选择 |
+| `seata.saga.enabled` | 仅使用 Saga 状态机时开启 |
+| `seata.config.type` / `seata.registry.type` | 配置中心 / 注册中心类型 |
+| `seata.config.nacos.*` / `seata.registry.nacos.*` | 对应 Nacos 地址、命名空间和认证信息 |
+
+AT 模式还需在业务库准备与 Seata 版本对应的 `undo_log` 表；引入 Starter 不代表服务端或业务表已就绪。
+
+客户端配置与 Nacos 中的 `seata.properties` 已集中展示。事务组名称需保持一致，详见[事务群组配置](https://seata.io/zh-cn/docs/user/configurations.html)。
 
 > 另外，client.http.interceptor-enabled=false可以关闭默认的HTTP拦截
 
@@ -125,7 +133,7 @@ public Object testCommit(@RequestParam(name = "id",defaultValue = "1") Integer i
 ### Seata AT模式
 
 AT模式根据其名称也能反馈出来他的特性，他是自动型的[分布式事务解决方案](https://so.csdn.net/so/search?q=分布式事务解决方案&spm=1001.2101.3001.7020)
-。这个自动提现在他无需代码入侵，也就是说我们不需要再编写多余的代码来实现这个模式，只需要在方法中添加上指定的注解即可。
+。这个自动化体现在它对业务代码侵入较少，也就是说我们不需要再编写多余的代码来实现这个模式，只需要在方法中添加上指定的注解即可。
 
 那么AT模式是如何实现无代码入侵的呢？他的工作原理是什么？
 
@@ -410,7 +418,7 @@ public class IProductTccServiceImpl extends ServiceImpl<ProductMapper, Product> 
 所谓悬挂问题，就是二阶段模式中，cancel比try先执行。这是怎么导致的呢？
 
 就拿我们上述的案例来假设，在订单服务中调用商品服务的扣减库存方法reduceInventory时，因为是通过RPC(feign)
-的方式来调用的，那么如果调用时刚好网络堵塞，或者商品服务出现问题，导致调用失败，出现报错，TM会通知TC出现错误，TC会通知所有的RM进行本地事务回滚，也就是执行cancel方法。当cancel方法执行完成后，try方法偏偏连通了，又执行了，那么就出现了问题，订单会被更新为未提交，但因为事务已经被cancel过了，就不会再执行confirm，也就没有谁再来将资源状态从预处理更新为已处理了。资源就会导致浪费。这时进行的回滚操作其实并没有真实回滚业务，这个现象我们称之为空回滚。所有我们需要针对悬挂问题进行防悬挂处理，方案呢就是限制如果二阶段执行完成，一阶段就不能再执行。比如执行cancel方法时会判断是否是空回滚，出现空回滚注册事务ID，try方法执行前先检查事务ID是否存在，如果存在则不允许执行当然这些处理呢，seata已经帮我们实现了，这也是使用现成的分布式事务框架的好处。省心！但是我们自己要知道这些问题和原理。
+的方式来调用的，那么如果调用时刚好网络堵塞，或者商品服务出现问题，导致调用失败，出现报错，TM会通知TC出现错误，TC会通知所有的RM进行本地事务回滚，也就是执行cancel方法。当cancel方法执行完成后，try方法偏偏连通了，又执行了，那么就出现了问题，订单会被更新为未提交，但因为事务已经被cancel过了，就不会再执行confirm，也就没有谁再来将资源状态从预处理更新为已处理了。资源就会导致浪费。这时进行的回滚操作其实并没有真实回滚业务，这个现象我们称之为空回滚。所以我们需要针对悬挂问题进行防悬挂处理，方案呢就是限制如果二阶段执行完成，一阶段就不能再执行。比如执行cancel方法时会判断是否是空回滚，出现空回滚注册事务ID，try方法执行前先检查事务ID是否存在，如果存在则不允许执行当然这些处理呢，seata已经帮我们实现了，这也是使用现成的分布式事务框架的好处。省心！但是我们自己要知道这些问题和原理。
 
 seata中的解决方案是增加一个事务记录表，在cancel阶段最后往事务记录表中插入一条记录（xid-status）标记cancel阶段已经执行过。此时try阶段进入时发现已经执行过回滚操作，则放弃try阶段的执行。
 
@@ -421,14 +429,14 @@ Saga的定义是“长时间活动的事务”，是普林斯顿大学教授Hect
 完整内容可以参考[原创博客](https://blog.51cto.com/u_15952602/6034754?articleABtest=0)
 ，代码示例可参考[seata-samples](https://github.com/seata/seata-samples/blob/master/saga/README.MD)
 
-Saga模式依然要求我们自己实现正向服务和补偿服务。但是它于TCC模式的区别之处在于：
+Saga模式依然要求我们自己实现正向服务和补偿服务。但是它与 TCC 模式的区别之处在于：
 
 - Saga的模式设计使得它天然适合于长流程的业务。TCC要实现同样的长流程的话，需要多写一个confirm操作，并且要考虑如何将业务拆分为两部分
 - Saga模式在正向服务中时就已经提交了本地事务了，而补偿事务也比较好实现，将正向服务的结合逆向补偿即可。
 - 比如正常服务是`update product set price=20 where price=30 and id=1`;
   那么补偿服务就是`update product set price=30 where price=20 and id=1`;
-  -
-  比起TCC模式，Saga模式更适用于一些老服务、第三方服务或者其他无法改造的服务，要接入到我们的分布式事务中时，就可以将其作为一个正向服务存在，而直接实现他的补偿服务即可。而TCC因为要对业务进行拆分为try-confirm-cancel，所以它不适用于不可改造的服务
+
+比起TCC模式，Saga模式更适用于一些老服务、第三方服务或者其他无法改造的服务，要接入到我们的分布式事务中时，就可以将其作为一个正向服务存在，而直接实现对应的补偿服务即可。而TCC因为要对业务进行拆分为try-confirm-cancel，所以它不适用于不可改造的服务
 
 同时，Saga模式同样不需要全局锁，只需要结合本地事务加本地锁即可，所以性能依旧有保证。
 
@@ -482,7 +490,7 @@ Saga模式依然要求我们自己实现正向服务和补偿服务。但是它�
 
 当补偿事务方法执行完成后，正向事务方法偏偏连通了，又执行了，那么就出现了问题，这个正向服务之前的补偿事务都执行了，但又执行了一个多余的正向服务。
 
-所有我们需要针对悬挂问题进行防悬挂处理，方案呢就是限制如果二阶段执行完成，一阶段就不能再执行。
+所以我们需要针对悬挂问题进行防悬挂处理，方案呢就是限制如果二阶段执行完成，一阶段就不能再执行。
 
 seata中的解决方案是增加一个事务记录表，在补偿服务执行后往事务记录表中插入一条记录（xid-status）标记补偿服务已经执行过。此时正向服务进入时发现已经执行过回滚操作，则放弃正向服务的执行。
 
