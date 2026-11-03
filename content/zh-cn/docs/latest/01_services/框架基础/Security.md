@@ -12,7 +12,7 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "
 
 ## 概览
 
-Security Starter 运行在 BFF 和业务微服务中：验证网关 JWT、建立 Spring Security 认证上下文，并在业务方法上执行细粒度授权。网关的认证与 URL 控制见 [Gateway](/docs/latest/01_services/微服务/gateway/)，整体分层见[请求链路](/docs/latest/00_introduce/应用架构/请求链路/)。
+Security Starter 运行在 BFF 和业务微服务中：验证网关 JWT、建立 Spring Security 认证上下文，并在业务方法上执行细粒度授权。网关的认证与 URL 控制见 [Gateway](/docs/latest/01_services/微服务/gateway/)，整体分层见[请求链路](/docs/latest/00_introduce/请求链路/)。
 
 ## 组件坐标
 

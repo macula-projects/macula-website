@@ -49,7 +49,7 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-cloud", 
 | --- | --- | --- |
 | 应用 Gateway → IAM | `spring.security.oauth2.resourceserver.opaquetoken.introspection-uri` 及 client-id / client-secret | 默认 `http://127.0.0.1:9010/oauth2/introspect`；使用有内省权限的服务端 Client |
 | BFF → Cloud | `macula.cloud.endpoint` / `app-key` / `secret-key` | Cloud Gateway，默认 `http://127.0.0.1:9000`；填第 1 步的应用凭据 |
-| BFF / Service → 应用 Gateway | `spring.security.oauth2.resourceserver.jwt.jwk-set-uri` | Samples Gateway 的 JWK 地址，详见[请求链路](/docs/latest/00_introduce/应用架构/请求链路/) |
+| BFF / Service → 应用 Gateway | `spring.security.oauth2.resourceserver.jwt.jwk-set-uri` | Samples Gateway 的 JWK 地址，详见[请求链路](/docs/latest/00_introduce/请求链路/) |
 
 Gateway 的 System Redis 应指向 **Cloud System 实际使用的同一 Redis 与数据库**，应用自身 Redis 则独立配置。Samples 默认 System Redis 端口 `16379`，Cloud 标准 Compose 默认 `6379`，请按部署覆盖 `MACULA_CLOUD_REDIS_PORT`。同样区分本机地址、容器 DNS 与浏览器可访问地址；IDE 不自动加载 `.env`。完整键名见[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
 

@@ -74,7 +74,7 @@ mvn clean verify
 - 自定义 Security 配置按目标 Security 7 API 重编译；将旧 `antMatchers`、`authorizeRequests`、`@EnableGlobalMethodSecurity` 等用法迁移到当前过滤器链、`requestMatchers` 和 `@EnableMethodSecurity` 配置。旧 `WebSecurityConfigurerAdapter` 不再适用，避免与 Starter 过滤器链重复。
 - WebSocket 扩展 `MessageSecurityMetaSourceCustomizer` 使用 `MessageMatcherDelegatingAuthorizationManager.Builder`，旧扩展实现需要调整。
 - 5.x Web Starter 使用 Undertow，latest 使用 Boot 默认 Tomcat；检查上传、Filter、Servlet、异常处理、跨域与容器定制。
-- 回归匿名白名单、JWT 验签与过期、401/403、网关身份传递和方法授权，细节见 [Security](/docs/latest/01_services/框架基础/security/)及[请求链路](/docs/latest/00_introduce/应用架构/请求链路/)。
+- 回归匿名白名单、JWT 验签与过期、401/403、网关身份传递和方法授权，细节见 [Security](/docs/latest/01_services/框架基础/security/)及[请求链路](/docs/latest/00_introduce/请求链路/)。
 
 ### Jackson 与接口文档
 

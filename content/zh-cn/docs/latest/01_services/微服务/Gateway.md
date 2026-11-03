@@ -23,7 +23,7 @@ Gateway 是应用的统一入口，基于 Spring Cloud Gateway WebFlux 提供路
 | 运行支撑 | 网关与 System Redis、Token 缓存移除、Trace ID 响应头 |
 | 灰度接入 | 接收并传递 grayversion 标签，配合云平台负载均衡 |
 
-下游 BFF / Service 继续使用 Security Starter 做 JWT 验签与细粒度授权，整体分层见[请求链路](/docs/latest/00_introduce/应用架构/请求链路/)。本页保留 Gateway 完整能力的接入与使用说明。
+下游 BFF / Service 继续使用 Security Starter 做 JWT 验签与细粒度授权，整体分层见[请求链路](/docs/latest/00_introduce/请求链路/)。本页保留 Gateway 完整能力的接入与使用说明。
 
 ## 组件坐标
 
