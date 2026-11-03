@@ -92,11 +92,11 @@
 - **Gateway 不能只介绍安全。** 对照 README 保留完整能力：HTTP/WebSocket 路由、入口认证授权、内部 JWT、接口加解密与签名、CryptoService、System Redis、Token 缓存管理、Trace ID 与灰度标签。
 - Gateway 组件页直接说明组件的接入和使用，使用通用服务名及环境变量，不引入 `macula-boot-examples` 或 Samples 的工程操作步骤。
 - “平台简介 → 请求链路”按一次请求从流量入口到最终服务的顺序讲清职责、身份传递与逐层授权，并配完整链路图：外部 Token、AK/SK、API Key → Gateway 认证与入口权限 → 内部 JWT → BFF/微服务验签与细粒度授权。
-- 讲清网关的登录认证、角色、菜单与 URL 权限，以及内层通过 `SecurityUtils` 获取上下文、通过 `@PreAuthorize`、`@PostAuthorize`、`@CheckOwner` 进一步授权的区别。
+- 讲清网关的登录认证、角色、菜单与 URL 权限，以及内层通过 `SecurityUtils` 获取上下文、通过 `@PreAuthorize`、`@PostAuthorize` 进行方法授权，并在 MVC Controller 参数上通过 `@Passkey` 验证资源凭证的区别。
 - 不把 AK/SK、API Key 应用身份写成登录用户身份，不声称它们自动具有用户角色；具体权限路径按实际实现说明。
 - 不混淆 IAM introspection、Macula Cloud Gateway endpoint、应用 Gateway JWK 地址。
 - 请求链路按入口、网关校验、身份转接、BFF、服务调用、业务执行与响应观测展开；IAM、System、Redis、JWK 是支撑连接。只说明原理与连接方向，参数、配置、注解用法与协议细节放在 Gateway Starter、Security Starter 等组件页，不把原有两章机械拼接。旧安全架构 URL 保持跳转。
-- `@CheckOwner` 的返回后归属检查与执行前 Passkey 校验分别解释，不能把资源凭证当作列表过滤、按钮权限或租户数据范围的替代。变更说明时核对当前注解和实现。
+- main / 5.x 已移除 `@CheckOwner`；返回后归属检查使用标准 `@PostAuthorize`，资源凭证使用 MVC Controller 参数级 `@Passkey`（DTO 为 JavaBean 属性路径，不是 SpEL）。两者分别解释，不能把资源凭证当作列表过滤、按钮权限或租户数据范围的替代。变更说明时核对当前注解和实现。
 - 生产准备包含 **Observability**，说明指标、链路、日志及其配置；不能只剩审计，也不能将已删除的旧可观测性 Starter 作为 main 的当前方案。
 
 ## 来源、同步与变更历史

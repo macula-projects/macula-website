@@ -7,6 +7,7 @@ source_paths: ["macula-boot-starters/macula-boot-starter-web/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}]
 ---
 
 ## 概览
@@ -209,7 +210,9 @@ public class ConsumerController {
 
 签发在包装判定前执行：Result、ResponseEntity、Feign 或 `@NotControllerResponseAdvice` 的包装跳过不能绕过签发，但保持原响应外壳。原两参 Advice 构造入口仍保留，无签发提供者时仍可处理普通响应。关闭 `macula.web.response-advice` 或提供自定义 Advice 后，自动签发需自行接入，资源前置验证不会因此放行。
 
-现有 ControllerExceptionAdvice 将实现公共 `ResourceAccessDenied` 标记的异常映射为 HTTP 403 / A0312，其他异常沿用原处理。完整配置和单注解验证见 [Security Starter](/docs/latest/01_services/框架基础/security/)。
+现有 ControllerExceptionAdvice 将实现公共 `ResourceAccessDenied` 标记的异常映射为 HTTP 403 / A0312，其他异常沿用原处理。完整配置和 Controller 参数验证见 [Security Starter](/docs/latest/01_services/框架基础/security/)。
+
+列表签发后的资源请求，在 MVC Controller 参数上使用 `@Passkey` 验证；操作权限与返回值归属分别使用 `@PreAuthorize`、`@PostAuthorize`。凭证不从 JSON / 表单字段读取，完整示例见 [Security 资源凭证](/docs/latest/01_services/框架基础/security/#passkeycontroller-参数资源凭证)。
 
 ### 国际化
 

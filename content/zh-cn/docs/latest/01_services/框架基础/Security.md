@@ -5,9 +5,9 @@ weight: 10
 manual_content: true
 source_repository: "https://github.com/macula-projects/macula-boot"
 source_branch: "main"
-source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
-source_paths: ["macula-boot-starters/macula-boot-starter-security/README.md", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/config/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/annotation/CheckOwner.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/authorization/CheckOwnerAdvisor.java", "macula-boot-starters/macula-boot-starter-system/src/main/java/dev/macula/boot/starter/system/service/PermissionService.java"]
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "3fbd28dc74d683055d27b81929971c0e45047878", "paths": ["macula-boot-starters/macula-boot-starter-security/README.md", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/config/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/annotation/CheckOwner.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/authorization/CheckOwnerAdvisor.java", "macula-boot-starters/macula-boot-starter-system/src/main/java/dev/macula/boot/starter/system/service/PermissionService.java"]}]
+source_commit: "5ff9b5c8e6166449ced7512cd3bf74a672aa922e"
+source_paths: ["macula-boot-starters/macula-boot-starter-security/README.md", "macula-boot-starters/macula-boot-starter-security/pom.xml", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/config/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/config/SecurityProperties.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/annotation/Passkey.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/web/PasskeyArgumentResolver.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/web/PasskeyArgumentResolverPostProcessor.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/passkey/PasskeyRequestResolver.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/passkey/HmacPasskeyService.java", "macula-boot-commons/src/main/java/dev/macula/boot/security/PasskeyResource.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/advice/ControllerResponseAdvice.java"]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-security/README.md", "macula-boot-starters/macula-boot-starter-security/pom.xml", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/config/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/config/SecurityProperties.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/annotation/Passkey.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/web/PasskeyArgumentResolver.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/web/PasskeyArgumentResolverPostProcessor.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/passkey/PasskeyRequestResolver.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/passkey/HmacPasskeyService.java", "macula-boot-commons/src/main/java/dev/macula/boot/security/PasskeyResource.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/advice/ControllerResponseAdvice.java"]}]
 ---
 
 ## 概览
@@ -129,63 +129,135 @@ public OrderView getById(String orderId) {
 
 这发生在方法返回后。检查失败拒绝返回，但不能撤销已经发生的写入、消息或其他副作用；写操作的权限在执行前检查。
 
-### @CheckOwner：两种资源控制模式
+### @Passkey：Controller 参数资源凭证
 
-通过必填的 value 表达式区分两种模式，不按 HTTP 动词或是否携带 Header 自动选择：
+列表 DTO 实现 `PasskeyResource`，框架自动填充 passkey；后续请求通过 Controller 参数上的 `@Passkey` 校验。接口定义如下：
 
-| 表达式 | 时机 | 校验依据 |
+```java
+package dev.macula.boot.security;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public interface PasskeyResource {
+    @JsonIgnore
+    String getResourceId();
+
+    String getPasskey();
+
+    void setPasskey(String passkey);
+}
+```
+
+列表 DTO 示例，`getResourceId()` 返回全局唯一且稳定的订单编号：
+
+```java
+import dev.macula.boot.security.PasskeyResource;
+import lombok.Data;
+
+@Data
+public class OrderListItem implements PasskeyResource {
+    private String orderId;
+    private String orderName;
+    private String passkey;
+
+    @Override
+    public String getResourceId() {
+        return orderId;
+    }
+}
+```
+
+Lombok 生成 `getPasskey()` 和 `setPasskey(...)`；`passkey` 由框架在列表响应时填充。下方 `UpdateOrderRequest` 提供 `getOrderId()`。
+
+#### 1. 查询已授权列表
+
+```java
+@PreAuthorize("isAuthenticated()")
+@GetMapping("/orders")
+public List<OrderListItem> list() {
+    // 业务查询必须先按当前用户的数据权限过滤，再由响应 Advice 自动填充 passkey。
+    return orderService.listVisibleTo(SecurityUtils.getCurrentUser());
+}
+```
+
+响应示例（passkey 仅为示意值）：
+
+```json
+{
+  "data": [
+    {
+      "orderId": "order-1001",
+      "passkey": "v1.<过期时间>.<签名>"
+    }
+  ]
+}
+```
+
+#### 2. 前端携带列表中的凭证
+
+从列表选中记录后，携带其 `orderId` 和 `passkey`，沿用现有登录认证。以下方式二选一。
+
+URL Query 参数：
+
+```http
+GET /orders/order-1001?passkey=<该记录的passkey，经URL编码>
+```
+
+Header（推荐）：
+
+```http
+GET /orders/order-1001
+X-Resource-Passkey: <该记录的passkey>
+```
+
+JSON 请求体只传业务数据，凭证仍放在 Header 或 URL Query 中。
+
+#### 3. 后端使用参数级 @Passkey
+
+```java
+import dev.macula.boot.starter.security.annotation.Passkey;
+
+// 参数本身就是资源编号。
+@GetMapping("/orders/{orderId}")
+public OrderDetail detail(@PathVariable("orderId") @Passkey String orderId) {
+    return orderService.getDetail(orderId);
+}
+
+// 从绑定完成的 DTO 中读取 orderId；嵌套属性可以写 @Passkey("order.id")。
+@PreAuthorize("@pms.hasPermission('order:update')")
+@PostMapping("/orders/update")
+public void update(@RequestBody @Valid @Passkey("orderId") UpdateOrderRequest request) {
+    orderService.update(request);
+}
+```
+
+`@Passkey` 校验当前用户、资源编号、签名和有效期，失败时 Controller 不执行。编号支持非空字符串或整数，DTO 属性通过 JavaBean getter 读取。`@Passkey("orderId")` 是属性路径，不是 SpEL；不能写 `#p0`、`#p0.orderId` 或 `returnObject`，也不标在 Service 方法上。请求体示例的 `@Valid` 使用 `jakarta.validation.Valid`。
+
+#### 配置与使用边界
+
+签发与验证的启用配置见本页[使用配置](#使用配置)。
+
+| 配置 | 默认 | 含义 |
 | --- | --- | --- |
-| `returnObject.ownerUsername` | 方法返回后 | 从服务端真实结果取得拥有者，与 authentication.name 相等 |
-| `#p0` / `#p0.orderId` | 方法执行前 | 指定资源 ID 的 Passkey 与当前身份、资源及有效期匹配 |
+| `macula.security.passkey.enabled` | `false` | 开启资源凭证；关闭时列表正常返回且不签发，默认服务及 Clock 不装配；标注 Passkey 的请求参数拒绝，标准 PostAuthorize 独立工作 |
+| `macula.security.passkey.ttl` | `5m` | 正数且至少 1 秒的凭证有效期 |
+| `macula.security.passkey.secret-base64` | 无 | Base64 编码、解码后至少 32 字节的独立服务端密钥 |
 
-#### 返回值归属
-
-```java
-@CheckOwner("returnObject.ownerUsername")
-public OrderView getById(String orderId) {
-    return orderRepository.findViewById(orderId);
-}
-```
-
-需要导入 `dev.macula.boot.starter.security.annotation.CheckOwner`。拥有者标识应来自服务端数据，并与当前认证名保持相同标识体系和类型。返回为空、拥有者为空或不匹配会拒绝，ROOT / ADMIN 不自动豁免。
-
-表达式针对被标注方法的实际返回值：若方法直接返回 OrderView，就访问其属性；若方法本身返回 Result 包装，按实际 data 层取值。后续响应 Advice 统一包装不改变方法的表达式层级。
-
-#### 执行前资源 Passkey
-
-业务先按当前用户、租户和数据范围查询授权列表。列表 DTO 实现 Commons 的 `dev.macula.boot.security.PasskeyResource`，提供稳定、全局唯一的 resourceId 和 passkey 字段，Web Starter 的响应 Advice 才能为授权列表签发凭证。
-
-配置见本页[配置示例](#配置示例)。
-
-| 配置 | 默认 / 约束 |
-| --- | --- |
-| `enabled` | false；关闭时不签发，入参模式拒绝，返回值归属模式仍可使用 |
-| `ttl` | 5m，须为至少 1 秒的正有效期 |
-| `secret-base64` | 无默认值，解码后至少 32 字节的独立服务端密钥 |
-
-需要同时接入 Web Starter 的列表签发与 Security 的验证；单独引入 Security 不会自动为响应签发。
-
-```java
-@PreAuthorize("@pms.hasPermission('order:cancel')")
-@CheckOwner("#p0")
-public void cancel(String orderId) {
-    orderService.cancel(orderId);
-}
-```
-
-调用方携带 `X-Resource-Passkey` Header（推荐）或 `passkey` Query。缺失、冲突、过期或与身份 / 资源不匹配时，在执行前拒绝；同一资源的凭证不能授权请求中的其他资源。前置模式失败不会降级为返回值归属模式。
+- 列表必须先完成业务数据权限过滤。Web Starter 的响应 Advice 支持 Collection、PageVO、成功 Result 和 ResponseEntity 中的列表；单对象不自动签发。
+- 各实例使用同一独立签名密钥，默认采用 HMAC-SHA256；可用 `PasskeyService` Bean 替换签发与验证。
+- 凭证只从 Header/Query 读取，不读取表单或 DTO 字段；重复、冲突和空值拒绝。使用现有异常 Advice 时，凭证拒绝返回 HTTP 403/A0312。
+- 仅保护 MVC Controller 请求；操作权限和返回值鉴权分别使用 `@PreAuthorize`、`@PostAuthorize`。凭证到期前可复用，不能代替业务状态、租户或实时权限检查。
 
 ### 组合规则与边界
 
-- 注解通过 Spring Bean 代理生效，同类内自调用、手动 new 对象不经过这些拦截器。
-- 角色、scope、PMS 操作权限与资源归属分别检查；网关放行不表示业务方法自动有权执行。
-- Gateway URL 匹配与 PMS 各自有明确的 ROOT 放行逻辑，CheckOwner 没有统一管理员豁免。
-- 后置注解不逐条过滤集合。列表、分页、统计、导出由查询条件落实用户、租户与数据范围。
-- CheckOwner 用于同步单对象；资源凭证不能替代操作权限、租户边界或业务事务条件。
-- Passkey 到期前可复用，业务授权变化不会自动撤销已签发凭证；其签名不包含租户 / action，应用仍要落实相应边界。
-- 当前 CheckOwner 的前置 / 后置模式由统一 Advisor 实现；注解模板 Bean 可供其他组合注解使用，不用它代替 CheckOwner 的资源校验。
+- `@PreAuthorize` 检查操作权限，`@PostAuthorize` 检查实际返回值归属；这两类方法注解通过 Spring Bean 代理生效，同类自调用不经过代理。
+- `@Passkey` 在 MVC 参数绑定后、Controller 执行前校验列表资源凭证；不用于 Service 代理、WebFlux 或后台任务，不代替登录认证。
+- 网关放行、ROOT / ADMIN 角色不代表自动通过资源凭证校验。列表、分页、统计和导出仍须在查询条件中落实用户、租户和数据范围。
+- 凭证到期前可复用；授权变化不会自动撤销已有凭证，签名不包含租户或 action，写操作仍应检查实时业务状态与权限。
 
-更多返回包装、参数解析与 Passkey 扩展说明见 [Security 源码 README](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-starters/macula-boot-starter-security)。实际应用组织参见 [Samples 模块说明](/docs/latest/04_devmanual/模块说明/)和[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
+旧 `@CheckOwner` 已移除：返回值归属检查使用本页 `@PostAuthorize` 示例，资源凭证检查使用 Controller 参数级 `@Passkey`；不能只改注解名称而保留原方法位置与 SpEL。
+
+实际应用组织参见 [Samples 模块说明](/docs/latest/04_devmanual/模块说明/)和[示例配置](/docs/latest/04_devmanual/模块说明/#示例配置)。
 
 ### 验证与排障
 
@@ -193,6 +265,7 @@ public void cancel(String orderId) {
 | --- | --- |
 | 身份与方法权限 | 分别使用有效身份、过期 Token、无角色身份调用同一业务入口；确认拒绝发生在写入之前。 |
 | PMS 权限 | 调用带操作权限表达式的方法，分别授予 / 撤销对应权限；角色校验成功不代表 PMS 按钮权限也成功。 |
+| 资源凭证 | 用有效列表凭证、缺失凭证、过期凭证及另一用户 / 资源的凭证请求同一 Controller；失败时方法不执行。关闭 Passkey 后确认列表不签发、带注解参数仍拒绝。 |
 | 资源范围 | 用两个真实用户验证列表查询范围与单资源归属；Passkey 验证通过不能替代列表、租户及业务状态约束。 |
 | 方法未被拦截 | 核对目标是否 Spring Bean、是否经过代理、注解声明的位置及调用方式，再看认证上下文，不能直接改成匿名放行。 |
 
