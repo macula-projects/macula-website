@@ -88,10 +88,7 @@ mvn archetype:generate \
 
 ## 依赖接入
 
-Archetype 已生成 Parent 配置；已有项目接入时可展开下面的 POM 示例。完整平台登记和业务开发步骤继续参见[开发指引](/docs/latest/04_devmanual/)。
-
-<details>
-<summary>已有项目的 Parent 与版本配置</summary>
+Archetype 已生成 Parent 配置；已有项目可按下面的 POM 示例接入。完整平台登记和业务开发步骤继续参见[开发指引](/docs/latest/04_devmanual/)。
 
 优先继承 Macula Boot Parent，由其管理 Starter 版本及构建配置：
 
@@ -122,5 +119,3 @@ Archetype 已生成 Parent 配置；已有项目接入时可展开下面的 POM 
 ```
 
 仅导入依赖版本管理不会继承 Parent 的构建插件。新项目优先通过 Archetype 生成，已有项目按对应组件说明核对编译插件。快照无法远程解析时，使用前文的完整框架安装命令准备本地制品；跳过测试的安装不能作为验证结果。
-
-</details>
