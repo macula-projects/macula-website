@@ -61,7 +61,7 @@ latest 跟随 Macula Boot main，当前版本为 **6.1.0-SNAPSHOT**，基于 Jav
 
 ![Macula 当前整体技术架构：Macula Cloud 与业务应用、Macula Boot、服务治理与可观测性、基础设施](/diagrams/platform-architecture.svg)
 
-[独立查看架构图](/diagrams/platform-architecture.svg)，点击图片可放大。图中组件按需组合；右侧治理与可观测系统、底层运行环境不要求全部部署。任务调度与重试统一基于 SnailJob，可观测性通过统一组件采集指标、链路与日志并以 OTLP 导出。完整配置见[平台能力](/docs/latest/01_services/)。
+图中组件按需组合；右侧治理与可观测系统、底层运行环境不要求全部部署。任务调度与重试统一基于 SnailJob，可观测性通过统一组件采集指标、链路与日志并以 OTLP 导出。完整配置见[平台能力](/docs/latest/01_services/)。
 
 一次请求从入口到业务服务的路由、身份传递和逐层授权，见[请求链路](/docs/latest/00_introduce/请求链路/)。先通过[快速开始](/docs/latest/00_introduce/快速开始/)跑通示例，再结合链路理解各模块的协作。
 

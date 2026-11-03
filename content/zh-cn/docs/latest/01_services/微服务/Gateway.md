@@ -198,7 +198,7 @@ Metrics、Traces、Logs 的采集及导出见 [Observability](/docs/latest/01_se
 
 ![Gateway 请求处理全景：WebFilter、本地端点、Spring Security、路由过滤链、下游服务与响应处理](/diagrams/gateway-filters.svg)
 
-[独立查看过滤器全景图](/diagrams/gateway-filters.svg)，点击图片可放大。图中展示 Starter 默认注册的过滤器及其相对关系；应用自定义过滤器、路由配置和框架内置过滤器会共同影响实际执行链。
+图中展示 Starter 默认注册的过滤器及其相对关系；应用自定义过滤器、路由配置和框架内置过滤器会共同影响实际执行链。
 
 Spring Security 通过外层 `WebFilter` 参与请求处理；只有请求通过相关入口规则并匹配路由后，才进入 `FilteringWebHandler` 组织的网关过滤链。后者将 `GlobalFilter` 与当前路由的 `GatewayFilter` 合并，按 `Ordered` 排序。前置处理通常从小到大，响应逻辑则取决于回调、响应装饰器及写回位置。参见 [WebFlux Security](https://docs.spring.io/spring-security/reference/reactive/configuration/webflux.html) 与 [Global Filters](https://docs.spring.io/spring-cloud-gateway/reference/spring-cloud-gateway-server-webflux/global-filters.html)。
 
