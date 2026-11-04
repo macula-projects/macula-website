@@ -7,7 +7,7 @@ source_paths: ["macula-boot-commons/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-commons/src/main/java/dev/macula/boot/result/Result.java", "macula-boot-commons/src/main/java/dev/macula/boot/result/ResultCode.java", "macula-boot-commons/src/main/java/dev/macula/boot/result/ApiResultCode.java", "macula-boot-commons/src/main/java/dev/macula/boot/security/PasskeyResource.java", "macula-boot-commons/src/main/java/dev/macula/boot/security/PasskeyIssuer.java", "macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java"]}]
 ---
 
 ## 概览
@@ -33,7 +33,40 @@ Commons 提供公共数据结构与工具契约，无独立 YAML 配置项；按
 
 ### 统一的返回结构
 
-`Result<T>` 包含 `success`、`code`、`msg`、`cause` 和 `data`。业务数据使用 `data`，失败原因使用 `cause`，不要混用。
+`Result<T>` 的字段定义如下（源码节选，省略工厂方法）。业务数据使用 `data`，失败原因使用 `cause`。完整实现见 [Result.java](https://github.com/macula-projects/macula-boot/blob/5ff9b5c8e6166449ced7512cd3bf74a672aa922e/macula-boot-commons/src/main/java/dev/macula/boot/result/Result.java)。
+
+```java
+@Data
+public class Result<T> implements Serializable {
+
+    /**
+     * 响应是否成功
+     */
+    private boolean success;
+
+    /**
+     * 响应码
+     */
+    private String code;
+
+    /**
+     * 响应消息
+     */
+    private String msg;
+
+    /**
+     * 错误原因
+     */
+    private String cause;
+
+    /**
+     * 响应数据
+     */
+    private T data;
+
+    // 工厂方法等省略，完整实现见下方源码链接。
+}
+```
 
 ```java
 Result<String> ok = Result.success("完成");
@@ -41,7 +74,66 @@ Result<Void> failed = Result.failed(ApiResultCode.BIZ_ERROR, "业务失败原因
 Result<Void> status = Result.judge(true);
 ```
 
-业务可实现 `ResultCode` 定义自己的错误码。Web Starter 负责 Controller 响应包装，Commons 本身不注册 Web 处理器。
+业务可实现以下 `ResultCode` 接口定义自己的错误码：
+
+```java
+package dev.macula.boot.result;
+
+/**
+ * 返回码接口
+ *
+ * @author pangu
+ * @since 5.0.0
+ */
+public interface ResultCode {
+
+    /**
+     * 返回码
+     *
+     * @return String
+     */
+    String getCode();
+
+    /**
+     * 返回消息
+     *
+     * @return String
+     */
+    String getMsg();
+}
+```
+
+`ApiResultCode` 的常用枚举项源码节选如下；完整枚举见 [ApiResultCode.java](https://github.com/macula-projects/macula-boot/blob/5ff9b5c8e6166449ced7512cd3bf74a672aa922e/macula-boot-commons/src/main/java/dev/macula/boot/result/ApiResultCode.java)。
+
+```java
+/**
+     * 请求成功
+     */
+    SUCCESS("00000", "请求成功"),
+
+    /**
+     * 请求失败
+     */
+    FAILED("99999", "请求失败"),
+
+    // 访问异常
+    /**
+     * 未授权的访问
+     */
+    ACCESS_UNAUTHORIZED("A0301", "未授权的访问"),
+
+    /**
+     * 访问令牌无效或已过期
+     */
+    TOKEN_INVALID_OR_EXPIRED("A0311", "访问令牌无效或已过期"),
+
+    /**
+     * 令牌没有访问授权
+     */
+    TOKEN_ACCESS_FORBIDDEN("A0312", "令牌没有访问授权"),
+```
+
+Web Starter 负责 Controller 响应包装，Commons 本身不注册 Web 处理器。
 
 ### 全局常量
 
@@ -74,9 +166,67 @@ throw new BizException(ApiResultCode.BIZ_ERROR, "订单状态不允许此操作"
 
 ### 资源访问凭证公共契约
 
-`dev.macula.boot.security.PasskeyResource` 声明 `getResourceId()`、`getPasskey()`、`setPasskey(String)`。实现类的列表可见性必须已经由业务完成当前用户的数据权限过滤；接口实现即表示允许框架为该记录签发访问凭证。资源编号须全局唯一；接口辅助 resourceId 在 JSON 中忽略，实际业务编号和 passkey 正常输出。
+`PasskeyResource` 的接口源码如下。业务须先按当前用户的数据权限过滤列表；实现接口即表示允许框架为该资源签发凭证。
 
-`PasskeyIssuer` 是 Web 响应处理可调用的签发扩展，由安全模块实现，无需 Commons 或 Web 依赖具体认证框架。`PasskeyResources` 仅从 Collection、PageVO、成功 Result 的明确包装中提取列表资源，拒绝循环/过深结构，不遍历任意业务属性，单对象不自动签发。
+```java
+package dev.macula.boot.security;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+/**
+ * A list record whose visibility authorizes the current user to access its globally unique resource.
+ * Only use this contract on lists already filtered by business data permissions.
+ *
+ * @author Macula
+ * @since 6.1.0
+ */
+public interface PasskeyResource {
+
+    /**
+     * Returns a stable, globally unique resource identifier without adding an auxiliary JSON property.
+     * @return resource identifier
+     */
+    @JsonIgnore
+    String getResourceId();
+
+    /**
+     * Returns the server-issued resource access credential.
+     * @return passkey, or null before issuance
+     */
+    String getPasskey();
+
+    /**
+     * Replaces the credential for the current response's authenticated user.
+     * @param passkey server-issued credential
+     */
+    void setPasskey(String passkey);
+}
+```
+
+`PasskeyIssuer` 为响应处理提供签发入口，安全模块实现它，Commons 与 Web 不依赖具体认证框架：
+
+```java
+package dev.macula.boot.security;
+
+/**
+ * Response processing extension for issuing a credential using a trusted current identity.
+ * Implementations must reject unauthenticated calls and invalid signing configuration.
+ *
+ * @author Macula
+ * @since 6.1.0
+ */
+@FunctionalInterface
+public interface PasskeyIssuer {
+
+    /**
+     * Assigns a fresh credential to an already authorized list record.
+     * @param resource authorized record
+     */
+    void issue(PasskeyResource resource);
+}
+```
+
+`PasskeyResources` 只提取 Collection、PageVO、成功 Result 等明确包装内的列表资源；拒绝循环或过深结构，不遍历任意业务属性，单对象不自动签发。
 
 `ResourceAccessDenied` 是跨模块的资源拒绝标记，`ResourceAccessException` 提供无安全库依赖的拒绝异常；现有 Web 异常 Advice 将其转换为 HTTP 403 / A0312。签名密钥、当前身份与实际验签留在 Security Starter，不放入 DTO 或公共模块。
 
@@ -89,7 +239,53 @@ throw new BizException(ApiResultCode.BIZ_ERROR, "订单状态不允许此操作"
 
 ### 临时租户上下文
 
-`dev.macula.boot.context.TenantContextHolder` 提供 `getCurrentTenantId()`、`setCurrentTenantId(Long)`、`clearCurrentTenantId()`，用于当前执行上下文内的临时租户切换。它不修改登录身份、Token 中的认证租户或应用归属租户，也不负责校验目标租户权限。
+`TenantContextHolder` 的源码如下，用于当前线程的临时租户上下文。它不修改认证租户或应用归属，也不负责目标租户授权。
+
+```java
+package dev.macula.boot.context;
+
+/**
+ * {@code TenantContextHolder} 租户ID的上下文
+ *
+ * @author rain
+ * @since 2023/3/1 15:42
+ */
+public class TenantContextHolder {
+
+    /**
+     * 私有构造函数，防止实例化
+     */
+    private TenantContextHolder() {
+    }
+
+    private final static ThreadLocal<Long> THREAD_LOCAL_VERSION = new ThreadLocal<>();
+
+    /**
+     * 获取当前上下文租户ID
+     *
+     * @return 租户ID
+     */
+    public static Long getCurrentTenantId() {
+        return THREAD_LOCAL_VERSION.get();
+    }
+
+    /**
+     * 设置当前租户ID
+     *
+     * @param tenantId 租户ID
+     */
+    public static void setCurrentTenantId(Long tenantId) {
+        THREAD_LOCAL_VERSION.set(tenantId);
+    }
+
+    /**
+     * 清除当前租户ID
+     */
+    public static void clearCurrentTenantId() {
+        THREAD_LOCAL_VERSION.remove();
+    }
+}
+```
 
 业务须先授权，再设置，并在 `finally` 中恢复原值或清除；MyBatisPlus 的租户插件优先读取此值。选择顺序和同步代码示例见 [MyBatisPlus](/docs/latest/01_services/框架基础/mybatisplus/#租户插件)。
 

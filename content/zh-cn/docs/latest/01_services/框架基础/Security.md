@@ -79,15 +79,45 @@ Samples 中，BFF、Service1、Basic、OpenAPI、Thirdparty 均指向本应用 G
 
 ### SecurityUtils：读取认证上下文
 
-JWT 验签后建立认证上下文，业务可以读取：
+JWT 验签后建立认证上下文。下面直接展示读取身份、角色、认证租户及 Token 声明的源码节选；其余方法见[完整源码](https://github.com/macula-projects/macula-boot/blob/5ff9b5c8e6166449ced7512cd3bf74a672aa922e/macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java)。
 
-| 方法 | 信息 |
-| --- | --- |
-| `getCurrentUser()` | 当前认证名，默认来自 JWT 的 sub |
-| `getRoles()` | 角色 Code，去掉 ROLE_ 前缀 |
-| `getTenantId()` | 已认证 Token 的默认业务租户，不读取临时 Holder |
-| `getDeptId()` / `getDataScope()` | 部门与数据范围声明 |
-| `getTokenAttributes()` | 已解析的 Token 声明 |
+```java
+public class SecurityUtils {
+
+    public static String getCurrentUser() {
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext()
+            .getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+            return SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+        return null;
+    }
+
+    public static Set<String> getRoles() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && CollectionUtil.isNotEmpty(authentication.getAuthorities())) {
+            return authentication.getAuthorities().stream()
+                .map(item -> StrUtil.removePrefix(item.getAuthority(), "ROLE_")).collect(Collectors.toSet());
+        }
+        return Collections.emptySet();
+    }
+
+    public static Long getTenantId() {
+        return Convert.toLong(getTokenAttributes().get(GlobalConstants.TENANT_ID_NAME));
+    }
+
+    public static Map<String, Object> getTokenAttributes() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            if (authentication instanceof AbstractOAuth2TokenAuthenticationToken) {
+                AbstractOAuth2TokenAuthenticationToken<?> tokenAuthenticationToken =
+                    (AbstractOAuth2TokenAuthenticationToken<?>)authentication;
+                return tokenAuthenticationToken.getTokenAttributes();
+            }
+        }
+        return Collections.emptyMap();
+    }
+}
+```
 
 `SecurityUtils` 是信息读取工具，不会自动校验按钮、资源归属或过滤数据库查询。AK/SK / API Key 的认证名可能是应用标识，不能直接当作登录用户。
 
@@ -229,6 +259,44 @@ X-Resource-Passkey: <该记录的passkey>
 JSON 请求体只传业务数据，凭证仍放在 Header 或 URL Query 中。
 
 #### 3. 后端使用参数级 @Passkey
+
+注解源码如下，目标为方法参数：
+
+```java
+package dev.macula.boot.starter.security.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 在 Spring MVC 参数绑定完成后，校验请求凭证与参数对应的资源编号。
+ * <p>
+ * 空路径表示参数本身就是资源编号，非空路径表示从已绑定的 DTO 中读取属性。
+ * 校验失败时 Controller 不执行；此注解不保护 Service 方法或内部直接调用。
+ * 返回值鉴权使用 PostAuthorize，操作权限使用 PreAuthorize。
+ *
+ * @author Rain
+ * @since 6.1.0
+ */
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Passkey {
+
+    /**
+     * JavaBean 属性路径，例如 {@code orderId} 或 {@code order.id}；留空则直接使用参数值。
+     * 资源编号只支持非空字符串或整数；这里不是 SpEL，不使用 {@code #p0} 等表达式。
+     *
+     * @return 资源编号属性路径，默认为空
+     */
+    String value() default "";
+}
+```
+
+Controller 使用示例：
 
 ```java
 import dev.macula.boot.starter.security.annotation.Passkey;
