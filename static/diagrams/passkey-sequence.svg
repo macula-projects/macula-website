@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="852" viewBox="0 0 900 852" role="img" aria-labelledby="title desc"><title id="title">Passkey：从授权列表到资源请求</title><desc id="desc">操作权限另用 @PreAuthorize；返回值归属另用 @PostAuthorize。</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7Z" fill="#3174b9"/></marker></defs><rect width="900" height="852" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="22" y="32" font-size="19" font-weight="600" text-anchor="start">Passkey：从授权列表到资源请求</text>
+<text x="22" y="61" font-size="14" font-weight="400" text-anchor="start">按编号阅读；虚线箭头表示返回，浅色框表示条件或执行阶段。</text>
+<path d="M123.0 124V787" stroke="#d8e3ef" stroke-dasharray="4 5"/>
+<rect x="17.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="123.0" y="110" font-size="14" font-weight="600" text-anchor="middle">前端</text>
+<path d="M341.0 124V787" stroke="#d8e3ef" stroke-dasharray="4 5"/>
+<rect x="235.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="341.0" y="110" font-size="14" font-weight="600" text-anchor="middle">Controller / Web</text>
+<path d="M559.0 124V787" stroke="#d8e3ef" stroke-dasharray="4 5"/>
+<rect x="453.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="559.0" y="110" font-size="14" font-weight="600" text-anchor="middle">Security</text>
+<path d="M777.0 124V787" stroke="#d8e3ef" stroke-dasharray="4 5"/>
+<rect x="671.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="777.0" y="110" font-size="14" font-weight="600" text-anchor="middle">业务 / 数据</text>
+<path d="M123.0 183H341.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="232.0" y="150" font-size="14" font-weight="400" text-anchor="middle">1. 请求可访问资源列表</text>
+<path d="M341.0 253H777.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="559.0" y="220" font-size="14" font-weight="400" text-anchor="middle">2. 业务先按身份和数据范围查询</text>
+<path d="M777.0 323H341.0" stroke="#3174b9" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="559.0" y="290" font-size="14" font-weight="400" text-anchor="middle">3. 返回 PasskeyResource 列表</text>
+<path d="M341.0 393H559.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="450.0" y="360" font-size="14" font-weight="400" text-anchor="middle">4. 按当前身份签发列表凭证</text>
+<path d="M341.0 463H123.0" stroke="#3174b9" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="232.0" y="430" font-size="14" font-weight="400" text-anchor="middle">5. 返回资源 ID 与 passkey</text>
+<path d="M123.0 533H341.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="232.0" y="500" font-size="14" font-weight="400" text-anchor="middle">6. 资源 ID + Header / Query</text>
+<text x="232.0" y="521" font-size="14" font-weight="400" text-anchor="middle">凭证</text>
+<path d="M341.0 603H559.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="450.0" y="570" font-size="14" font-weight="400" text-anchor="middle">7. 绑定参数后校验 @Passkey</text>
+<rect x="28" y="628" width="844" height="52" rx="7" fill="#f1f8f4" stroke="#d5e2ef"/>
+<text x="42" y="649" font-size="14" font-weight="400" text-anchor="start">8. 身份、资源、签名或有效期不匹配：拒绝，Controller 不执行</text>
+<path d="M341.0 743H777.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="559.0" y="710" font-size="14" font-weight="400" text-anchor="middle">9. 校验通过，再执行业务方法</text>
+<text x="22" y="820" font-size="14" font-weight="400" text-anchor="start">操作权限另用 @PreAuthorize；返回值归属另用 @PostAuthorize。</text>
+</g></svg>

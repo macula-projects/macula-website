@@ -457,11 +457,19 @@ AK/SK 的应用 URL 范围与 Token 的角色 URL 规则是两套不同判断，
 
 System 维护 `macula:cloud:system:tenants` Hash（租户编码 → ID）；网关直接从映射解析归属，不配置 `macula.gateway.tenant-id`。
 
-**命名约定：网关应用名以租户编码为前缀，忽略大小写。** 例如网关名为 `macula-samples-gateway` 时，租户编码建议为 `macula-samples`；若其映射 ID 为 `12`，网关就归属租户 `12`。编码 `MACULA-SAMPLES` 同样匹配，但平台中不能同时登记两个仅大小写不同的租户编码。若 `macula` 和 `macula-samples` 都能匹配，选择更长的 `macula-samples`，不是较短的 `macula`。
+**命名约定：网关应用名以租户编码为前缀，忽略大小写。**
+
+- 网关 `macula-samples-gateway` 的租户编码建议为 `macula-samples`；映射 ID 为 `12` 时，网关归属租户 `12`。
+- `MACULA-SAMPLES` 同样匹配，但不能登记两个仅大小写不同的租户编码。
+- `macula` 与 `macula-samples` 同时匹配时，使用更长的 `macula-samples`。
 
 应用名缺失、无映射匹配或命中值非法时，网关使用未知标记 `-1`，拒绝 AK/SK 接入。
 
-**应用与网关必须属于同一归属租户。** 例如归属 `12`、认证租户 `30` 的应用，在权限及签名校验均通过后可接入归属 `12` 的网关，JWT 默认业务租户为 `30`；归属 `20` 的应用即使认证租户也是 `30`，也不能凭 AK/SK 接入归属 `12` 的网关。只有平台 ROOT 可把认证租户配置为不同于归属租户的值，且目标租户必须存在。
+**应用与网关必须属于同一归属租户。** 以归属 `12` 的网关为例：
+
+- 应用归属 `12`、认证租户 `30`：归属检查通过，权限及签名也通过后，JWT 默认业务租户为 `30`。
+- 应用归属 `20`、认证租户 `30`：归属不符，不能接入此网关。
+- 不同认证租户仅平台 ROOT 可配置，目标租户必须存在；该配置不放宽归属隔离。
 
 该校验适用于标准 HMAC 请求入口及启用 HMAC 的 opaque token 清理入口；API Key 不在此次归属隔离规则范围内。认证结果保存在当前请求的可信属性中，再转为 JWT，不向 `TenantContextHolder` 写入临时切换值。调用方传入租户头不会改变网关归属或应用认证租户；下游业务是否允许临时切换，另按 [MyBatisPlus 租户插件](/docs/latest/01_services/框架基础/mybatisplus/#租户插件)落实。
 
@@ -469,7 +477,9 @@ System 维护 `macula:cloud:system:tenants` Hash（租户编码 → ID）；网�
 
 ### 转换为内部 JWT
 
-这是图中 order 1000 的身份转接点。三种入口使用各自的认证和访问控制路径，通过后由 `AddJwtGlobalFilter` 写入：
+{{< process-diagram name="gateway-security-sequence" title="网关职责时序：外层安全、路由过滤链、HMAC 验签、JWT 转接和响应保护" >}}
+
+这是过滤器全景图中 order 1000 的身份转接点。三种入口使用各自的认证和访问控制路径，通过后由 `AddJwtGlobalFilter` 写入：
 
 ```http
 Authorization: Bearer <网关签发的JWT>

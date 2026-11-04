@@ -204,15 +204,26 @@ public class ConsumerController {
 
 #### 授权列表的资源凭证扩展
 
-现有 ControllerResponseAdvice 支持 Commons 的 `PasskeyResource` 和 `PasskeyIssuer` 扩展契约，无需 Web Starter 依赖 Security Starter。Collection、PageVO、成功 Result 包装中的接口实现元素会调用签发器；ResponseEntity 正文同样处理。不同 DTO 可提供相同的全局唯一编号；混合列表的普通元素保持不变，单个对象不自动签发。辅助 `resourceId` 不输出 JSON，`passkey` 正常输出。
+响应签发依赖 Commons 的 `PasskeyResource` 与 `PasskeyIssuer` 契约，Web 无需依赖具体 Security 实现。处理规则：
 
-**返回接口实现元素即表示业务已按当前用户过滤资源访问范围。** 无需签发注解，不得将此类 DTO 用于未经授权的列表；每次响应覆盖旧凭证，不将缓存凭证当作授权依据。`macula.security.passkey.enabled=false`（默认）时跳过列表遍历和签发，列表正常返回，已有自定义签发器也不会被调用。只有启用时，有候选元素但无有效签发器才拒绝；默认 Security 服务启用时要求有效签名配置。
+- **支持包装**：Collection、PageVO、成功 Result 中的列表，以及 ResponseEntity 的相应正文。
+- **资源元素**：实现接口的元素调用签发器，混合列表中的普通元素保持不变；单对象不自动签发。
+- **字段输出**：辅助 resourceId 不输出 JSON，实际业务编号与 passkey 正常输出。不同 DTO 可引用同一全局唯一资源编号。
+
+**返回接口实现元素即表示业务已按当前用户过滤资源访问范围。**
+
+- 不需要签发注解，不能把此类 DTO 用于未经授权的列表。
+- 每次响应覆盖旧凭证，不把缓存凭证当作授权依据。
+- `macula.security.passkey.enabled=false`（默认）时，跳过遍历与签发，已有自定义签发器也不调用。
+- 启用后，存在候选元素却缺少有效签发器时拒绝；默认 Security 服务要求有效签名配置。
 
 签发在包装判定前执行：Result、ResponseEntity、Feign 或 `@NotControllerResponseAdvice` 的包装跳过不能绕过签发，但保持原响应外壳。原两参 Advice 构造入口仍保留，无签发提供者时仍可处理普通响应。关闭 `macula.web.response-advice` 或提供自定义 Advice 后，自动签发需自行接入，资源前置验证不会因此放行。
 
 现有 ControllerExceptionAdvice 将实现公共 `ResourceAccessDenied` 标记的异常映射为 HTTP 403 / A0312，其他异常沿用原处理。完整配置和 Controller 参数验证见 [Security Starter](/docs/latest/01_services/框架基础/security/)。
 
 列表签发后的资源请求，在 MVC Controller 参数上使用 `@Passkey` 验证；操作权限与返回值归属分别使用 `@PreAuthorize`、`@PostAuthorize`。凭证不从 JSON / 表单字段读取，完整示例见 [Security 资源凭证](/docs/latest/01_services/框架基础/security/#passkeycontroller-参数资源凭证)。
+
+<span id="租户id"></span>
 
 ### 临时租户参数
 
@@ -642,10 +653,6 @@ public JsonMapperBuilderCustomizer customizer() {
 Macula Boot 6.1 使用 Jackson 3：`JsonMapperBuilderCustomizer` 位于
 `org.springframework.boot.jackson.autoconfigure`，Jackson 数据绑定类型位于 `tools.jackson.databind`。
 Boot 3 的 `Jackson2ObjectMapperBuilderCustomizer` 与 `com.fasterxml.jackson.databind` 扩展不能直接用于该配置链。
-
-### 租户ID
-
-在HTTP请求头或者请求参数中添加`tenantId`参数可以设置当前请求的租户ID上下文，用户后续的数据库操作按照租户ID隔离数据。一般用在前端界面切换不同租户来管理。
 
 ### 升级与消息转换器兼容
 

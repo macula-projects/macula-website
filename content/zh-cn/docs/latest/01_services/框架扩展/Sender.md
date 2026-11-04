@@ -7,6 +7,7 @@ source_paths: ["macula-boot-starters/macula-boot-starter-sender/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "3fbd28dc74d683055d27b81929971c0e45047878", "paths": ["macula-boot-starters/macula-boot-starter-sender/src/main/java/dev/macula/boot/starter/sender/support/ReliableMessageSendService.java", "macula-boot-starters/macula-boot-starter-sender/src/main/java/dev/macula/boot/starter/sender/support/SendMessageTask.java"]}]
 ---
 
 ## 概览
@@ -44,9 +45,16 @@ macula:
 
 ## 核心功能
 
-事件消息首先和业务事务一起存储到本地数据库表，然后再发送给 RocketMQ。
+{{< process-diagram name="reliable-message-sequence" title="可靠消息时序：业务与消息落库、提交后发送、发送结果、补偿重发与幂等消费" >}}
 
-业务事务提交后发送消息；发送失败由补偿任务重试。消费端仍需幂等处理，不能将该机制视为消息只投递一次。
+以业务方法已开启本地事务为前提：
+
+1. **同事务落库**：业务数据与消息记录写入同一业务数据库；事务失败时一同回滚。
+2. **提交后发送**：事务提交后执行发送任务，再记录发送结果。
+3. **失败补偿**：实际调度的补偿任务扫描未成功记录并重发，调度需由应用安排。
+4. **消费幂等**：重复发送仍可能发生，消费端按业务键实现幂等。
+
+没有事务同步时，Sender 落库后直接执行发送，不能据此保证业务与消息原子提交。该机制不保证只投递一次。
 
 使用前，需要在你的业务库中创建如下表（建议定期归档）：
 

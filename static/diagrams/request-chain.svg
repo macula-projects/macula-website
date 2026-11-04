@@ -1,52 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="980" viewBox="0 0 1040 980" role="img" aria-labelledby="chain-title chain-desc"><title id="chain-title">Macula 一次请求的完整链路</title><desc id="chain-desc">业务请求自调用方经应用 Gateway、BFF、Feign 调用到业务 Service 和数据库，再返回调用方。IAM、System Redis、Cloud System、公钥集从旁支撑身份和权限校验，可观测性贯穿全程。</desc><defs><marker id="chain-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#3174b9"/></marker></defs><rect width="1040" height="980" rx="18" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#273f57">
-<text x="28" y="40" font-size="19.81" font-weight="700" fill="#273f57">一次请求：从流量入口到业务结果</text>
-<text x="28" y="72" font-size="15.41" font-weight="400" fill="#52677d">实线：业务流量　虚线：身份、权限与公钥支撑连接</text>
-<rect x="28" y="104" width="646" height="84" rx="10" fill="#f2f7fd" stroke="#bed2e7"/>
-<text x="48" y="136" font-size="17.61" font-weight="600" fill="#273f57">1 · 流量入口</text>
-<text x="48" y="167" font-size="15.41" font-weight="400" fill="#273f57">用户 Token / 外部系统 AK/SK、API Key</text>
-<path d="M350 188V209" stroke="#3174b9" stroke-width="2" marker-end="url(#chain-arrow)"/>
-<rect x="28" y="212" width="646" height="84" rx="10" fill="#f2f7fd" stroke="#bed2e7"/>
-<text x="48" y="244" font-size="17.61" font-weight="600" fill="#273f57">2 · 应用 Gateway：认证与入口授权</text>
-<text x="48" y="275" font-size="15.41" font-weight="400" fill="#273f57">校验身份、URL 权限；按需保护接口内容</text>
-<path d="M350 296V317" stroke="#3174b9" stroke-width="2" marker-end="url(#chain-arrow)"/>
-<rect x="28" y="320" width="646" height="84" rx="10" fill="#f2f7fd" stroke="#bed2e7"/>
-<text x="48" y="352" font-size="17.61" font-weight="600" fill="#273f57">3 · 应用 Gateway：转接与路由</text>
-<text x="48" y="383" font-size="15.41" font-weight="400" fill="#273f57">可信身份 → 内部 JWT → 目标后端</text>
-<path d="M350 404V425" stroke="#3174b9" stroke-width="2" marker-end="url(#chain-arrow)"/>
-<rect x="28" y="428" width="646" height="84" rx="10" fill="#f1f8f4" stroke="#bed2e7"/>
-<text x="48" y="460" font-size="17.61" font-weight="600" fill="#273f57">4 · BFF：验签、授权与页面聚合</text>
-<text x="48" y="491" font-size="15.41" font-weight="400" fill="#273f57">验证 JWT，检查操作权限，组织服务调用</text>
-<path d="M350 512V533" stroke="#3174b9" stroke-width="2" marker-end="url(#chain-arrow)"/>
-<rect x="28" y="536" width="646" height="84" rx="10" fill="#f1f8f4" stroke="#bed2e7"/>
-<text x="48" y="568" font-size="17.61" font-weight="600" fill="#273f57">5 · 服务调用：API 契约 + Feign</text>
-<text x="48" y="599" font-size="15.41" font-weight="400" fill="#273f57">传递内部 JWT 与必要上下文，定位目标服务</text>
-<path d="M350 620V641" stroke="#3174b9" stroke-width="2" marker-end="url(#chain-arrow)"/>
-<rect x="28" y="644" width="646" height="84" rx="10" fill="#f1f8f4" stroke="#bed2e7"/>
-<text x="48" y="676" font-size="17.61" font-weight="600" fill="#273f57">6 · 业务 Service：验签、授权与业务</text>
-<text x="48" y="707" font-size="15.41" font-weight="400" fill="#273f57">方法 / 资源 / 数据范围检查，执行业务与事务</text>
-<path d="M350 728V749" stroke="#3174b9" stroke-width="2" marker-end="url(#chain-arrow)"/>
-<rect x="28" y="752" width="646" height="84" rx="10" fill="#f1f8f4" stroke="#bed2e7"/>
-<text x="48" y="784" font-size="17.61" font-weight="600" fill="#273f57">7 · 自有数据与结果返回</text>
-<text x="48" y="815" font-size="15.41" font-weight="400" fill="#273f57">访问数据库 / 缓存，按契约返回业务结果</text>
-<rect x="726" y="212" width="286" height="106" rx="10" fill="#f2f7fd" stroke="#bed2e7"/>
-<text x="744" y="241" font-size="15.41" font-weight="600" fill="#273f57">IAM / System Redis</text>
-<text x="744" y="269" font-size="15.41" font-weight="400" fill="#273f57">验证外部 Token</text>
-<text x="744" y="295" font-size="15.41" font-weight="400" fill="#273f57">入口规则与应用凭据</text>
-<path d="M674 254H724" fill="none" stroke="#3174b9" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#chain-arrow)"/>
-<rect x="726" y="428" width="286" height="106" rx="10" fill="#f2f7fd" stroke="#bed2e7"/>
-<text x="744" y="457" font-size="15.41" font-weight="600" fill="#273f57">Cloud Gateway → System</text>
-<text x="744" y="485" font-size="15.41" font-weight="400" fill="#273f57">平台用户、菜单</text>
-<text x="744" y="511" font-size="15.41" font-weight="400" fill="#273f57">及具体操作权限</text>
-<path d="M674 470H724" fill="none" stroke="#3174b9" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#chain-arrow)"/>
-<rect x="726" y="644" width="286" height="106" rx="10" fill="#f2f7fd" stroke="#bed2e7"/>
-<text x="744" y="673" font-size="15.41" font-weight="600" fill="#273f57">应用 Gateway JWK</text>
-<text x="744" y="701" font-size="15.41" font-weight="400" fill="#273f57">BFF / Service 获取公钥</text>
-<text x="744" y="727" font-size="15.41" font-weight="400" fill="#273f57">分别验证内部 JWT</text>
-<path d="M674 686H724" fill="none" stroke="#3174b9" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#chain-arrow)"/>
-<text x="726" y="150" font-size="17.61" font-weight="600" fill="#273f57">支撑连接</text>
-<text x="726" y="184" font-size="15.41" font-weight="400" fill="#52677d">按用途访问，不替代业务链路</text>
-<path d="M674 470H702V686" fill="none" stroke="#3174b9" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="28" y="882" width="984" height="72" rx="10" fill="#e8f1fc" stroke="#bed2e7"/>
-<text x="48" y="910" font-size="15.41" font-weight="600" fill="#273f57">响应：Service → BFF → Gateway → 调用方；失败可在相应环节终止</text>
-<text x="48" y="938" font-size="15.41" font-weight="400" fill="#273f57">全程观测：关联指标、链路与日志；业务审计与操作日志记录操作事实</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="992" viewBox="0 0 900 992" role="img" aria-labelledby="title desc"><title id="title">一次请求：职责与身份流转</title><desc id="desc">AK/SK、API Key 分别走应用认证路径；不自动获得用户角色。</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7Z" fill="#3174b9"/></marker></defs><rect width="900" height="992" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="22" y="32" font-size="19" font-weight="600" text-anchor="start">一次请求：职责与身份流转</text>
+<text x="22" y="61" font-size="14" font-weight="400" text-anchor="start">按编号阅读；虚线箭头表示返回，浅色框表示条件或执行阶段。</text>
+<rect x="14.0" y="82" width="140.33333333333334" height="842" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="17.0" y="86" width="135.33333333333334" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="86.66666666666667" y="110" font-size="14" font-weight="600" text-anchor="middle">调用方</text>
+<rect x="159.33333333333334" y="82" width="140.33333333333334" height="842" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="162.33333333333334" y="86" width="135.33333333333334" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="232.0" y="110" font-size="14" font-weight="600" text-anchor="middle">应用 Gateway</text>
+<rect x="304.6666666666667" y="82" width="140.33333333333334" height="842" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="307.6666666666667" y="86" width="135.33333333333334" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="377.33333333333337" y="110" font-size="14" font-weight="600" text-anchor="middle">IAM / 平台</text>
+<rect x="450.0" y="82" width="140.33333333333334" height="842" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="453.0" y="86" width="135.33333333333334" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="522.6666666666667" y="110" font-size="14" font-weight="600" text-anchor="middle">BFF</text>
+<rect x="595.3333333333334" y="82" width="140.33333333333334" height="842" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="598.3333333333334" y="86" width="135.33333333333334" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="668.0" y="110" font-size="14" font-weight="600" text-anchor="middle">业务 Service</text>
+<rect x="740.6666666666667" y="82" width="140.33333333333334" height="842" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="743.6666666666667" y="86" width="135.33333333333334" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="813.3333333333334" y="110" font-size="14" font-weight="600" text-anchor="middle">自有数据</text>
+<path d="M86.66666666666667 183H232.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="159.33333333333334" y="150" font-size="14" font-weight="400" text-anchor="middle">1. 外部 Token / 应</text>
+<text x="159.33333333333334" y="171" font-size="14" font-weight="400" text-anchor="middle">用凭据</text>
+<path d="M232.0 253H377.33333333333337" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="304.6666666666667" y="220" font-size="14" font-weight="400" text-anchor="middle">2. Token 内省；应</text>
+<text x="304.6666666666667" y="241" font-size="14" font-weight="400" text-anchor="middle">用凭据读取平台缓存</text>
+<path d="M377.33333333333337 323H232.0" stroke="#3174b9" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="304.6666666666667" y="290" font-size="14" font-weight="400" text-anchor="middle">3. 可信身份与访问</text>
+<text x="304.6666666666667" y="311" font-size="14" font-weight="400" text-anchor="middle">规则</text>
+<rect x="166.33333333333331" y="344" width="131.33333333333334" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="175.33333333333331" y="362" font-size="14" font-weight="400" text-anchor="start">4. 认证、入口授</text>
+<text x="175.33333333333331" y="383" font-size="14" font-weight="400" text-anchor="start">权</text>
+<path d="M232.0 463H522.6666666666667" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="377.33333333333337" y="430" font-size="14" font-weight="400" text-anchor="middle">5. 内部 JWT + 路由</text>
+<rect x="457.00000000000006" y="484" width="131.33333333333334" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="466.00000000000006" y="502" font-size="14" font-weight="400" text-anchor="start">6. 验签、操作授</text>
+<text x="466.00000000000006" y="523" font-size="14" font-weight="400" text-anchor="start">权</text>
+<path d="M522.6666666666667 603H377.33333333333337" stroke="#3174b9" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="450.00000000000006" y="570" font-size="14" font-weight="400" text-anchor="middle">7. 按需获取平台菜</text>
+<text x="450.00000000000006" y="591" font-size="14" font-weight="400" text-anchor="middle">单与用户</text>
+<path d="M522.6666666666667 673H668.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="595.3333333333334" y="640" font-size="14" font-weight="400" text-anchor="middle">8. Feign 调用，传</text>
+<text x="595.3333333333334" y="661" font-size="14" font-weight="400" text-anchor="middle">递 JWT</text>
+<rect x="602.3333333333334" y="694" width="131.33333333333334" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="611.3333333333334" y="712" font-size="14" font-weight="400" text-anchor="start">9. 独立验签、业</text>
+<text x="611.3333333333334" y="733" font-size="14" font-weight="400" text-anchor="start">务授权</text>
+<path d="M668.0 813H813.3333333333334" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="740.6666666666667" y="780" font-size="14" font-weight="400" text-anchor="middle">10. 限定租户与数据</text>
+<text x="740.6666666666667" y="801" font-size="14" font-weight="400" text-anchor="middle">范围</text>
+<path d="M813.3333333333334 883H86.66666666666667" stroke="#3174b9" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="450.0" y="850" font-size="14" font-weight="400" text-anchor="middle">11. 按契约逐层返回结果</text>
+<text x="22" y="960" font-size="14" font-weight="400" text-anchor="start">AK/SK、API Key 分别走应用认证路径；不自动获得用户角色。</text>
 </g></svg>

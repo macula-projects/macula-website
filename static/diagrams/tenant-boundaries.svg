@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="852" viewBox="0 0 900 852" role="img" aria-labelledby="title desc"><title id="title">租户：接入归属与数据访问</title><desc id="desc">认证租户不取消归属隔离；设置 Holder 本身不代表授权。</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7Z" fill="#3174b9"/></marker></defs><rect width="900" height="852" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="22" y="32" font-size="19" font-weight="600" text-anchor="start">租户：接入归属与数据访问</text>
+<text x="22" y="61" font-size="14" font-weight="400" text-anchor="start">按编号阅读；虚线箭头表示返回，浅色框表示条件或执行阶段。</text>
+<rect x="14.0" y="82" width="213.0" height="702" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="17.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="123.0" y="110" font-size="14" font-weight="600" text-anchor="middle">平台登记</text>
+<rect x="232.0" y="82" width="213.0" height="702" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="235.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="341.0" y="110" font-size="14" font-weight="600" text-anchor="middle">应用 Gateway</text>
+<rect x="450.0" y="82" width="213.0" height="702" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="453.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="559.0" y="110" font-size="14" font-weight="600" text-anchor="middle">业务服务</text>
+<rect x="668.0" y="82" width="213.0" height="702" rx="7" fill="#f8fafc" stroke="#d5e2ef"/>
+<rect x="671.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="777.0" y="110" font-size="14" font-weight="600" text-anchor="middle">MyBatisPlus</text>
+<path d="M123.0 183H341.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="232.0" y="150" font-size="14" font-weight="400" text-anchor="middle">1. 租户编码映射、应用归属和认</text>
+<text x="232.0" y="171" font-size="14" font-weight="400" text-anchor="middle">证租户</text>
+<rect x="239.0" y="204" width="204.0" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="248.0" y="222" font-size="14" font-weight="400" text-anchor="start">2. 应用名匹配最长前缀</text>
+<rect x="28" y="278" width="844" height="52" rx="7" fill="#f1f8f4" stroke="#d5e2ef"/>
+<text x="42" y="299" font-size="14" font-weight="400" text-anchor="start">3. AK/SK 应用归属须与网关一致；不一致时拒绝</text>
+<path d="M341.0 393H559.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="450.0" y="360" font-size="14" font-weight="400" text-anchor="middle">4. JWT 携带认证租户</text>
+<rect x="457.0" y="414" width="204.0" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="466.0" y="432" font-size="14" font-weight="400" text-anchor="start">5. 先授权，再临时设置</text>
+<text x="466.0" y="453" font-size="14" font-weight="400" text-anchor="start">Holder</text>
+<path d="M559.0 533H777.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="668.0" y="500" font-size="14" font-weight="400" text-anchor="middle">6. 执行数据访问</text>
+<rect x="675.0" y="554" width="204.0" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="684.0" y="572" font-size="14" font-weight="400" text-anchor="start">7. Holder → JWT → 配置兜</text>
+<text x="684.0" y="593" font-size="14" font-weight="400" text-anchor="start">底</text>
+<path d="M777.0 673H559.0" stroke="#3174b9" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="668.0" y="640" font-size="14" font-weight="400" text-anchor="middle">8. 对命中表名规则的 SQL 添加</text>
+<text x="668.0" y="661" font-size="14" font-weight="400" text-anchor="middle">租户条件</text>
+<rect x="457.0" y="694" width="204.0" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="466.0" y="712" font-size="14" font-weight="400" text-anchor="start">9. finally 恢复原值或清除</text>
+<text x="22" y="820" font-size="14" font-weight="400" text-anchor="start">认证租户不取消归属隔离；设置 Holder 本身不代表授权。</text>
+</g></svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="890" viewBox="0 0 340 890" role="img" aria-labelledby="title desc"><title id="title">配置：启动加载与运行变更（纵向阅读）</title><desc id="desc">本图表达加载路径，不将所有属性源简化为一条固定优先级。</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7Z" fill="#3174b9"/></marker></defs><rect width="340" height="890" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="16" y="29" font-size="18" font-weight="600" text-anchor="start">配置：启动加载与运行变更</text>
+<text x="16" y="58" font-size="14" font-weight="400" text-anchor="start">沿编号阅读各参与方与执行步骤。</text>
+<rect x="10" y="80" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="105" font-size="15" font-weight="600" text-anchor="start">1. 部署环境 → 仓库 YAML</text>
+<text x="24" y="127" font-size="14" font-weight="400" text-anchor="start">指定 profile、入口与凭据</text>
+<rect x="10" y="168" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="193" font-size="15" font-weight="600" text-anchor="start">2. 仓库 YAML</text>
+<text x="24" y="215" font-size="14" font-weight="400" text-anchor="start">选择激活文档和 import</text>
+<rect x="10" y="256" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="281" font-size="15" font-weight="600" text-anchor="start">3. 仓库 YAML → Nacos</text>
+<text x="24" y="303" font-size="14" font-weight="400" text-anchor="start">显式导入公共与环境 Data ID</text>
+<rect x="10" y="344" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="369" font-size="15" font-weight="600" text-anchor="start">4. Nacos → 仓库 YAML</text>
+<text x="24" y="391" font-size="14" font-weight="400" text-anchor="start">同一导入列表后项优先</text>
+<rect x="10" y="432" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="457" font-size="15" font-weight="600" text-anchor="start">5. 仓库 YAML → 应用 Bean</text>
+<text x="24" y="479" font-size="14" font-weight="400" text-anchor="start">合并属性源，绑定并校验</text>
+<rect x="10" y="520" width="320" height="92" rx="7" fill="#f1f8f4" stroke="#d5e2ef"/>
+<text x="24" y="545" font-size="15" font-weight="600" text-anchor="start">6. 条件 / 阶段</text>
+<text x="24" y="567" font-size="14" font-weight="400" text-anchor="start">最终值还受命令行、系统属性等影响；按实际</text>
+<text x="24" y="588" font-size="14" font-weight="400" text-anchor="start">PropertySource 排查</text>
+<rect x="10" y="629" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="654" font-size="15" font-weight="600" text-anchor="start">7. Nacos → 应用 Bean</text>
+<text x="24" y="676" font-size="14" font-weight="400" text-anchor="start">发布配置变更通知</text>
+<rect x="10" y="717" width="320" height="92" rx="7" fill="#f1f8f4" stroke="#d5e2ef"/>
+<text x="24" y="742" font-size="15" font-weight="600" text-anchor="start">8. 条件 / 阶段</text>
+<text x="24" y="764" font-size="14" font-weight="400" text-anchor="start">支持刷新且验证通过的参数：确认行为变化；</text>
+<text x="24" y="785" font-size="14" font-weight="400" text-anchor="start">启动或重建类配置：受控重启</text>
+<text x="24" y="854" font-size="14" font-weight="400" text-anchor="start">本图表达加载路径，不将所有属性源简化为一</text>
+<text x="24" y="875" font-size="14" font-weight="400" text-anchor="start">条固定优先级。</text>
+</g></svg>

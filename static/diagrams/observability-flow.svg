@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="712" viewBox="0 0 900 712" role="img" aria-labelledby="title desc"><title id="title">可观测性：采集、导出与查询</title><desc id="desc">日志与指标各自采集；关联同一请求不表示三者天然等量。</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7Z" fill="#3174b9"/></marker></defs><rect width="900" height="712" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="22" y="32" font-size="19" font-weight="600" text-anchor="start">可观测性：采集、导出与查询</text>
+<text x="22" y="61" font-size="14" font-weight="400" text-anchor="start">按编号阅读；虚线箭头表示返回，浅色框表示条件或执行阶段。</text>
+<path d="M123.0 124V647" stroke="#d8e3ef" stroke-dasharray="4 5"/>
+<rect x="17.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="123.0" y="110" font-size="14" font-weight="600" text-anchor="middle">请求 / 服务</text>
+<path d="M341.0 124V647" stroke="#d8e3ef" stroke-dasharray="4 5"/>
+<rect x="235.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="341.0" y="110" font-size="14" font-weight="600" text-anchor="middle">采集与上下文</text>
+<path d="M559.0 124V647" stroke="#d8e3ef" stroke-dasharray="4 5"/>
+<rect x="453.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="559.0" y="110" font-size="14" font-weight="600" text-anchor="middle">OTLP Collector</text>
+<path d="M777.0 124V647" stroke="#d8e3ef" stroke-dasharray="4 5"/>
+<rect x="671.0" y="86" width="208.0" height="38" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="777.0" y="110" font-size="14" font-weight="600" text-anchor="middle">存储 / 查询</text>
+<path d="M123.0 183H341.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="232.0" y="150" font-size="14" font-weight="400" text-anchor="middle">1. HTTP 调用及受管异步任务</text>
+<rect x="239.0" y="204" width="204.0" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="248.0" y="222" font-size="14" font-weight="400" text-anchor="start">2. 关联 Trace、指标与日志</text>
+<path d="M341.0 323H559.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="450.0" y="290" font-size="14" font-weight="400" text-anchor="middle">3. 按各自开关导出三类信号</text>
+<rect x="457.0" y="344" width="204.0" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="466.0" y="362" font-size="14" font-weight="400" text-anchor="start">4. 接收并按 pipeline 处理</text>
+<path d="M559.0 463H777.0" stroke="#3174b9" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="668.0" y="430" font-size="14" font-weight="400" text-anchor="middle">5. 通过实际配置的 exporter</text>
+<text x="668.0" y="451" font-size="14" font-weight="400" text-anchor="middle">写入</text>
+<rect x="675.0" y="484" width="204.0" height="49" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="684.0" y="502" font-size="14" font-weight="400" text-anchor="start">6. 按服务、环境与 traceId</text>
+<text x="684.0" y="523" font-size="14" font-weight="400" text-anchor="start">查询</text>
+<rect x="28" y="558" width="844" height="52" rx="7" fill="#f1f8f4" stroke="#d5e2ef"/>
+<text x="42" y="579" font-size="14" font-weight="400" text-anchor="start">7. 验证 Collector 接收后，还要确认实际存储可查；debug 输出不代表写入成功</text>
+<text x="22" y="680" font-size="14" font-weight="400" text-anchor="start">日志与指标各自采集；关联同一请求不表示三者天然等量。</text>
+</g></svg>

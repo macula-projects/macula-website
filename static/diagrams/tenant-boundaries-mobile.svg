@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="936" viewBox="0 0 340 936" role="img" aria-labelledby="title desc"><title id="title">租户：接入归属与数据访问（纵向阅读）</title><desc id="desc">认证租户不取消归属隔离；设置 Holder 本身不代表授权。</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7Z" fill="#3174b9"/></marker></defs><rect width="340" height="936" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="16" y="29" font-size="18" font-weight="600" text-anchor="start">租户：接入归属与数据访问</text>
+<text x="16" y="58" font-size="14" font-weight="400" text-anchor="start">沿编号阅读各参与方与执行步骤。</text>
+<rect x="10" y="80" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="105" font-size="15" font-weight="600" text-anchor="start">1. 平台登记 → 应用 Gateway</text>
+<text x="24" y="127" font-size="14" font-weight="400" text-anchor="start">租户编码映射、应用归属和认证租户</text>
+<rect x="10" y="168" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="193" font-size="15" font-weight="600" text-anchor="start">2. 应用 Gateway</text>
+<text x="24" y="215" font-size="14" font-weight="400" text-anchor="start">应用名匹配最长前缀</text>
+<rect x="10" y="256" width="320" height="71" rx="7" fill="#f1f8f4" stroke="#d5e2ef"/>
+<text x="24" y="281" font-size="15" font-weight="600" text-anchor="start">3. 条件 / 阶段</text>
+<text x="24" y="303" font-size="14" font-weight="400" text-anchor="start">AK/SK 应用归属须与网关一致；不一致时拒绝</text>
+<rect x="10" y="344" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="369" font-size="15" font-weight="600" text-anchor="start">4. 应用 Gateway → 业务服务</text>
+<text x="24" y="391" font-size="14" font-weight="400" text-anchor="start">JWT 携带认证租户</text>
+<rect x="10" y="432" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="457" font-size="15" font-weight="600" text-anchor="start">5. 业务服务</text>
+<text x="24" y="479" font-size="14" font-weight="400" text-anchor="start">先授权，再临时设置 Holder</text>
+<rect x="10" y="520" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="545" font-size="15" font-weight="600" text-anchor="start">6. 业务服务 → MyBatisPlus</text>
+<text x="24" y="567" font-size="14" font-weight="400" text-anchor="start">执行数据访问</text>
+<rect x="10" y="608" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="633" font-size="15" font-weight="600" text-anchor="start">7. MyBatisPlus</text>
+<text x="24" y="655" font-size="14" font-weight="400" text-anchor="start">Holder → JWT → 配置兜底</text>
+<rect x="10" y="696" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="721" font-size="15" font-weight="600" text-anchor="start">8. MyBatisPlus → 业务服务</text>
+<text x="24" y="743" font-size="14" font-weight="400" text-anchor="start">对命中表名规则的 SQL 添加租户条件</text>
+<rect x="10" y="784" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="809" font-size="15" font-weight="600" text-anchor="start">9. 业务服务</text>
+<text x="24" y="831" font-size="14" font-weight="400" text-anchor="start">finally 恢复原值或清除</text>
+<text x="24" y="900" font-size="14" font-weight="400" text-anchor="start">认证租户不取消归属隔离；设置 Holder 本身</text>
+<text x="24" y="921" font-size="14" font-weight="400" text-anchor="start">不代表授权。</text>
+</g></svg>

@@ -148,6 +148,8 @@ OTLP 网络发送；`macula.observability.enabled=false` 只关闭 Macula 的指
 
 ## 核心功能
 
+{{< process-diagram name="observability-flow" title="可观测性数据流：应用采集、上下文关联、OTLP 导出、Collector 与存储查询" >}}
+
 ### 结构化日志与日志导出
 
 默认 Logback 会幂等挂载名为 `MACULA_OTEL` 的 OpenTelemetry Appender。在自定义

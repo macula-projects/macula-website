@@ -1,0 +1,12 @@
+{{- $name := .Get "name" -}}
+{{- $title := .Get "title" -}}
+{{- $desktop := printf "/diagrams/%s.svg" $name | relURL -}}
+{{- $mobile := printf "/diagrams/%s-mobile.svg" $name | relURL -}}
+<figure class="process-diagram">
+  <a href="{{ $desktop }}" data-fancybox="process-diagram">
+    <picture>
+      <source media="(max-width: 600px)" srcset="{{ $mobile }}">
+      <img src="{{ $desktop }}" width="900" alt="{{ $title }}" loading="lazy">
+    </picture>
+  </a>
+</figure>

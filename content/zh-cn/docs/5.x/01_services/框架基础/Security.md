@@ -142,6 +142,14 @@ public OrderView getById(String orderId) {
 
 ### @Passkey：Controller 参数资源凭证
 
+{{< process-diagram name="passkey-sequence" title="Passkey 时序图：业务过滤列表、响应签发、携带凭证与 Controller 参数验证" >}}
+
+先按时序理解三个阶段，再看下面的 DTO 与接口示例：
+
+1. **列表阶段**：业务先限定资源可见范围，Web 响应处理调用签发器。
+2. **请求阶段**：前端携带选中资源的 ID 和对应凭证，沿用登录身份。
+3. **校验阶段**：绑定参数后验证身份、资源、签名和有效期；失败时 Controller 不执行。
+
 列表 DTO 实现 `PasskeyResource`，框架自动填充 passkey；后续请求通过 Controller 参数上的 `@Passkey` 校验。接口定义如下：
 
 ```java
@@ -242,7 +250,13 @@ public void update(@RequestBody @Valid @Passkey("orderId") UpdateOrderRequest re
 }
 ```
 
-`@Passkey` 校验当前用户、资源编号、签名和有效期，失败时 Controller 不执行。编号支持非空字符串或整数，DTO 属性通过 JavaBean getter 读取。`@Passkey("orderId")` 是属性路径，不是 SpEL；不能写 `#p0`、`#p0.orderId` 或 `returnObject`，也不标在 Service 方法上。请求体示例的 `@Valid` 使用 `javax.validation.Valid`。
+参数注解的写法与限制：
+
+- 参数直接是资源 ID：使用 `@Passkey`。
+- 参数为 DTO：使用 `@Passkey("orderId")`，嵌套属性如 `order.id`，通过 JavaBean getter 读取。
+- 值是属性路径，不是 SpEL；不使用 `#p0`、`#p0.orderId` 或 `returnObject`。
+- 资源编号只支持非空字符串或整数；注解放在 MVC Controller 参数上。
+- 请求体示例的 `@Valid` 使用 `javax.validation.Valid`。
 
 #### 配置与使用边界
 

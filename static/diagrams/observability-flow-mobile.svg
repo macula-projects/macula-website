@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="781" viewBox="0 0 340 781" role="img" aria-labelledby="title desc"><title id="title">可观测性：采集、导出与查询（纵向阅读）</title><desc id="desc">日志与指标各自采集；关联同一请求不表示三者天然等量。</desc><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7Z" fill="#3174b9"/></marker></defs><rect width="340" height="781" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="16" y="29" font-size="18" font-weight="600" text-anchor="start">可观测性：采集、导出与查询</text>
+<text x="16" y="58" font-size="14" font-weight="400" text-anchor="start">沿编号阅读各参与方与执行步骤。</text>
+<rect x="10" y="80" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="105" font-size="15" font-weight="600" text-anchor="start">1. 请求 / 服务 → 采集与上下文</text>
+<text x="24" y="127" font-size="14" font-weight="400" text-anchor="start">HTTP 调用及受管异步任务</text>
+<rect x="10" y="168" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="193" font-size="15" font-weight="600" text-anchor="start">2. 采集与上下文</text>
+<text x="24" y="215" font-size="14" font-weight="400" text-anchor="start">关联 Trace、指标与日志</text>
+<rect x="10" y="256" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="281" font-size="15" font-weight="600" text-anchor="start">3. 采集与上下文 → OTLP Collector</text>
+<text x="24" y="303" font-size="14" font-weight="400" text-anchor="start">按各自开关导出三类信号</text>
+<rect x="10" y="344" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="369" font-size="15" font-weight="600" text-anchor="start">4. OTLP Collector</text>
+<text x="24" y="391" font-size="14" font-weight="400" text-anchor="start">接收并按 pipeline 处理</text>
+<rect x="10" y="432" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="457" font-size="15" font-weight="600" text-anchor="start">5. OTLP Collector → 存储 / 查询</text>
+<text x="24" y="479" font-size="14" font-weight="400" text-anchor="start">通过实际配置的 exporter 写入</text>
+<rect x="10" y="520" width="320" height="71" rx="7" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="24" y="545" font-size="15" font-weight="600" text-anchor="start">6. 存储 / 查询</text>
+<text x="24" y="567" font-size="14" font-weight="400" text-anchor="start">按服务、环境与 traceId 查询</text>
+<rect x="10" y="608" width="320" height="92" rx="7" fill="#f1f8f4" stroke="#d5e2ef"/>
+<text x="24" y="633" font-size="15" font-weight="600" text-anchor="start">7. 条件 / 阶段</text>
+<text x="24" y="655" font-size="14" font-weight="400" text-anchor="start">验证 Collector 接收后，还要确认实际存储</text>
+<text x="24" y="676" font-size="14" font-weight="400" text-anchor="start">可查；debug 输出不代表写入成功</text>
+<text x="24" y="745" font-size="14" font-weight="400" text-anchor="start">日志与指标各自采集；关联同一请求不表示三</text>
+<text x="24" y="766" font-size="14" font-weight="400" text-anchor="start">者天然等量。</text>
+</g></svg>
