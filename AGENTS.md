@@ -60,13 +60,14 @@
 
 ### 开发指引
 
-- latest 顺序固定为：创建示例平台 → 部署 Macula Cloud → 首次接入 → 示例模块说明 → 创建示例服务 → 单元测试 → 运行与测试 → 打包部署。
+- latest 顺序固定为：创建示例平台 → 部署 Macula Cloud → 首次接入 → 示例模块说明 → 创建示例服务 → 测试指南 → 运行与测试 → 打包部署。
 - “开发环境准备”与“创建应用平台”合并为“创建示例平台”；“示例模块说明”包含原有示例配置，不再单列配置章节。保留旧 URL 跳转、原有配置块、来源元数据和页内锚点；同步不得重建已合并的章节。
 
 - 主线以 [GitHub macula-samples](https://github.com/macula-projects/macula-samples) 的**单仓模式**为准，模块是同一仓库内的目录。
 - “创建示例平台 → 获取源码”同时简要提及可用 Archetype 创建自己的项目，生成命令统一链接到快速开始的 Archetype 小节。
 - 多仓模式只在“创建示例平台 → 获取源码”附近简要提及，并链接 [macula-samples-workspace](https://cnb.cool/macula-projects/macula-samples-workspace)。不要放在开发指引首页，也不展开多仓管理教程。
 - 获取源码、模块结构、运行测试和部署步骤统一使用单仓的真实文件与命令。不要混入多仓 `repo.sh` 流程。
+- “测试指南”按单元测试与集成测试分开组织：先讲适用场景、真实与替换边界及执行入口，再讲工具和注解。Spring 切片、容器 Bean 协作与真实基础设施测试按集成测试管理；不能因存在 Mock 就标为单元测试。
 - “运行与测试”介绍 Samples；Examples 的启动说明放在快速开始，不能用 Examples README 覆盖 Samples 指引。
 - 开发指引覆盖模块职责、`application.yml` 的组织规范、profile、Nacos、运行测试与部署；业务开发要交代应用分层及跨服务 API 契约。
 - 区分 Java/IDE、Compose、Vite 对 `.env` 的读取方式，以及本机、容器、浏览器使用的地址；属性前缀以各模块的真实绑定代码为准，不机械统一。

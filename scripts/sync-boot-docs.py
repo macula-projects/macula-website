@@ -28,7 +28,7 @@ EXTRA_CHAPTERS = {
 
 LATEST_CHAPTERS = {
     '04_devmanual/单元测试.md': {
-        'title': '单元测试', 'linkTitle': '单元测试', 'weight': 6,
+        'title': '测试指南', 'linkTitle': '测试指南', 'weight': 6,
     },
     '03_devrules/后端开发规范/Java开发规范.md': {
         'title': 'Java开发规范', 'linkTitle': 'Java开发规范', 'weight': 1,
