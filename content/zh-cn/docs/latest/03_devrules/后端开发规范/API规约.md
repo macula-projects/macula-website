@@ -3,10 +3,14 @@ title: "API规约"
 linkTitle: "API规约"
 weight: 2
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "cd6e30827c78d267cca2f4e0d7b3a6e3dcb01617", "paths": ["content/zh-cn/docs/latest/03_devrules/后端开发规范/阿里规范/Java开发手册(黄山版).pdf", "content/zh-cn/docs/latest/03_devrules/后端开发规范/API规约.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-commons/README.md"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-website", "branch": "master", "commit": "cd6e30827c78d267cca2f4e0d7b3a6e3dcb01617", "paths": ["content/zh-cn/docs/latest/03_devrules/后端开发规范/阿里规范/Java开发手册(黄山版).pdf", "content/zh-cn/docs/latest/03_devrules/后端开发规范/API规约.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-commons/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "6f69e84254b7d1c134d8491c2dbca10dd80de41a", "paths": ["macula-boot-starters/macula-boot-starter-mapstruct/README.md", "macula-boot-starters/macula-boot-starter-mapstruct/src/main/java/dev/macula/boot/mapstruct/DateTimeConverter.java"]}]
 ---
 
 本章约束新建和演进中的 HTTP API。REST 设计原则用于提高接口一致性，既有契约兼容性优先；例如 Samples 的 `/api/v1/app` 不因复数命名建议而强制改名。调用流程见开发指引，本章侧重接口必须满足的约束。
+
+## 时间字段
+
+对外 POJO 中表示具体时刻的字段使用 `Date` 或 `Instant`，JSON 使用带 `Z` / 偏移量的明确表达，或约定好单位的时间戳。不要用 `LocalDateTime` 传递创建、发生、更新时间等时间点；纯日期可按业务使用 `LocalDate`。与 Entity / BO 的转换遵循 [Web 日期时间边界](/docs/latest/01_services/框架基础/web/#数据库日期)，格式化不等于时区转换。
 
 ## 路径与方法
 

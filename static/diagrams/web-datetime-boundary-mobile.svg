@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="848" viewBox="0 0 360 848" role="img" aria-labelledby="title desc"><title id="title">时间点与数据库日期时间的转换（移动版）</title><desc id="desc">五个步骤纵向展示写入链路，读取时反向进行；接口时间点和实体数据库无时区值经同一存储时区转换。</desc><defs><marker id="forward" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#3174b9"/></marker><marker id="back" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#248675"/></marker></defs><rect width="360" height="848" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="14" y="30" font-size="18" font-weight="600" text-anchor="start">时间点与数据库日期时间</text>
+<text x="14" y="56" font-size="14" font-weight="400" text-anchor="start">写入按 1 → 5；读取按 5 → 1 返回。</text>
+<rect x="14" y="77" width="332" height="88" rx="8" fill="#f7faff" stroke="#bfd5ee"/>
+<text x="180.0" y="104" font-size="15" font-weight="600" text-anchor="middle">1. 前端</text>
+<text x="180.0" y="130" font-size="14" font-weight="400" text-anchor="middle">JSON 时间点</text>
+<text x="180" y="152" font-size="14" font-weight="400" text-anchor="middle">含 Z / 偏移量</text>
+<path d="M180 167V189" fill="none" stroke="#3174b9" stroke-width="1.6" marker-end="url(#forward)"/>
+<rect x="14" y="193" width="332" height="88" rx="8" fill="#f7faff" stroke="#bfd5ee"/>
+<text x="180.0" y="220" font-size="15" font-weight="600" text-anchor="middle">2. 接口 POJO</text>
+<text x="180.0" y="246" font-size="14" font-weight="400" text-anchor="middle">Date / Instant</text>
+<text x="180" y="268" font-size="14" font-weight="400" text-anchor="middle">明确的时间点</text>
+<path d="M180 283V305" fill="none" stroke="#3174b9" stroke-width="1.6" marker-end="url(#forward)"/>
+<rect x="14" y="309" width="332" height="88" rx="8" fill="#eaf3ff" stroke="#bfd5ee"/>
+<text x="180.0" y="336" font-size="15" font-weight="600" text-anchor="middle">3. Converter</text>
+<text x="180.0" y="362" font-size="14" font-weight="400" text-anchor="middle">关联存储时区</text>
+<text x="180" y="384" font-size="14" font-weight="400" text-anchor="middle">对象类型转换</text>
+<path d="M180 399V421" fill="none" stroke="#3174b9" stroke-width="1.6" marker-end="url(#forward)"/>
+<rect x="14" y="425" width="332" height="88" rx="8" fill="#f7faff" stroke="#bfd5ee"/>
+<text x="180.0" y="452" font-size="15" font-weight="600" text-anchor="middle">4. Entity / BO</text>
+<text x="180.0" y="478" font-size="14" font-weight="400" text-anchor="middle">LocalDateTime</text>
+<text x="180" y="500" font-size="14" font-weight="400" text-anchor="middle">无时区日历值</text>
+<path d="M180 515V537" fill="none" stroke="#3174b9" stroke-width="1.6" marker-end="url(#forward)"/>
+<rect x="14" y="541" width="332" height="88" rx="8" fill="#f7faff" stroke="#bfd5ee"/>
+<text x="180.0" y="568" font-size="15" font-weight="600" text-anchor="middle">5. 数据库</text>
+<text x="180.0" y="594" font-size="14" font-weight="400" text-anchor="middle">DATETIME 等</text>
+<text x="180" y="616" font-size="14" font-weight="400" text-anchor="middle">无时区字段</text>
+<text x="14" y="675" font-size="14" font-weight="600" text-anchor="start">示例 · 存储时区 Asia/Shanghai</text>
+<text x="14" y="701" font-size="14" font-weight="400" text-anchor="start">接口时刻：2026-11-05T00:50:30Z</text>
+<text x="14" y="727" font-size="14" font-weight="400" text-anchor="start">存储日期时间：2026-11-05 08:50:30</text>
+<text x="14" y="757" font-size="14" font-weight="400" text-anchor="start">当前内置：Date ↔ LocalDateTime。</text>
+<text x="14" y="781" font-size="14" font-weight="400" text-anchor="start">Instant 需显式适配；返回还原同一时刻。</text>
+<text x="14" y="813" font-size="14" font-weight="400" text-anchor="start">JSON 格式、Converter 与 JDBC 设置分开。</text>
+<text x="14" y="837" font-size="14" font-weight="400" text-anchor="start">修改配置不会改写历史数据。</text>
+</g></svg>

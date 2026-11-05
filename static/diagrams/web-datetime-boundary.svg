@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="492" viewBox="0 0 900 492" role="img" aria-labelledby="title desc"><title id="title">时间点与数据库日期时间的转换</title><desc id="desc">写入从前端 JSON 到接口 Date 或 Instant，经 Converter 按存储时区转换为实体 LocalDateTime，JDBC 写入无时区数据库列；读取按相同路径反向还原时间点。</desc><defs><marker id="forward" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#3174b9"/></marker><marker id="back" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#248675"/></marker></defs><rect width="900" height="492" rx="10" fill="#fff"/><g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" fill="#33475b">
+<text x="22" y="32" font-size="19" font-weight="600" text-anchor="start">时间点与存储日期时间：在对象边界做转换</text>
+<text x="22" y="61" font-size="14" font-weight="400" text-anchor="start">实线：请求写入；虚线：读取返回。JSON 格式、对象转换和 JDBC 读写各司其职。</text>
+<text x="22" y="96" font-size="14" font-weight="600" text-anchor="start" fill="#3174b9">写入 →</text>
+<rect x="18" y="112" width="152" height="108" rx="8" fill="#f7faff" stroke="#bfd5ee"/>
+<text x="94.0" y="139" font-size="15" font-weight="600" text-anchor="middle">前端</text>
+<text x="94.0" y="165" font-size="14" font-weight="400" text-anchor="middle">JSON 时间点</text>
+<text x="94.0" y="188" font-size="14" font-weight="400" text-anchor="middle">含 Z / 偏移量</text>
+<path d="M171 166H194" fill="none" stroke="#3174b9" stroke-width="1.6" marker-end="url(#forward)"/>
+<rect x="196" y="112" width="152" height="108" rx="8" fill="#f7faff" stroke="#bfd5ee"/>
+<text x="272.0" y="139" font-size="15" font-weight="600" text-anchor="middle">接口 POJO</text>
+<text x="272.0" y="165" font-size="14" font-weight="400" text-anchor="middle">Date / Instant</text>
+<text x="272.0" y="188" font-size="14" font-weight="400" text-anchor="middle">明确的时间点</text>
+<path d="M349 166H372" fill="none" stroke="#3174b9" stroke-width="1.6" marker-end="url(#forward)"/>
+<rect x="374" y="112" width="152" height="108" rx="8" fill="#eaf3ff" stroke="#bfd5ee"/>
+<text x="450.0" y="139" font-size="15" font-weight="600" text-anchor="middle">Converter</text>
+<text x="450.0" y="165" font-size="14" font-weight="400" text-anchor="middle">关联存储时区</text>
+<text x="450.0" y="188" font-size="14" font-weight="400" text-anchor="middle">对象类型转换</text>
+<path d="M527 166H550" fill="none" stroke="#3174b9" stroke-width="1.6" marker-end="url(#forward)"/>
+<rect x="552" y="112" width="152" height="108" rx="8" fill="#f7faff" stroke="#bfd5ee"/>
+<text x="628.0" y="139" font-size="15" font-weight="600" text-anchor="middle">Entity / BO</text>
+<text x="628.0" y="165" font-size="14" font-weight="400" text-anchor="middle">LocalDateTime</text>
+<text x="628.0" y="188" font-size="14" font-weight="400" text-anchor="middle">无时区日历值</text>
+<path d="M705 166H728" fill="none" stroke="#3174b9" stroke-width="1.6" marker-end="url(#forward)"/>
+<rect x="730" y="112" width="152" height="108" rx="8" fill="#f7faff" stroke="#bfd5ee"/>
+<text x="806.0" y="139" font-size="15" font-weight="600" text-anchor="middle">数据库</text>
+<text x="806.0" y="165" font-size="14" font-weight="400" text-anchor="middle">DATETIME 等</text>
+<text x="806.0" y="188" font-size="14" font-weight="400" text-anchor="middle">无时区字段</text>
+<text x="182" y="247" font-size="13" font-weight="400" text-anchor="middle">JSON ↔ POJO</text>
+<text x="451" y="247" font-size="13" font-weight="400" text-anchor="middle">MapStruct / 业务适配</text>
+<text x="718" y="247" font-size="13" font-weight="400" text-anchor="middle">JDBC 读写</text>
+<path d="M806 279H628" fill="none" stroke="#248675" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#back)"/>
+<path d="M628 279H450" fill="none" stroke="#248675" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#back)"/>
+<path d="M450 279H272" fill="none" stroke="#248675" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#back)"/>
+<path d="M272 279H94" fill="none" stroke="#248675" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#back)"/>
+<text x="22" y="311" font-size="14" font-weight="600" text-anchor="start" fill="#248675">← 返回：数据库值按相同存储时区还原时间点，再输出 JSON</text>
+<rect x="18" y="331" width="864" height="91" rx="8" fill="#f2f7fd" stroke="#d5e2ef"/>
+<text x="35" y="356" font-size="14" font-weight="600" text-anchor="start">同一时刻示例 · 存储时区 Asia/Shanghai</text>
+<text x="35" y="382" font-size="14" font-weight="400" text-anchor="start">接口：2026-11-05T00:50:30Z</text>
+<text x="470" y="382" font-size="14" font-weight="400" text-anchor="start">实体 / 数据库：2026-11-05 08:50:30</text>
+<text x="35" y="406" font-size="14" font-weight="400" text-anchor="start">返回必须还原 00:50:30Z，不能把数据库的 08:50:30 直接加 Z。</text>
+<text x="22" y="451" font-size="14" font-weight="400" text-anchor="start">当前公共转换器：Date ↔ LocalDateTime；Instant 需显式业务适配。</text>
+<text x="22" y="475" font-size="14" font-weight="400" text-anchor="start">存储时区配置不改变 Jackson、JDBC 或数据库设置，也不会改写历史数据。</text>
+</g></svg>
