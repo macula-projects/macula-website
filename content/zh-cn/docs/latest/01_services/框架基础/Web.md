@@ -7,7 +7,7 @@ source_paths: ["macula-boot-starters/macula-boot-starter-web/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "6f69e84254b7d1c134d8491c2dbca10dd80de41a", "paths": ["macula-boot-starters/macula-boot-starter-mapstruct/src/main/java/dev/macula/boot/mapstruct/DateTimeConverter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/config/JacksonConfiguration.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/config/MaculaWebMvcConfigurer.java"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "6f69e84254b7d1c134d8491c2dbca10dd80de41a", "paths": ["macula-boot-starters/macula-boot-starter-mapstruct/src/main/java/dev/macula/boot/mapstruct/DateTimeConverter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/config/JacksonConfiguration.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/config/MaculaWebMvcConfigurer.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "c30ff533d0044dd95ac585253111815702490be5", "paths": ["macula-boot-starters/macula-boot-starter-mapstruct/README.md", "macula-boot-starters/macula-boot-starter-mapstruct/src/main/java/dev/macula/boot/mapstruct/DateTimeConverter.java"]}]
 ---
 
 ## 概览
@@ -48,7 +48,8 @@ macula:
     response-advice: true   # 统一响应处理器，默认true
 spring:
   jackson:
-    date-format: "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" # Date 的示例格式，保留时区偏移
+    # 通常保留默认 ISO 日期解析；以下仅为 Date 的可选固定格式
+    # date-format: "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
     time-zone: UTC                           # 接口输出时区，不是数据库存储时区
 ```
 
@@ -64,7 +65,7 @@ spring:
 | `macula.jackson.local-date-format` | 未设置 | 自定义 LocalDate 格式 |
 | `macula.jackson.local-time-format` | 未设置 | 自定义 LocalTime 格式 |
 
-通用 Jackson 开关使用 `spring.jackson.*`。`spring.jackson.date-format` 不能替代 JSR-310 类型的格式配置；上述 LocalDateTime 格式项用于兼容存量字段，不应据此将它选为接口中表示具体时刻的类型。
+通用 Jackson 开关使用 `spring.jackson.*`。不强制配置固定的日期格式，尤其不能用固定毫秒位数统一解析 Instant 的 ISO 输入。`spring.jackson.date-format` 不能替代 JSR-310 类型的格式配置；上述 LocalDateTime 格式项用于兼容存量字段，不应据此将它选为接口中表示具体时刻的类型。
 
 ## 核心功能
 
@@ -238,6 +239,44 @@ Servlet 应用中的 `TenantFilter` 从 `tenantId` 请求头读取临时租户�
 
 ### 时间格式
 
+#### 各层类型与转换原理
+
+**数据库与接口使用两种时间语义：Entity / BO 按存储约定保留无时区日期时间；对外 POJO 用 `Date` 或 `Instant` 表示具体时刻，在转换边界显式关联存储时区。** 不直接把 Entity 的 `LocalDateTime` 字段复制到接口模型中作为发生时刻。
+
+{{< process-diagram name="web-datetime-boundary" title="日期时间双向流转：前端 JSON、接口 Date 或 Instant、Converter、实体 LocalDateTime 与数据库无时区字段" >}}
+
+| 边界 | 推荐类型 / 表达 | 约束 |
+| --- | --- | --- |
+| 数据库日期时间列 | MySQL `DATETIME(3)` / `DATETIME(6)` 等无时区字段 | 小数秒精度按业务选择；统一约定这些值按哪个存储时区解释 |
+| 与数据库交互的 Entity / BO | `LocalDateTime`；纯日期用 `LocalDate`，日内时刻用 `LocalTime` | 不在字段里附加时区；查询范围参数也按同一存储语义转换 |
+| 对外 Form / DTO / VO 中的发生、创建、更新时间等 | `Date` 或 `Instant` | 表示确定时刻，不使用 `LocalDateTime` 承担此语义 |
+| 前端 JSON 中的具体时刻 | 含 `Z` / 明确偏移量的 ISO 字符串，或契约明确单位的时间戳 | 不传含义不明的裸日期时间字符串；前端展示时再按用户时区格式化 |
+
+`Date` 和 `Instant` 表示时间线上的点，**并不保存用户的时区 ID**；`LocalDateTime` 则没有足够信息独立确定一个时刻。接口若表达生日、账期日期等纯日期，仍可使用 `LocalDate`；这类字段不是发生时刻，不应强行补成零点。
+
+##### 写入与返回的职责
+
+1. **JSON → 接口 POJO：** Web / Jackson 按契约解析时间点。接口 JSON、GET 参数和表单绑定不是同一条解析链，需分别验证。
+2. **接口 POJO → Entity / BO：** Converter 按统一存储时区，将时间点转换成 `LocalDateTime`。不是直接去掉偏移量或时区后缀。
+3. **Entity / BO → 数据库：** JDBC 按数据库列类型读写无时区值。数据库、连接和驱动设置应与存储约定一致，避免隐式二次换算。
+4. **返回响应：** 数据库值经 Entity / BO 取出，由 Converter 按同一存储时区还原 `Date` / `Instant`，再由 Jackson 输出接口 JSON。
+
+以 `Asia/Shanghai` 为存储约定：接口 `2026-11-05T00:50:30Z` 对应实体 `2026-11-05T08:50:30`、数据库 `2026-11-05 08:50:30`。返回时应还原同一个时刻，而不是把 `08:50:30` 直接加 `Z`。
+
+##### 公共日期转换
+
+[MapStruct Starter](/docs/latest/01_services/框架基础/mapstruct/) 的公共转换器同时支持 `Date ↔ LocalDateTime` 和 `Instant ↔ LocalDateTime`，共用 `macula.time.storage-zone`。Instant 直接保留纳秒，Date 路径为毫秒；实际落库精度由数据库列定义决定。普通 MapStruct 与 Plus 的接入方式不同，按该组件文档的两套示例选择，不需要为 Instant 另外编写日期适配器。
+
+JSON 建议保留标准 ISO 输入输出。`spring.jackson.date-format` 不统一控制 Instant，不要为可变精度 ISO 输入强制套用固定 `SSS` 格式。格式约定、对象映射与数据库读写分别验证。
+
+##### 配置的职责
+
+- Jackson 的时区 / 格式配置只控制接口解析与输出；MapStruct 的 `storage-zone` 控制对象映射；JDBC / 数据库会话设置属于持久化边界。一个设置不能代替其他边界。
+- 未配置 `storage-zone` 时，当前公共转换器使用创建 Bean 时的 JVM 默认时区；多实例环境应显式统一，不能让不同容器按不同默认值解释同一列。
+
+格式化只决定字符串的表达，不能为无时区值自动补出正确时间点。类型语义见 [LocalDateTime](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html) 与 [Instant](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Instant.html)。
+
+
 #### 日期传入
 
 http请求传入日期格式的字符串
@@ -299,7 +338,7 @@ enum ISO {
 
 {{% alert title="提示" color="primary" %}}
 
-`spring.jackson.date-format` 不控制 LocalDate / LocalDateTime 的格式。纯日期字段可按契约使用属性注解；表示具体时刻的接口字段应选择 Date / Instant，见下文“数据库日期”。
+`spring.jackson.date-format` 不控制 LocalDate / LocalDateTime 的格式。纯日期字段可按契约使用属性注解；表示具体时刻的接口字段应选择 Date / Instant，见本节开头的“各层类型与转换原理”。
 
 {{% /alert %}}
 
@@ -319,57 +358,13 @@ enum ISO {
 
 #### 数据库日期
 
-**数据库与接口使用两种时间语义：Entity / BO 按存储约定保留无时区日期时间；对外 POJO 用 `Date` 或 `Instant` 表示具体时刻，在转换边界显式关联存储时区。** 不直接把 Entity 的 `LocalDateTime` 字段复制到接口模型中作为发生时刻。
+数据库列、JDBC 与历史数据遵守前面[各层类型与转换原理](#各层类型与转换原理)的存储约定，本节只补充持久化边界。
 
-{{< process-diagram name="web-datetime-boundary" title="日期时间双向流转：前端 JSON、接口 Date 或 Instant、Converter、实体 LocalDateTime 与数据库无时区字段" >}}
-
-| 边界 | 推荐类型 / 表达 | 约束 |
-| --- | --- | --- |
-| 数据库日期时间列 | MySQL `DATETIME(3)` / `DATETIME(6)` 等无时区字段 | 小数秒精度按业务选择；统一约定这些值按哪个存储时区解释 |
-| 与数据库交互的 Entity / BO | `LocalDateTime`；纯日期用 `LocalDate`，日内时刻用 `LocalTime` | 不在字段里附加时区；查询范围参数也按同一存储语义转换 |
-| 对外 Form / DTO / VO 中的发生、创建、更新时间等 | `Date` 或 `Instant` | 表示确定时刻，不使用 `LocalDateTime` 承担此语义 |
-| 前端 JSON 中的具体时刻 | 含 `Z` / 明确偏移量的 ISO 字符串，或契约明确单位的时间戳 | 不传含义不明的裸日期时间字符串；前端展示时再按用户时区格式化 |
-
-`Date` 和 `Instant` 表示时间线上的点，**并不保存用户的时区 ID**；`LocalDateTime` 则没有足够信息独立确定一个时刻。接口若表达生日、账期日期等纯日期，仍可使用 `LocalDate`；这类字段不是发生时刻，不应强行补成零点。
-
-##### 写入与返回的职责
-
-1. **JSON → 接口 POJO：** Web / Jackson 按契约解析时间点。接口 JSON、GET 参数和表单绑定不是同一条解析链，需分别验证。
-2. **接口 POJO → Entity / BO：** Converter 按统一存储时区，将时间点转换成 `LocalDateTime`。不是直接去掉偏移量或时区后缀。
-3. **Entity / BO → 数据库：** JDBC 按数据库列类型读写无时区值。数据库、连接和驱动设置应与存储约定一致，避免隐式二次换算。
-4. **返回响应：** 数据库值经 Entity / BO 取出，由 Converter 按同一存储时区还原 `Date` / `Instant`，再由 Jackson 输出接口 JSON。
-
-以 `Asia/Shanghai` 为存储约定：接口 `2026-11-05T00:50:30Z` 对应实体 `2026-11-05T08:50:30`、数据库 `2026-11-05 08:50:30`。返回时应还原同一个时刻，而不是把 `08:50:30` 直接加 `Z`。
-
-##### 公共转换器与 Instant
-
-最新 [MapStruct Starter](/docs/latest/01_services/框架基础/mapstruct/#使用配置) 提供 `macula.time.storage-zone` 与 `DateTimeConverter`。当前内置的是 `Date ↔ LocalDateTime`，普通 MapStruct 与 Plus 的接入方式不同，详见该组件文档。
-
-接口选择 `Instant` 时，需提供同一存储时区的显式转换。下面是业务转换方法的写法节选，`storageZone` 应与应用的数据库存储约定一致；不是 Starter 已新增的公共 API：
-
-```java
-LocalDateTime toStorageTime(Instant value, ZoneId storageZone) {
-    return value == null ? null : LocalDateTime.ofInstant(value, storageZone);
-}
-
-Instant toApiTime(LocalDateTime value, ZoneId storageZone) {
-    return value == null ? null : value.atZone(storageZone).toInstant();
-}
-```
-
-通过 Mapper 的 `uses` 等方式接入应用自己的适配器，不依赖隐式转换。经 `Date` 中转时只有毫秒精度；直接使用 `Instant` 也仍须遵守数据库列的小数秒精度。
-
-##### 配置和已有数据
-
-- Jackson 的时区 / 格式配置只控制接口解析与输出；MapStruct 的 `storage-zone` 控制对象映射；JDBC / 数据库会话设置属于持久化边界。一个设置不能代替其他边界。
-- 未配置 `storage-zone` 时，当前公共转换器使用创建 Bean 时的 JVM 默认时区；多实例环境应显式统一，不能让不同容器按不同默认值解释同一列。
 - MySQL `TIMESTAMP` 存在按会话时区转换的语义，不应简单写成“对应 ZonedDateTime”。本指南推荐的无时区存储采用 `DATETIME`；已有 `TIMESTAMP` 字段须按实际驱动和数据库行为评估迁移。
 - MySQL `TIME` 还可表达超过一天的时长，只有“日内时刻”语义才适合直接对应 `LocalTime`。
 - 改时区配置不会重写历史值。先核对已有数据的存储约定，再决定配置和迁移，不能只改 JVM 或 JSON 格式后认定问题解决。
 
-验收应覆盖：JSON 输入 → 对象转换 → 实际数据库写入 → 重新读取 → JSON 返回，检查时间点和精度是否一致；至少比较不同 JVM 默认时区的实例，避免只测试格式字符串看起来相同。
-
-类型语义见 [LocalDateTime](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html)、[Instant](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Instant.html)；数据库行为见 [MySQL 日期时间类型](https://dev.mysql.com/doc/refman/8.4/en/datetime.html)。
+验收覆盖 JSON 输入 → 对象转换 → 实际数据库写入 → 重新读取 → JSON 返回，检查时间点和精度是否一致，并比较不同 JVM 默认时区的实例。数据库语义见 [MySQL 日期时间类型](https://dev.mysql.com/doc/refman/8.4/en/datetime.html)。
 
 ### Validator校验
 

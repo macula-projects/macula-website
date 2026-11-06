@@ -39,6 +39,6 @@
 <text x="35" y="382" font-size="14" font-weight="400" text-anchor="start">接口：2026-11-05T00:50:30Z</text>
 <text x="470" y="382" font-size="14" font-weight="400" text-anchor="start">实体 / 数据库：2026-11-05 08:50:30</text>
 <text x="35" y="406" font-size="14" font-weight="400" text-anchor="start">返回必须还原 00:50:30Z，不能把数据库的 08:50:30 直接加 Z。</text>
-<text x="22" y="451" font-size="14" font-weight="400" text-anchor="start">当前公共转换器：Date ↔ LocalDateTime；Instant 需显式业务适配。</text>
+<text x="22" y="451" font-size="14" font-weight="400" text-anchor="start">公共转换器：Date / Instant ↔ LocalDateTime，共用存储时区。</text>
 <text x="22" y="475" font-size="14" font-weight="400" text-anchor="start">存储时区配置不改变 Jackson、JDBC 或数据库设置，也不会改写历史数据。</text>
 </g></svg>

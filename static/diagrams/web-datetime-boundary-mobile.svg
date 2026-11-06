@@ -28,8 +28,8 @@
 <text x="14" y="675" font-size="14" font-weight="600" text-anchor="start">示例 · 存储时区 Asia/Shanghai</text>
 <text x="14" y="701" font-size="14" font-weight="400" text-anchor="start">接口时刻：2026-11-05T00:50:30Z</text>
 <text x="14" y="727" font-size="14" font-weight="400" text-anchor="start">存储日期时间：2026-11-05 08:50:30</text>
-<text x="14" y="757" font-size="14" font-weight="400" text-anchor="start">当前内置：Date ↔ LocalDateTime。</text>
-<text x="14" y="781" font-size="14" font-weight="400" text-anchor="start">Instant 需显式适配；返回还原同一时刻。</text>
+<text x="14" y="757" font-size="14" font-weight="400" text-anchor="start">Date / Instant ↔ LocalDateTime 均支持。</text>
+<text x="14" y="781" font-size="14" font-weight="400" text-anchor="start">Instant 保留纳秒；返回还原同一时刻。</text>
 <text x="14" y="813" font-size="14" font-weight="400" text-anchor="start">JSON 格式、Converter 与 JDBC 设置分开。</text>
 <text x="14" y="837" font-size="14" font-weight="400" text-anchor="start">修改配置不会改写历史数据。</text>
 </g></svg>

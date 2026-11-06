@@ -10,7 +10,7 @@ source_refs: [{"repository": "https://github.com/macula-projects/macula-website"
 
 ## 时间字段
 
-对外 POJO 中表示具体时刻的字段使用 `Date` 或 `Instant`，JSON 使用带 `Z` / 偏移量的明确表达，或约定好单位的时间戳。不要用 `LocalDateTime` 传递创建、发生、更新时间等时间点；纯日期可按业务使用 `LocalDate`。与 Entity / BO 的转换遵循 [Web 日期时间边界](/docs/latest/01_services/框架基础/web/#数据库日期)，格式化不等于时区转换。
+对外 POJO 中表示具体时刻的字段使用 `Date` 或 `Instant`，JSON 使用带 `Z` / 偏移量的明确表达，或约定好单位的时间戳。不要用 `LocalDateTime` 传递创建、发生、更新时间等时间点；纯日期可按业务使用 `LocalDate`。与 Entity / BO 的转换遵循 [Web 日期时间边界](/docs/latest/01_services/框架基础/web/#各层类型与转换原理)，格式化不等于时区转换。
 
 ## 路径与方法
 
