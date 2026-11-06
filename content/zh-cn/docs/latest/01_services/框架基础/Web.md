@@ -61,6 +61,7 @@ spring:
 | `macula.web.response-advice` | `true` | 启用统一响应包装 |
 | `macula.jackson.long-to-string` | `true` | 将 Long、BigInteger、BigDecimal 序列化为字符串 |
 | `macula.jackson.null-to-empty` | `false` | 按字段类型将 null 输出为空值 |
+| `spring.jackson.date-format` | 未设置 | Date / Calendar 的全局格式，不控制 Instant 或其他 Java Time 类型 |
 | `macula.jackson.local-date-time-format` | 未设置 | 自定义 LocalDateTime 格式 |
 | `macula.jackson.local-date-format` | 未设置 | 自定义 LocalDate 格式 |
 | `macula.jackson.local-time-format` | 未设置 | 自定义 LocalTime 格式 |
@@ -267,7 +268,7 @@ Servlet 应用中的 `TenantFilter` 从 `tenantId` 请求头读取临时租户�
 
 [MapStruct Starter](/docs/latest/01_services/框架基础/mapstruct/) 的公共转换器同时支持 `Date ↔ LocalDateTime` 和 `Instant ↔ LocalDateTime`，共用 `macula.time.storage-zone`。Instant 直接保留纳秒，Date 路径为毫秒；实际落库精度由数据库列定义决定。普通 MapStruct 与 Plus 的接入方式不同，按该组件文档的两套示例选择，不需要为 Instant 另外编写日期适配器。
 
-JSON 建议保留标准 ISO 输入输出。`spring.jackson.date-format` 不统一控制 Instant，不要为可变精度 ISO 输入强制套用固定 `SSS` 格式。格式约定、对象映射与数据库读写分别验证。
+JSON 建议保留标准 ISO 输入输出；`spring.jackson.date-format` 不控制 Instant 的格式，具体区别见下文[JSON 时间格式的作用范围](#json-时间格式的作用范围)。格式约定、对象映射与数据库读写分别验证。
 
 ##### 配置的职责
 
@@ -276,6 +277,48 @@ JSON 建议保留标准 ISO 输入输出。`spring.jackson.date-format` 不统�
 
 格式化只决定字符串的表达，不能为无时区值自动补出正确时间点。类型语义见 [LocalDateTime](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html) 与 [Instant](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Instant.html)。
 
+
+#### JSON 时间格式的作用范围
+
+**`spring.jackson.date-format` 不控制 `java.time.Instant` 的序列化或反序列化格式。** 它主要作用于 `java.util.Date`、`Calendar` 等传统日期类型；Instant 使用独立的 Java Time 处理规则，不能用这一项配置统一所有时间类型。
+
+| Java 类型 | `spring.jackson.date-format` 是否控制格式 | 本组件中的处理方式 |
+| --- | --- | --- |
+| `Date` / `Calendar` | 是，未被字段注解或自定义处理器覆盖时 | 使用该日期格式和相应时区配置 |
+| `Instant` | 否 | 默认采用 Java Time 规则；字符串形式通常为带 `Z` 的 ISO 表达，保留可变的小数秒精度 |
+| `LocalDateTime` | 否 | 可用 `macula.jackson.local-date-time-format` 或字段格式注解；仍不表示确定时刻 |
+| `LocalDate` / `LocalTime` | 否 | 分别使用本页对应的 Macula 格式配置或字段格式注解 |
+
+例如，在前面的[集中配置](#配置示例)中启用 Date 的 `yyyy-MM-dd'T'HH:mm:ss.SSSXXX` 格式，并保持 `time-zone: UTC`。接口模型同时包含两种时间点字段：
+
+```java
+import java.time.Instant;
+import java.util.Date;
+
+public record EventVO(Date createdAt, Instant occurredAt) {}
+```
+
+下面是创建响应模型的调用片段：
+
+```java
+Instant time = Instant.parse("2026-11-05T00:50:30.123456789Z");
+EventVO result = new EventVO(Date.from(time), time);
+```
+
+在两者均输出字符串、没有额外字段定制时，JSON 示例为：
+
+```json
+{
+  "createdAt": "2026-11-05T00:50:30.123Z",
+  "occurredAt": "2026-11-05T00:50:30.123456789Z"
+}
+```
+
+Date 本身只有毫秒精度，而 Instant 保留纳秒。Date 的全局格式即使指定 `SSS`，也不会让 Instant 自动收敛为三位小数；修改该格式也不会让 Instant 跟着采用相同的字符串样式。上面的 Jackson 时区配置同样不代表给 Instant 默认的 ISO 表达统一套用本地展示格式。
+
+通常建议保留 Instant 的标准 ISO 输入输出，接受契约范围内不同的小数秒位数。确有固定格式需求时，使用适用于 Instant 的字段级 `@JsonFormat` 或专门的序列化 / 反序列化配置，并验证两端行为与精度；不要认为设置 `spring.jackson.date-format` 就已经完成定制。若全局启用时间戳数字输出，JSON 形态还会受到对应日期时间特性影响，不能仅凭 date-format 判断最终输出。
+
+这些规则只针对 JSON。GET 参数和表单字段走 Spring MVC 的格式转换链；MapStruct 的对象时间转换也独立于 Jackson。Instant 的默认格式路径可参考 [Jackson InstantSerializer 源码](https://github.com/FasterXML/jackson-databind/blob/3.0/src/main/java/tools/jackson/databind/ext/javatime/ser/InstantSerializer.java)。
 
 #### 日期传入
 
@@ -338,7 +381,7 @@ enum ISO {
 
 {{% alert title="提示" color="primary" %}}
 
-`spring.jackson.date-format` 不控制 LocalDate / LocalDateTime 的格式。纯日期字段可按契约使用属性注解；表示具体时刻的接口字段应选择 Date / Instant，见本节开头的“各层类型与转换原理”。
+`spring.jackson.date-format` 不控制 Instant、LocalDate / LocalDateTime 的格式。纯日期字段可按契约使用属性注解；表示具体时刻的接口字段应选择 Date / Instant，见本节开头的“各层类型与转换原理”。
 
 {{% /alert %}}
 
