@@ -427,176 +427,132 @@ signature = hex(Digest(algorithm, plain))
 
 #### 6. 前端代码示例
 
-下面是浏览器 ES Module 接入示例，适用于 Vite 等前端工程，在 HTTPS 或 localhost 下运行。示例与上方 `LocalCryptoService` 约定一致：SM2 使用 **C1C3C2**，密文补回 `04` 前缀；SM4 使用 **ECB / PKCS7**，密钥为 32 位十六进制文本，业务密文以 Base64 传输。自定义 CryptoService 时，应同步调整客户端算法与编码。
+前端采用 **Axios 请求 / 响应拦截器**，直接复用[前端协议示例目录](https://github.com/macula-projects/macula-boot/tree/main/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo)。业务只传普通 `params` / `data`，拦截器获取公钥与保护清单，按入口路径自动决定是否加密、签名，并还原响应 `Result.data`。签名由前端生成、网关验签；当前网关不签名响应，前端没有响应验签步骤。
 
-安装 [sm-crypto](https://github.com/JuneAndGreen/sm-crypto)（示例使用 0.5.8）：
+##### 引入协议工具与 Axios 请求封装
 
-```bash
-npm install sm-crypto@0.5.8
+将下面的文件复制到前端静态资源目录，例如 `/assets/gateway-crypto/`，保留相对目录与许可证。下面的源码链接固定到已核对的提交；页面用的 `demo.js`、表单和诊断面板无需引入业务项目。
+
+| 文件 | 用途 | 完整源码 |
+| --- | --- | --- |
+| `crypto-client.js` | SM2 / SM4、SHA-256 签名、Query 编码、Ant 路径匹配及 Result 处理 | [协议工具](https://github.com/macula-projects/macula-boot/blob/9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/crypto-client.js) |
+| `request.js` | 创建 Axios 实例、缓存并刷新元数据、请求加密 / 签名与响应解密 | [请求封装](https://github.com/macula-projects/macula-boot/blob/9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/request.js) |
+| `vendor/axios.min.js` | Axios 1.21.1 浏览器发行文件 | [Axios 资源](https://github.com/macula-projects/macula-boot/blob/9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/axios.min.js) |
+| `vendor/sm2.js`、`vendor/sm4.js` | sm-crypto 0.5.8 浏览器发行文件 | [SM2](https://github.com/macula-projects/macula-boot/blob/9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/sm2.js)、[SM4](https://github.com/macula-projects/macula-boot/blob/9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/sm4.js) |
+| `vendor/README.md`、`vendor/LICENCE_MIT`、`vendor/AXIOS_LICENSE` | 第三方版本、校验值与许可证 | [资源说明](https://github.com/macula-projects/macula-boot/blob/9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/README.md)、[国密库许可证](https://github.com/macula-projects/macula-boot/blob/9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/LICENCE_MIT)、[Axios 许可证](https://github.com/macula-projects/macula-boot/blob/9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c/macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/AXIOS_LICENSE) |
+
+按依赖顺序加载，随后再执行自己的业务脚本；使用 HTTPS 或 localhost，以便调用浏览器安全随机源与 Web Crypto：
+
+```html
+<script src="/assets/gateway-crypto/vendor/axios.min.js"></script>
+<script src="/assets/gateway-crypto/vendor/sm2.js"></script>
+<script src="/assets/gateway-crypto/vendor/sm4.js"></script>
+<script src="/assets/gateway-crypto/crypto-client.js"></script>
+<script src="/assets/gateway-crypto/request.js"></script>
 ```
 
-将以下代码保存为前端工程的 `src/utils/gateway-request.js`。它获取规则和公钥，提供单次请求密钥、加密、签名及响应解密。为突出协议，**示例不自动匹配 Ant 路径**：调用方根据 `protectUrls.crypto` / `protectUrls.sign` 分别选择 `encrypt` / `sign`；默认两者都启用，对应本页配置中的 `/api/**`。未受保护的接口使用项目原有请求入口。
+##### 创建实例与业务调用
+
+下面代码放在上述资源加载后的业务模块中。`readAccessToken` 替换为项目现有登录态模块的读取函数；路径和字段替换为真实业务接口，并确保入口路径已配置路由、权限与保护规则。代码使用异步函数，普通脚本与模块脚本均可调用。
 
 ```javascript
-import smCrypto from 'sm-crypto';
+// readAccessToken 由现有登录态模块提供，不在前端写死 Token 或应用 SK。
+const request = globalThis.MaculaRequest.createRequest({
+  baseURL: window.location.origin,
+  getToken: () => readAccessToken()
+});
 
-const { sm2, sm4 } = smCrypto;
-const hex = bytes => Array.from(bytes, n => n.toString(16).padStart(2, '0')).join('');
-const randomHex = () => hex(crypto.getRandomValues(new Uint8Array(16)));
-const sha256 = async text => hex(new Uint8Array(
-  await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
-));
+async function loadOrder() {
+  // 可选：提前加载。未提前调用时，首个业务请求会自动加载并缓存元数据。
+  const { protectUrls } = await request.loadCryptoMetadata();
 
-function encryptText(text, key) {
-  const bytes = sm4.encrypt(text, key, { padding: 'pkcs#7', output: 'array' });
-  return btoa(bytes.map(n => String.fromCharCode(n)).join(''));
+  // 传普通 Query；匹配 crypto/sign 清单时自动加密和签名。
+  const detail = await request.get('/api/orders/detail', {
+    params: { orderId: 'ORDER-001' }
+  });
+  return detail.data; // 拦截器返回统一 Result，data 已解密。
 }
 
-function decryptText(cipher, key) {
-  const bytes = Array.from(atob(cipher), c => c.charCodeAt(0));
-  return sm4.decrypt(bytes, key, { padding: 'pkcs#7' });
+async function createOrder() {
+  // 直接传 JSON 对象，不需要业务自行封装 { data: 密文 } 或添加签名头。
+  const result = await request.post('/api/orders', {
+    productCode: 'PRODUCT-001', quantity: 1
+  });
+  return result.data;
 }
 
-// Query 已由 URLSearchParams 解码；与 Java TreeMap 一样排序，空首值不参与签名。
-function signingQuery(params) {
-  return [...new Set(params.keys())].sort()
-    .filter(name => params.get(name) !== '')
-    .map(name => name + '=' + params.get(name)).join('&');
-}
-
-// Token 从现有登录态读取；不要在代码中写死，或把应用 SK 放入浏览器。
-export async function createGatewayRequest(getToken = () => '') {
-  async function metadata(path) {
-    const response = await fetch(path, { cache: 'no-store', redirect: 'error' });
-    const result = await response.json();
-    if (!response.ok || result.success !== true || result.code !== '00000') {
-      throw new Error(result.msg || result.cause || '获取网关元数据失败');
-    }
-    return result.data;
-  }
-  const [publicKey, protectUrls] = await Promise.all([
-    metadata('/gateway/protect/key'), metadata('/gateway/protect/urls')
-  ]);
-  if (!/^04[0-9a-f]{128}$/i.test(publicKey) || !sm2.verifyPublicKey(publicKey)) {
-    throw new Error('SM2 公钥无效');
-  }
-
-  async function request(method, path, {
-    query = {}, data, encrypt = true, sign = true
-  } = {}) {
-    method = method.toUpperCase();
-    const read = ['GET', 'DELETE'].includes(method);
-    if (!read && !['POST', 'PUT', 'PATCH'].includes(method)) {
-      throw new Error('仅支持 GET / DELETE / POST / PUT / PATCH');
-    }
-    const url = new URL(path, location.origin);
-    if (url.origin !== location.origin || url.pathname !== path || url.search || url.hash) {
-      throw new Error('path 须为同源网关入口路径，Query 请单独传入');
-    }
-    if (!encrypt && !sign) throw new Error('普通接口请使用原有请求入口');
-    if (read && data !== undefined) throw new Error('GET / DELETE 不支持 Body');
-    if (!read && encrypt && Object.keys(query).length) {
-      throw new Error('加密 POST / PUT / PATCH 请将参数放入 JSON Body');
-    }
-    // 本例只接收单值 Query，避免数组被隐式序列化。
-    for (const [name, value] of Object.entries(query)) {
-      if (value == null) continue;
-      if (!['string', 'number', 'boolean'].includes(typeof value)) {
-        throw new Error('Query 只支持字符串、数字和布尔值');
-      }
-      url.searchParams.append(name, String(value));
-    }
-    const key = randomHex(); // 每次请求独立生成；不持久化、不写入日志。
-    const headers = { 'sm4-key': '04' + sm2.doEncrypt(key, publicKey, 1) };
-    const token = await getToken();
-    if (token) headers.Authorization = 'Bearer ' + token; // 传入不含 Bearer 前缀的 Token。
-    if (encrypt) headers['sym-alg'] = 'SM4';
-
-    if (read && encrypt && url.search) {
-      const pairs = [...url.searchParams];
-      // 网关整体重建 Query，并非逐字段解码；这些字符无法可靠往返。
-      for (const [name, value] of pairs) {
-        if (!name || /[=&+"\u0000-\u001f]/.test(name) ||
-            /[&+"\u0000-\u001f]/.test(value) ||
-            name === 'data' || name === 'access_token') {
-          throw new Error('当前加密 Query 不支持该参数，请改用 JSON Body');
-        }
-      }
-      const plain = pairs.map(([name, value]) => name + '=' + value).join('&');
-      url.search = new URLSearchParams({ data: encryptText(plain, key) }).toString();
-    }
-
-    let body;
-    if (!read && data !== undefined) {
-      // 本例只接收 JSON 对象/数组，不接收 FormData、文件或预序列化字符串。
-      if (data === null || (Object.getPrototypeOf(data) !== Object.prototype &&
-          !Array.isArray(data))) throw new Error('data 须为 JSON 对象或数组');
-      const plain = JSON.stringify(data);
-      body = encrypt ? JSON.stringify({ data: encryptText(plain, key) }) : plain;
-      headers['Content-Type'] = 'application/json';
-    }
-    if (sign) {
-      const timestamp = String(Date.now()); // Unix 毫秒，不能传秒。
-      const nonce = randomHex();
-      const params = signingQuery(url.searchParams) +
-        (body ? 'SHA-256=' + await sha256(body) : ''); // 此处不额外插入 &。
-      Object.assign(headers, {
-        algorithm: 'SHA-256', timestamp, nonce,
-        signature: await sha256(url.pathname + params + key + timestamp + nonce)
-      });
-    }
-    // body 已是签名使用的最终文本，不能再交给其他拦截器改写。
-    const response = await fetch(url, {
-      method, headers, body, redirect: 'error', cache: 'no-store'
-    });
-    const result = await response.json();
-    // 验签失败等早期响应可能未加密；先判断 HTTP 与 Result，再处理 data。
-    if (!response.ok || result.success !== true || result.code !== '00000') {
-      throw new Error(result.msg || result.cause || `HTTP ${response.status}`);
-    }
-    if (encrypt && result.data != null) {
-      const plain = decryptText(result.data, key);
-      // 对象/数组恢复为 JSON；普通字符串保持原类型，如 "00123"。
-      result.data = plain;
-      if (/^\s*[\[{]/.test(plain)) {
-        try { result.data = JSON.parse(plain); } catch { /* 普通文本。 */ }
-      }
-    }
-    return result;
-  }
-  return { protectUrls, request };
+async function refreshGatewayKey() {
+  // 网关换密钥或调整保护规则后主动刷新；不会自动重放先前的业务请求。
+  await request.loadCryptoMetadata(true);
 }
 ```
 
-业务调用传入普通参数即可；以下路径与字段是接入写法示意，应替换为自己的真实接口，并确保入口路径已配置路由、权限及保护规则：
+`createRequest` 直接返回 Axios 实例，支持常规的 `get` / `post` / `put` / `patch` / `delete` 调用、超时和 `AbortController.signal`。业务通过 `try/catch` 处理 HTTP、超时、取消与 Result 业务失败；不要自动重放可能产生副作用的请求。
+
+保护方式由服务端清单决定，业务无需传入加密 / 签名开关：
+
+| 入口路径命中情况 | 请求处理 | 响应处理 |
+| --- | --- | --- |
+| 同时命中 `crypto`、`sign` | 加密载荷，再对最终密文签名 | 解密成功 Result 的非空 `data` |
+| 只命中 `crypto` | 加密载荷，发送 `sm4-key` / `sym-alg` | 解密成功 Result 的非空 `data` |
+| 只命中 `sign` | 明文载荷参与签名，仍发送 `sm4-key`，不发送 `sym-alg` | 保持明文 |
+| 都未命中 | 保留普通 Axios 参数与载荷，不附加保护头 | 保留普通响应数据，并检查返回的 Result |
+
+封装仅向受保护、同源请求自动补充 `getToken` 返回的 Token；未命中保护清单的接口如需认证，应由现有认证逻辑提供 `Authorization`。跨源请求不自动补充 Token 或密钥，但调用方已设置的 Header 仍会保留。
+
+匹配支持 `*`、`**`、`?` 与简单 `{变量}`，不支持 `{变量:正则}`；不支持的清单会报错。元数据使用独立 Axios 实例加载，缓存公钥和两组清单，并合并并发加载；获取失败会阻止业务请求，不自动退回明文。
+
+##### 关键实现节选
+
+以下节选来自上面链接的完整源码，用于说明协议；实际接入复制完整文件，不把节选当作完整请求封装。
+
+SM2 使用 **C1C3C2**，为密文补回 `04` 点前缀；随机 SM4 密钥为 32 位十六进制字符串。SM4 使用 **ECB / PKCS7**，输出 Base64，与本页 `LocalCryptoService` 约定一致：
 
 ```javascript
-import { createGatewayRequest } from './utils/gateway-request.js';
+function wrapKey(key, publicKey) {
+    if (!/^04[0-9a-f]{128}$/i.test(publicKey) || !sm2.verifyPublicKey(publicKey))
+        throw new Error('网关公钥格式无效，请重新加载。');
+    return '04' + sm2.doEncrypt(key, publicKey, 1);
+}
 
-// readAccessToken 由项目现有登录态模块提供。
-const { protectUrls, request } = await createGatewayRequest(readAccessToken);
-
-// GET：加密 Query → 对密文签名 → 解密响应 data。
-const detail = await request('GET', '/api/orders/detail', {
-  query: { orderId: 'ORDER-001' }
-});
-// detail.data 已是解密后的业务数据；无需再次 JSON.parse 整个 Result。
-
-// POST：加密 JSON → 对最终 {data: ...} 文本计算摘要与签名。
-const created = await request('POST', '/api/orders', {
-  data: { productCode: 'PRODUCT-001', quantity: 1 }
-});
-
-// 仅签名：目标路径应在 sign 清单中，且不要求强制加密。
-// 仍通过 SM2 传递本次密钥，但不发送 sym-alg，响应保持明文。
-// await request('POST', '/api/sign-only', {
-//   data: { orderId: 'ORDER-001' }, encrypt: false, sign: true
-// });
+function encrypt(plain, key) {
+    const bytes = sm4.encrypt(plain, key, { padding: 'pkcs#7', output: 'array' });
+    return btoa(bytes.map((byte) => String.fromCharCode(byte)).join(''));
+}
 ```
 
-加密 GET / DELETE 的参数先按 `name=value&...` 拼成明文，再整体加密；不能先用 `URLSearchParams.toString()` 编码明文参数，否则中文、空格、百分号等可能在网关重建 Query 时发生二次编码。外层 `data` 密文则必须通过 `URLSearchParams` 编码，确保 Base64 中的 `+` 不变成空格。参数中包含 `&`、`+`、双引号等字符时，本例明确拒绝，改用 JSON Body。
+请求拦截器先通过 `request.getUri(config)` 得到实际 URL，再分别匹配加密与签名清单：
 
-调用成功时，应同时确认下游收到明文、业务返回值正确且前端 `result.data` 已还原；改动密文或签名应被拒绝，重放同一 nonce 应失败。网关更换 SM2 密钥后，重新调用 `createGatewayRequest` 获取公钥；不自动重试或降级为明文。示例使用同源访问；跨域部署时需另外允许 `sm4-key`、`sym-alg`、`signature`、`timestamp`、`nonce`、`algorithm` 等请求头，并统一代理转发前后的签名路径。
+```javascript
+const encrypted = settings.protectUrls.crypto.some((pattern) =>
+    crypto.matches(pattern, url.pathname)
+);
+const signed = settings.protectUrls.sign.some((pattern) =>
+    crypto.matches(pattern, url.pathname)
+);
+if (!encrypted && !signed) return config;
+```
+
+加密完成后调用 `signRequest`；JSON Body 先固定为最终发送的文本，再计算 SHA-256，并通过 `transformRequest` 保持原样发送。Query 按参数名排序、只取每个参数的首值且忽略空首值；Query 和 Body 摘要之间不额外插入 `&`：
+
+```javascript
+async function signRequest(url, body, key, timestamp, nonce) {
+    const bodyHash = body == null || body === '' ? null : await sha256(body);
+    const params = signingQuery(url.searchParams) + (bodyHash ? 'SHA-256=' + bodyHash : '');
+    const signature = await sha256(url.pathname + params + key + timestamp + nonce);
+    return { signature, bodyHash, algorithm: 'SHA-256', timestamp, nonce };
+}
+```
+
+`request.js` 将每次请求的密钥保存在以 Axios config 为键的 `WeakMap` 中，响应时读取对应密钥，避免并发请求串用。成功 Result 的 `data` 经 `crypto.decrypt`、`crypto.decodeData` 还原；对象 / 数组解析为 JSON，普通字符串保持字符串。HTTP、超时与取消保留 Axios 错误，Result 失败会拒绝，不对未加密错误强行解密，也不自动重试；结束后清除请求上下文。
+
+##### 接入限制与验证
+
+加密 GET / DELETE 的参数先按 `name=value&...` 拼成明文，再整体加密；不能先对明文调用 `URLSearchParams.toString()`，否则网关重建 Query 时可能二次编码。外层 `data` 密文通过 `URLSearchParams` 编码，保留 Base64 中的 `+`、`/`、`=`。当前协议无法可靠往返 Query 中的 `&`、`+`、双引号、控制字符或非法参数名，封装会拒绝，应改用 JSON Body；也不接受预包装 `data` 或 Query 凭据 `access_token`。
+
+受保护 GET / DELETE 不带 Body；加密 POST / PUT / PATCH 将参数放入 JSON `data`，不使用 Query。封装支持 JSON 请求与 JSON Result 响应，不覆盖文件上传、文件下载或流式接口。不要在签名后继续修改路径、Query 或 Body，也不要重复添加保护头。默认使用 Axios 的 `fetch` 适配器以禁止受保护请求重定向；生产接入省略会展示业务明文的 `onTrace` 诊断回调。
+
+验证时分别检查普通访问、仅加密、仅签名及加密加签名四种清单组合：合法请求应在下游恢复明文，前端得到正确业务结果；篡改载荷或签名、过期时间戳和重放 nonce 应被拒绝。另检查并发请求密钥隔离、公钥刷新、HTTP / Result 失败与取消。不将前端代码验证等同于真实网关联调通过。
 
 ### AK/SK：应用 HMAC 认证
 
