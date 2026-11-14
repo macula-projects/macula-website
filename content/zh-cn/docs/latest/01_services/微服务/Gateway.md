@@ -7,7 +7,7 @@ source_repository: "https://github.com/macula-projects/macula-boot"
 source_branch: "main"
 source_commit: "a0178da198a79cbbf66f7b9354d2c8711703e81e"
 source_paths: ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayProperties.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/crypto/CryptoService.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/constants/GatewayConstants.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/SignCheckGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/CryptoGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ProtectUrlsEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/GrayscalePublishGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/TraceIdGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/BodyGlobalFilter.java"]
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayProperties.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/crypto/CryptoService.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/constants/GatewayConstants.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/SignCheckGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/CryptoGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ProtectUrlsEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/GrayscalePublishGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/TraceIdGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/BodyGlobalFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "291e80dc296587cc1ec4f4979aa6fdb3bd087054", "paths": ["macula-cloud-system/README.md", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysApplicationServiceImpl.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysTenantServiceImpl.java", "macula-cloud-system/src/main/resources/db/migration/V12__application_auth_tenant.sql", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/service/userdetails/SysUserDetailsServiceImpl.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/protocol/oauth2/CustomOAuth2TokenCustomizer.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/form/OAuth2ClientForm.java"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayProperties.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/crypto/CryptoService.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/constants/GatewayConstants.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/SignCheckGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/CryptoGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ProtectUrlsEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/GrayscalePublishGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/TraceIdGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/BodyGlobalFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "291e80dc296587cc1ec4f4979aa6fdb3bd087054", "paths": ["macula-cloud-system/README.md", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysApplicationServiceImpl.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysTenantServiceImpl.java", "macula-cloud-system/src/main/resources/db/migration/V12__application_auth_tenant.sql", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/service/userdetails/SysUserDetailsServiceImpl.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/protocol/oauth2/CustomOAuth2TokenCustomizer.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/form/OAuth2ClientForm.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c", "paths": ["macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/crypto-client.js", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/request.js", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/README.md"]}]
 ---
 
 ## 概览
@@ -424,6 +424,179 @@ signature = hex(Digest(algorithm, plain))
 3. 使用 CryptoService 解密 SM4 密钥及请求内容。
 4. 转发给业务微服务执行原有接口。
 5. 加密响应 Result.data，前端收到后解密。
+
+#### 6. 前端代码示例
+
+下面是浏览器 ES Module 接入示例，适用于 Vite 等前端工程，在 HTTPS 或 localhost 下运行。示例与上方 `LocalCryptoService` 约定一致：SM2 使用 **C1C3C2**，密文补回 `04` 前缀；SM4 使用 **ECB / PKCS7**，密钥为 32 位十六进制文本，业务密文以 Base64 传输。自定义 CryptoService 时，应同步调整客户端算法与编码。
+
+安装 [sm-crypto](https://github.com/JuneAndGreen/sm-crypto)（示例使用 0.5.8）：
+
+```bash
+npm install sm-crypto@0.5.8
+```
+
+将以下代码保存为前端工程的 `src/utils/gateway-request.js`。它获取规则和公钥，提供单次请求密钥、加密、签名及响应解密。为突出协议，**示例不自动匹配 Ant 路径**：调用方根据 `protectUrls.crypto` / `protectUrls.sign` 分别选择 `encrypt` / `sign`；默认两者都启用，对应本页配置中的 `/api/**`。未受保护的接口使用项目原有请求入口。
+
+```javascript
+import smCrypto from 'sm-crypto';
+
+const { sm2, sm4 } = smCrypto;
+const hex = bytes => Array.from(bytes, n => n.toString(16).padStart(2, '0')).join('');
+const randomHex = () => hex(crypto.getRandomValues(new Uint8Array(16)));
+const sha256 = async text => hex(new Uint8Array(
+  await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+));
+
+function encryptText(text, key) {
+  const bytes = sm4.encrypt(text, key, { padding: 'pkcs#7', output: 'array' });
+  return btoa(bytes.map(n => String.fromCharCode(n)).join(''));
+}
+
+function decryptText(cipher, key) {
+  const bytes = Array.from(atob(cipher), c => c.charCodeAt(0));
+  return sm4.decrypt(bytes, key, { padding: 'pkcs#7' });
+}
+
+// Query 已由 URLSearchParams 解码；与 Java TreeMap 一样排序，空首值不参与签名。
+function signingQuery(params) {
+  return [...new Set(params.keys())].sort()
+    .filter(name => params.get(name) !== '')
+    .map(name => name + '=' + params.get(name)).join('&');
+}
+
+// Token 从现有登录态读取；不要在代码中写死，或把应用 SK 放入浏览器。
+export async function createGatewayRequest(getToken = () => '') {
+  async function metadata(path) {
+    const response = await fetch(path, { cache: 'no-store', redirect: 'error' });
+    const result = await response.json();
+    if (!response.ok || result.success !== true || result.code !== '00000') {
+      throw new Error(result.msg || result.cause || '获取网关元数据失败');
+    }
+    return result.data;
+  }
+  const [publicKey, protectUrls] = await Promise.all([
+    metadata('/gateway/protect/key'), metadata('/gateway/protect/urls')
+  ]);
+  if (!/^04[0-9a-f]{128}$/i.test(publicKey) || !sm2.verifyPublicKey(publicKey)) {
+    throw new Error('SM2 公钥无效');
+  }
+
+  async function request(method, path, {
+    query = {}, data, encrypt = true, sign = true
+  } = {}) {
+    method = method.toUpperCase();
+    const read = ['GET', 'DELETE'].includes(method);
+    if (!read && !['POST', 'PUT', 'PATCH'].includes(method)) {
+      throw new Error('仅支持 GET / DELETE / POST / PUT / PATCH');
+    }
+    const url = new URL(path, location.origin);
+    if (url.origin !== location.origin || url.pathname !== path || url.search || url.hash) {
+      throw new Error('path 须为同源网关入口路径，Query 请单独传入');
+    }
+    if (!encrypt && !sign) throw new Error('普通接口请使用原有请求入口');
+    if (read && data !== undefined) throw new Error('GET / DELETE 不支持 Body');
+    if (!read && encrypt && Object.keys(query).length) {
+      throw new Error('加密 POST / PUT / PATCH 请将参数放入 JSON Body');
+    }
+    // 本例只接收单值 Query，避免数组被隐式序列化。
+    for (const [name, value] of Object.entries(query)) {
+      if (value == null) continue;
+      if (!['string', 'number', 'boolean'].includes(typeof value)) {
+        throw new Error('Query 只支持字符串、数字和布尔值');
+      }
+      url.searchParams.append(name, String(value));
+    }
+    const key = randomHex(); // 每次请求独立生成；不持久化、不写入日志。
+    const headers = { 'sm4-key': '04' + sm2.doEncrypt(key, publicKey, 1) };
+    const token = await getToken();
+    if (token) headers.Authorization = 'Bearer ' + token; // 传入不含 Bearer 前缀的 Token。
+    if (encrypt) headers['sym-alg'] = 'SM4';
+
+    if (read && encrypt && url.search) {
+      const pairs = [...url.searchParams];
+      // 网关整体重建 Query，并非逐字段解码；这些字符无法可靠往返。
+      for (const [name, value] of pairs) {
+        if (!name || /[=&+"\u0000-\u001f]/.test(name) ||
+            /[&+"\u0000-\u001f]/.test(value) ||
+            name === 'data' || name === 'access_token') {
+          throw new Error('当前加密 Query 不支持该参数，请改用 JSON Body');
+        }
+      }
+      const plain = pairs.map(([name, value]) => name + '=' + value).join('&');
+      url.search = new URLSearchParams({ data: encryptText(plain, key) }).toString();
+    }
+
+    let body;
+    if (!read && data !== undefined) {
+      // 本例只接收 JSON 对象/数组，不接收 FormData、文件或预序列化字符串。
+      if (data === null || (Object.getPrototypeOf(data) !== Object.prototype &&
+          !Array.isArray(data))) throw new Error('data 须为 JSON 对象或数组');
+      const plain = JSON.stringify(data);
+      body = encrypt ? JSON.stringify({ data: encryptText(plain, key) }) : plain;
+      headers['Content-Type'] = 'application/json';
+    }
+    if (sign) {
+      const timestamp = String(Date.now()); // Unix 毫秒，不能传秒。
+      const nonce = randomHex();
+      const params = signingQuery(url.searchParams) +
+        (body ? 'SHA-256=' + await sha256(body) : ''); // 此处不额外插入 &。
+      Object.assign(headers, {
+        algorithm: 'SHA-256', timestamp, nonce,
+        signature: await sha256(url.pathname + params + key + timestamp + nonce)
+      });
+    }
+    // body 已是签名使用的最终文本，不能再交给其他拦截器改写。
+    const response = await fetch(url, {
+      method, headers, body, redirect: 'error', cache: 'no-store'
+    });
+    const result = await response.json();
+    // 验签失败等早期响应可能未加密；先判断 HTTP 与 Result，再处理 data。
+    if (!response.ok || result.success !== true || result.code !== '00000') {
+      throw new Error(result.msg || result.cause || `HTTP ${response.status}`);
+    }
+    if (encrypt && result.data != null) {
+      const plain = decryptText(result.data, key);
+      // 对象/数组恢复为 JSON；普通字符串保持原类型，如 "00123"。
+      result.data = plain;
+      if (/^\s*[\[{]/.test(plain)) {
+        try { result.data = JSON.parse(plain); } catch { /* 普通文本。 */ }
+      }
+    }
+    return result;
+  }
+  return { protectUrls, request };
+}
+```
+
+业务调用传入普通参数即可；以下路径与字段是接入写法示意，应替换为自己的真实接口，并确保入口路径已配置路由、权限及保护规则：
+
+```javascript
+import { createGatewayRequest } from './utils/gateway-request.js';
+
+// readAccessToken 由项目现有登录态模块提供。
+const { protectUrls, request } = await createGatewayRequest(readAccessToken);
+
+// GET：加密 Query → 对密文签名 → 解密响应 data。
+const detail = await request('GET', '/api/orders/detail', {
+  query: { orderId: 'ORDER-001' }
+});
+// detail.data 已是解密后的业务数据；无需再次 JSON.parse 整个 Result。
+
+// POST：加密 JSON → 对最终 {data: ...} 文本计算摘要与签名。
+const created = await request('POST', '/api/orders', {
+  data: { productCode: 'PRODUCT-001', quantity: 1 }
+});
+
+// 仅签名：目标路径应在 sign 清单中，且不要求强制加密。
+// 仍通过 SM2 传递本次密钥，但不发送 sym-alg，响应保持明文。
+// await request('POST', '/api/sign-only', {
+//   data: { orderId: 'ORDER-001' }, encrypt: false, sign: true
+// });
+```
+
+加密 GET / DELETE 的参数先按 `name=value&...` 拼成明文，再整体加密；不能先用 `URLSearchParams.toString()` 编码明文参数，否则中文、空格、百分号等可能在网关重建 Query 时发生二次编码。外层 `data` 密文则必须通过 `URLSearchParams` 编码，确保 Base64 中的 `+` 不变成空格。参数中包含 `&`、`+`、双引号等字符时，本例明确拒绝，改用 JSON Body。
+
+调用成功时，应同时确认下游收到明文、业务返回值正确且前端 `result.data` 已还原；改动密文或签名应被拒绝，重放同一 nonce 应失败。网关更换 SM2 密钥后，重新调用 `createGatewayRequest` 获取公钥；不自动重试或降级为明文。示例使用同源访问；跨域部署时需另外允许 `sm4-key`、`sym-alg`、`signature`、`timestamp`、`nonce`、`algorithm` 等请求头，并统一代理转发前后的签名路径。
 
 ### AK/SK：应用 HMAC 认证
 
