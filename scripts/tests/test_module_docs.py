@@ -43,6 +43,8 @@ class ModuleDocsTest(unittest.TestCase):
         page = (Path(__file__).resolve().parents[2] /
                 'content/zh-cn/docs/latest/01_services/微服务/Gateway.md').read_text()
         body = page.split('\n---\n', 1)[1]
+        # Allow source attribution links while keeping project setup instructions out of this component page.
+        body = re.sub(r'\]\(https?://[^\s)]+\)', ']', body)
         self.assertNotRegex(body, r'Examples|Samples|macula-boot-examples|macula-example-')
 
     def test_gateway_documents_all_its_capabilities(self):
