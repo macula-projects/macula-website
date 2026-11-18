@@ -5,7 +5,7 @@ linkTitle: "WEB"
 weight: 1
 manual_content: true
 
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "8c57d381e86905e0b73d456ce012c9dd3e37dd54", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "de40118a4d1519a7ac3d47373064a89dc5229a63", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/pom.xml", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/PhoneMaskingSupport.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "8c57d381e86905e0b73d456ce012c9dd3e37dd54", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "de40118a4d1519a7ac3d47373064a89dc5229a63", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/pom.xml", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/PhoneMaskingSupport.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "4b10a6b41154969696a7982db862f12986519467", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/test/java/dev/macula/boot/starter/web/utils/SensitiveUtilTest.java"]}]
 ---
 
 ## 概览
@@ -521,7 +521,7 @@ public class HaveNoBlankValidator implements ConstraintValidator<HaveNoBlank, St
 
 通过使用@Sensitive注解可以令某个字段属性在序列化为JSON时按照一定的规则脱敏，并且预置了如下规则：
 * MOBILE：手机号，如：138****2359
-* CHINESE_NAME_V2：保留首尾、间隔点和斜杠分段，详见下方规则
+* CHINESE_NAME_V2：两字保留末字，三字及以上保留首尾，支持间隔点和斜杠分段，详见下方规则
 * PHONE：自动识别手机或座机，详见下方规则
 * CHINESE_NAME：中文名 ，如：黄**
 * ID_CARD：身份证号，如：如511623********0537
@@ -600,13 +600,20 @@ public @interface Sensitive {
 
 #### 姓名与电话号码脱敏
 
-`CHINESE_NAME` 保留原行为；新增 `CHINESE_NAME_V2` 对应 `SensitiveUtil.handlerUsernameV2`：单字不变，两字保留首字，三字及以上保留首尾，连续隐藏字符压缩为一个 `*`；间隔点保留且不计字数，`/` 分段独立处理。
+`CHINESE_NAME` 保留原行为；新增 `CHINESE_NAME_V2` 对应 `SensitiveUtil.handlerUsernameV2`：单字不变，两字保留末字，三字及以上保留首尾，连续隐藏字符压缩为一个 `*`；间隔点保留且不计字数，`/` 分段独立处理。
 
 | 输入 | CHINESE_NAME_V2 输出 |
 | --- | --- |
+| 张 | 张 |
+| 李四 | *四 |
+| 张小明 | 张*明 |
 | 欧阳娜娜 | 欧*娜 |
+| 阿·依 | *·依 |
+| 张𠮷 | *𠮷 |
 | 阿不都·热合曼 | 阿*·*曼 |
-| 欧阳娜娜/李四 | 欧*娜/李* |
+| 欧阳娜娜/李四 | 欧*娜/*四 |
+
+支持的间隔点为 `·`、`•`、`・`、`.`、`．`，均原样保留且不计入姓名字数；`/` 分段时保留空段，例如 `/张三//李四/ → /*三//*四/`。实现按 Unicode 码点处理生僻汉字，null 和空字符串返回 null。原 `CHINESE_NAME` / `handlerUsername` 的规则保持原样。
 
 ```java
 @Sensitive(Sensitive.Type.CHINESE_NAME_V2)
@@ -614,6 +621,8 @@ private String name;
 @Sensitive(Sensitive.Type.PHONE)
 private String phone;
 ```
+
+姓名规则见[目标分支源码](https://github.com/macula-projects/macula-boot/blob/4b10a6b41154969696a7982db862f12986519467/macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java)，边界输入与期望输出见[对应测试](https://github.com/macula-projects/macula-boot/blob/4b10a6b41154969696a7982db862f12986519467/macula-boot-starters/macula-boot-starter-web/src/test/java/dev/macula/boot/starter/web/utils/SensitiveUtilTest.java)。
 
 ##### 电话规则
 

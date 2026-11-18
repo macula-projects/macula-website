@@ -8,7 +8,7 @@ source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
 
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "6f69e84254b7d1c134d8491c2dbca10dd80de41a", "paths": ["macula-boot-starters/macula-boot-starter-mapstruct/src/main/java/dev/macula/boot/mapstruct/DateTimeConverter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/config/JacksonConfiguration.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/config/MaculaWebMvcConfigurer.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "c30ff533d0044dd95ac585253111815702490be5", "paths": ["macula-boot-starters/macula-boot-starter-mapstruct/README.md", "macula-boot-starters/macula-boot-starter-mapstruct/src/main/java/dev/macula/boot/mapstruct/DateTimeConverter.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "250bb889cb452d2d4182fab61602bab634cdf75b", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/pom.xml", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/PhoneMaskingSupport.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "6f69e84254b7d1c134d8491c2dbca10dd80de41a", "paths": ["macula-boot-starters/macula-boot-starter-mapstruct/src/main/java/dev/macula/boot/mapstruct/DateTimeConverter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/config/JacksonConfiguration.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/config/MaculaWebMvcConfigurer.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "c30ff533d0044dd95ac585253111815702490be5", "paths": ["macula-boot-starters/macula-boot-starter-mapstruct/README.md", "macula-boot-starters/macula-boot-starter-mapstruct/src/main/java/dev/macula/boot/mapstruct/DateTimeConverter.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "250bb889cb452d2d4182fab61602bab634cdf75b", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/pom.xml", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/PhoneMaskingSupport.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "44e56422b8117f799943570bdaf576b181d4bd22", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/test/java/dev/macula/boot/starter/web/utils/SensitiveUtilTest.java"]}]
 ---
 
 ## 概览
@@ -634,7 +634,7 @@ public class HaveNoBlankValidator implements ConstraintValidator<HaveNoBlank, St
 通过使用@Sensitive注解可以令某个字段属性在序列化为JSON时按照一定的规则脱敏，并且预置了如下规则：
 
 * MOBILE：手机号，如：138****2359
-* CHINESE_NAME_V2：保留首尾、间隔点和斜杠分段，详见下方规则
+* CHINESE_NAME_V2：两字保留末字，三字及以上保留首尾，支持间隔点和斜杠分段，详见下方规则
 * PHONE：自动识别手机或座机，详见下方规则
 * CHINESE_NAME：中文名 ，如：黄**
 * ID_CARD：身份证号，如：511623********0537
@@ -715,13 +715,20 @@ public @interface Sensitive {
 
 #### 姓名与电话号码脱敏
 
-`CHINESE_NAME` 保留原行为；新增 `CHINESE_NAME_V2` 对应 `SensitiveUtil.handlerUsernameV2`：单字不变，两字保留首字，三字及以上保留首尾，连续隐藏字符压缩为一个 `*`；间隔点保留且不计字数，`/` 分段独立处理。
+`CHINESE_NAME` 保留原行为；新增 `CHINESE_NAME_V2` 对应 `SensitiveUtil.handlerUsernameV2`：单字不变，两字保留末字，三字及以上保留首尾，连续隐藏字符压缩为一个 `*`；间隔点保留且不计字数，`/` 分段独立处理。
 
 | 输入 | CHINESE_NAME_V2 输出 |
 | --- | --- |
+| 张 | 张 |
+| 李四 | *四 |
+| 张小明 | 张*明 |
 | 欧阳娜娜 | 欧*娜 |
+| 阿·依 | *·依 |
+| 张𠮷 | *𠮷 |
 | 阿不都·热合曼 | 阿*·*曼 |
-| 欧阳娜娜/李四 | 欧*娜/李* |
+| 欧阳娜娜/李四 | 欧*娜/*四 |
+
+支持的间隔点为 `·`、`•`、`・`、`.`、`．`，均原样保留且不计入姓名字数；`/` 分段时保留空段，例如 `/张三//李四/ → /*三//*四/`。实现按 Unicode 码点处理生僻汉字，null 和空字符串返回 null。原 `CHINESE_NAME` / `handlerUsername` 的规则保持原样。
 
 ```java
 @Sensitive(Sensitive.Type.CHINESE_NAME_V2)
@@ -729,6 +736,8 @@ private String name;
 @Sensitive(Sensitive.Type.PHONE)
 private String phone;
 ```
+
+姓名规则见[目标分支源码](https://github.com/macula-projects/macula-boot/blob/44e56422b8117f799943570bdaf576b181d4bd22/macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java)，边界输入与期望输出见[对应测试](https://github.com/macula-projects/macula-boot/blob/44e56422b8117f799943570bdaf576b181d4bd22/macula-boot-starters/macula-boot-starter-web/src/test/java/dev/macula/boot/starter/web/utils/SensitiveUtilTest.java)。
 
 ##### 电话规则
 
