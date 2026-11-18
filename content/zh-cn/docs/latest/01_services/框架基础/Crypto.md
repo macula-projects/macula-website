@@ -7,6 +7,7 @@ source_paths: ["macula-boot-starters/macula-boot-starter-crypto/README.md"]
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "250bb889cb452d2d4182fab61602bab634cdf75b", "paths": ["macula-boot-starters/macula-boot-starter-crypto/README.md", "macula-boot-starters/macula-boot-starter-crypto/pom.xml", "macula-boot-starters/macula-boot-starter-crypto/src/main/java/dev/macula/boot/starter/crypto/cli/ConfigCryptoCli.java", "macula-boot-starters/macula-boot-starter-crypto/src/main/java/dev/macula/boot/starter/crypto/config/CryptoPostProcessor.java", "macula-boot-starters/macula-boot-starter-crypto/src/main/java/dev/macula/boot/starter/crypto/utils/ConfigCryptoUtil.java"]}]
 ---
 
 ## 概览
@@ -74,6 +75,59 @@ java -jar application.jar --macula.crypto.key="${CONFIG_DECRYPTION_KEY}"
 启动时通过上方命令行参数提供 `macula.crypto.key`，不要将解密密钥与密文一起写入配置文件。
 
 配置文件的密文属性需要以 `mpw:` 开头，见集中配置中的 `test.encrypt`。
+
+### 独立配置加解密工具
+
+在仓库根目录使用 JDK 17 或更高版本构建：
+
+```bash
+mvn -pl macula-boot-starters/macula-boot-starter-crypto -am package -DskipTests
+```
+
+产物位于模块 `target/` 下：
+
+- `macula-boot-starter-crypto-6.1.0-SNAPSHOT.jar`：普通 Starter。
+- `macula-boot-starter-crypto-6.1.0-SNAPSHOT-cli.jar`：包含工具及所需 Hutool 依赖的独立可执行 JAR，可单独复制运行，无需 Spring、Nacos 或网络。
+
+以下命令在模块目录执行；版本变更后相应调整文件名。示例密钥仅供演示：
+
+```bash
+# 加密，stdout 输出完整 mpw: 密文
+java -jar target/macula-boot-starter-crypto-6.1.0-SNAPSHOT-cli.jar encrypt --key 'abcdef1234567890' --value 'hello1'
+# 结果：mpw:Or0wNwIcctnekUyDfeN8cw==
+
+# 解密，stdout 输出明文
+java -jar target/macula-boot-starter-crypto-6.1.0-SNAPSHOT-cli.jar decrypt --key 'abcdef1234567890' --value 'mpw:Or0wNwIcctnekUyDfeN8cw=='
+
+# 交互选择加密/解密，再输入密钥和内容
+java -jar target/macula-boot-starter-crypto-6.1.0-SNAPSHOT-cli.jar
+
+# 也可仅省略密钥或内容，缺失项通过交互补齐
+java -jar target/macula-boot-starter-crypto-6.1.0-SNAPSHOT-cli.jar encrypt
+
+# 帮助
+java -jar target/macula-boot-starter-crypto-6.1.0-SNAPSHOT-cli.jar --help
+```
+
+密钥必须与应用启动时传入的 `macula.crypto.key` 相同，为 16、24 或 32 个 UTF-8 字节，不能全为空白。合法密钥和内容均不会自动去除首尾空白。空字符串明文通过 `--value ''` 输入；内容包含换行时使用带引号的参数，交互每次读取一整行。以短横线开头的普通值可直接传入；值恰好为 `--key`、`--value`、`--help` 时，请省略该选项并通过交互输入。
+
+命令行参数可能出现在历史或进程信息中。有 Console 的交互终端会隐藏密钥及待加密明文；IDE 或管道无 Console 时从 UTF-8 stdin 读取，不保证终端不回显。提示和错误写 stderr，参数模式成功时 stdout 只有结果及换行；退出码 0 表示成功或帮助，2 表示参数/格式错误，1 表示输入或加解密失败。
+
+也可直接调用工具类：
+
+```java
+String encrypted = ConfigCryptoUtil.encrypt("hello1", "abcdef1234567890");
+String plaintext = ConfigCryptoUtil.decrypt(encrypted, "abcdef1234567890");
+// import dev.macula.boot.starter.crypto.utils.ConfigCryptoUtil;
+```
+
+#### 验证与故障定位
+
+1. 用演示密钥加密 `hello1`，应得到 `mpw:Or0wNwIcctnekUyDfeN8cw==`；再解密应还原 `hello1`。
+2. 将密文写入本页的配置示例，并用相同的 `macula.crypto.key` 启动应用，确认读取的是明文值。CLI 往返成功只验证工具，不代表配置中心或应用启动已通过联调。
+3. 找不到可执行 JAR 时，确认构建执行了 `package` 且文件名带 `-cli`；参数错误查看 stderr 与退出码，密钥错误首先核对 UTF-8 字节长度及空白字符。
+
+工具沿用配置协议 AES/ECB/PKCS5Padding 和 Base64；该协议无认证，无法保证识别所有错误密钥或密文篡改。工具不会改变 `CryptoPostProcessor` 的配置来源或动态刷新支持范围。
 
 ### MyBatis的数据库字段加密
 

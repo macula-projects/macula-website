@@ -7,7 +7,8 @@ source_paths: ["macula-boot-starters/macula-boot-starter-mybatis-plus/README.md"
 source_branch: "main"
 source_commit: "3fbd28dc74d683055d27b81929971c0e45047878"
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusProperties.java"]}]
+
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-commons/src/main/java/dev/macula/boot/context/TenantContextHolder.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-security/src/main/java/dev/macula/boot/starter/security/utils/SecurityUtils.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusProperties.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "250bb889cb452d2d4182fab61602bab634cdf75b", "paths": ["macula-boot-starters/macula-boot-starter-mybatis-plus/README.md", "macula-boot-starters/macula-boot-starter-mybatis-plus/pom.xml", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/handler/MyDataPermissionHandler.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/utils/SecurityUtils.java"]}]
 ---
 
 ## 概览
@@ -155,13 +156,13 @@ IdType.ASSIGN_ID和ASSIGN_UUID：分别使用雪花算法和 UUID，如要自定
 
 | 优先级 | 读取位置 | 含义 |
 | --- | --- | --- |
-| 1 | `TenantContextHolder.getCurrentTenantId()` | 当前执行上下文的临时租户 |
+| 1 | `TenantContextHolder.getCurrentTenantId()` | 仅已认证且非匿名 ROOT 可采用的临时租户 |
 | 2 | `SecurityUtils.getTenantId()` | 登录 / AK/SK 认证后，内部 JWT 携带的默认业务租户 |
 | 3 | `macula.mybatis-plus.tenant-id` | 前两者为空时的配置兜底值，默认 `1` |
 
 OAuth Client 的租户配置决定登录关联的租户；AK/SK 应用的认证租户决定认证后的业务租户。应用归属租户另用于网关接入隔离，不由此插件选择或改变。概念关系见[请求链路](/docs/latest/00_introduce/请求链路/#租户边界)。
 
-业务已确认当前调用者有权访问目标租户后，可临时切换。下面是同步业务方法内的示意代码；`targetTenantId` 必须先经过业务授权，不能直接信任请求参数：
+已认证 ROOT 在业务确认目标租户权限后，可临时切换。下面是同步业务方法内的示意代码；`targetTenantId` 必须先经过业务授权，不能直接信任请求参数：
 
 ```java
 import dev.macula.boot.context.TenantContextHolder;
@@ -169,7 +170,7 @@ import dev.macula.boot.context.TenantContextHolder;
 Long previousTenantId = TenantContextHolder.getCurrentTenantId();
 try {
     TenantContextHolder.setCurrentTenantId(targetTenantId);
-    // 对命中租户表规则的 SQL，插件优先使用 targetTenantId。
+    // 当前身份为已认证 ROOT 时，命中租户表规则的 SQL 优先使用 targetTenantId。
     orderService.processForTenant();
 } finally {
     if (previousTenantId == null) {
@@ -255,6 +256,10 @@ public enum DataScopeEnum implements IBaseEnum<Integer> {
 
 从原理来说，实际上是通过实现DataPermissionHandler，对具体的SQL语句根据用户的数据权限重新按照部门ID或者用户ID生成新的SQL语句过滤数据。
 
+##### 数据权限用户名约定
+
+SELF 用户名仅接受 `[A-Za-z0-9_]+`；空值或非法字符生成 `1 = 0`，不会删除字符后继续查询。合法值使用单引号 SQL 字面量。原 WHERE 与权限条件分别加括号，避免 OR 分支绕过；ALL / DEFAULT 策略保持原行为。
+
 #### 分页插件
 
 引入PaginationInnerInterceptor分页拦截器，返回IPage<T>接口，具体可参考[官方文档](https://baomidou.com/pages/97710a)
@@ -321,6 +326,10 @@ public class BasePageQuery {
 | 隔离与范围 | 验证无临时值时使用认证租户、有授权临时值时优先使用该值、结束后恢复原值；确认表名命中 tenant-suffixes，未经授权的租户覆盖被后端拒绝。 |
 | 查询异常 | 先核对 mapper 扫描与 mapper-locations，再检查 SQL 和参数；只在范围明确的测试环境查看脱敏 SQL。 |
 | 事务与迁移 | 异常回滚后不应留下部分业务写入；分别验证空库初始化与已有库升级，不能通过重跑 V1 清库验收。 |
+
+### 租户切换身份限制
+
+只有已认证且非匿名的 ROOT 可以采用 Holder 中的临时租户；非 ROOT 忽略提示，继续按认证租户、配置兜底选择，不因提示本身返回 403。Holder 不执行目标租户授权，不修改 JWT。
 
 ## 依赖引入
 

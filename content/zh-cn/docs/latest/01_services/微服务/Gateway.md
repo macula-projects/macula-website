@@ -7,7 +7,8 @@ source_repository: "https://github.com/macula-projects/macula-boot"
 source_branch: "main"
 source_commit: "a0178da198a79cbbf66f7b9354d2c8711703e81e"
 source_paths: ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayProperties.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/crypto/CryptoService.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/constants/GatewayConstants.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/SignCheckGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/CryptoGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ProtectUrlsEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/GrayscalePublishGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/TraceIdGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/BodyGlobalFilter.java"]
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayProperties.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/crypto/CryptoService.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/constants/GatewayConstants.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/SignCheckGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/CryptoGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ProtectUrlsEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/GrayscalePublishGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/TraceIdGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/BodyGlobalFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "291e80dc296587cc1ec4f4979aa6fdb3bd087054", "paths": ["macula-cloud-system/README.md", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysApplicationServiceImpl.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysTenantServiceImpl.java", "macula-cloud-system/src/main/resources/db/migration/V12__application_auth_tenant.sql", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/service/userdetails/SysUserDetailsServiceImpl.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/protocol/oauth2/CustomOAuth2TokenCustomizer.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/form/OAuth2ClientForm.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c", "paths": ["macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/crypto-client.js", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/request.js", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/README.md"]}]
+
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "a0178da198a79cbbf66f7b9354d2c8711703e81e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerAuthorizationManager.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/KongApiGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ApiKeyAuthenticationFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/NimbusJwkSetEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayProperties.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/crypto/CryptoService.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/constants/GatewayConstants.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/SignCheckGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/CryptoGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/ProtectUrlsEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/GrayscalePublishGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/TraceIdGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/BodyGlobalFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "5ff9b5c8e6166449ced7512cd3bf74a672aa922e", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/utils/KongApiUtils.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java"]}, {"repository": "https://github.com/macula-projects/macula-cloud", "branch": "main", "commit": "291e80dc296587cc1ec4f4979aa6fdb3bd087054", "paths": ["macula-cloud-system/README.md", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysApplicationServiceImpl.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/service/impl/SysTenantServiceImpl.java", "macula-cloud-system/src/main/resources/db/migration/V12__application_auth_tenant.sql", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/service/userdetails/SysUserDetailsServiceImpl.java", "macula-cloud-iam/src/main/java/dev/macula/cloud/iam/protocol/oauth2/CustomOAuth2TokenCustomizer.java", "macula-cloud-system/src/main/java/dev/macula/cloud/system/form/OAuth2ClientForm.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "9e20e4d1357d96f6c71155ebf8b1a31eb9fd7b3c", "paths": ["macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/crypto-client.js", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/request.js", "macula-boot-examples/macula-example-alibaba-gateway/src/main/resources/static/crypto-demo/vendor/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "main", "commit": "250bb889cb452d2d4182fab61602bab634cdf75b", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayProperties.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/BodyGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/CryptoGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/CachingReactiveOpaqueTokenIntrospector.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java"]}]
 ---
 
 ## 概览
@@ -105,6 +106,13 @@ spring:
     context-propagation: auto
 macula:
   gateway:
+    max-cached-body-size: 10MB
+    jwt:
+      key-store: ${GATEWAY_KEY_STORE}
+      key-store-type: ${GATEWAY_KEY_STORE_TYPE:JKS}
+      key-store-password: ${GATEWAY_KEY_STORE_PASSWORD}
+      key-alias: ${GATEWAY_KEY_ALIAS:jose}
+      # key-password 未配置时沿用 KeyStore 密码
     # 接口保护可选；启用时还需提供 CryptoService Bean
     sign-switch: true
     crypto-switch: true
@@ -123,7 +131,6 @@ macula:
     rm-opaque-token:
       enabled: true
     rm-opaque-token-endpoint: /gateway/rm/opaqueToken
-    force-hmac-rm-opaque-token-endpoint: true
     apikey:
       enabled: true
     # 灰度能力按需开启
@@ -176,7 +183,6 @@ Metrics、Traces、Logs 的采集及导出见 [Observability](/docs/latest/01_se
 | `apikey.enabled` | `true` | 创建 API Key 认证过滤器 |
 | `rm-opaque-token.enabled` | `true` | 创建 Token 缓存移除端点过滤器 |
 | `rm-opaque-token-endpoint` | `/gateway/rm/opaqueToken` | 缓存移除路径 |
-| `force-hmac-rm-opaque-token-endpoint` | `true` | 移除 Token 缓存时强制 HMAC 校验 |
 | `security.ignore-urls` | 空列表并合并内置白名单 | 放行认证的路径 |
 | `security.only-auth-urls` | 空列表 | 只认证、不检查 URL 角色权限的路径 |
 | `security.default-url-require-check` | `false` | 未配置 URL 权限时是否要求鉴权，生产需明确评估 |
@@ -190,6 +196,23 @@ Metrics、Traces、Logs 的采集及导出见 [Observability](/docs/latest/01_se
 `protect-urls.sign` 与 `protect-urls.crypto` 分别管理签名和加密范围，可以按业务配置不同清单。只有 CryptoService 存在时，接口签名、加解密及保护规则 / 公钥端点才会注册；仅设置 YAML 不会创建密钥实现。
 
 当前过滤器中，`sign-switch` / `crypto-switch` 参与“缺少参数时是否强制拒绝”的判断；请求已携带完整签名或加密参数时仍会进入相应处理，不能将这两个配置理解为无条件跳过已提交参数的校验。
+
+#### JWT 签名材料
+
+`spring.security.oauth2.resourceserver.jwt.issuer-uri` 用于下游 JWT 的签发者标识，默认 `http://127.0.0.1:9010`。签名密钥支持以下网关配置。未配置时保留原 `classpath:jwk/jose.jks`、`jose` 别名及原密码，旧部署签发密钥和下游验证关系不变；默认组件加载内置材料时输出 WARN。内置私钥公开，生产应配置独立签名材料，这次兼容调整不消除默认密钥风险。
+
+| 属性 | 默认值 / 行为 |
+| --- | --- |
+| `macula.gateway.jwt.key-store` | `classpath:jwk/jose.jks`；支持 `classpath:` 或 `file:` |
+| `macula.gateway.jwt.key-store-type` | `JKS`，可配置 `PKCS12` |
+| `macula.gateway.jwt.key-store-password` | 保留原默认值，生产通过环境变量注入 |
+| `macula.gateway.jwt.key-alias` | `jose` |
+| `macula.gateway.jwt.key-password` | 未提供时使用 KeyStore 密码 |
+| `macula.gateway.max-cached-body-size` | `10MB`，即 10,485,760 字节；必须大于零且不超过 2,147,483,647 字节 |
+
+可使用 Spring 标准环境变量 `MACULA_GATEWAY_JWT_KEY_STORE`、`MACULA_GATEWAY_JWT_KEY_STORE_TYPE`、`MACULA_GATEWAY_JWT_KEY_STORE_PASSWORD`、`MACULA_GATEWAY_JWT_KEY_ALIAS`、`MACULA_GATEWAY_JWT_KEY_PASSWORD` 覆盖，也可在配置中心设置同名属性。显式资源、密码或别名错误会启动失败，不静默回退。
+
+自定义 `JWKSource<SecurityContext>` 或 `JwtEncoder` Bean 分别按类型优先。仅替换编码器时，仍创建默认 JWKSource，兼容 `JwtEncoder customEncoder(JWKSource<SecurityContext> source)` 的原有装配方式；因此默认 source 的显式 KeyStore 配置也必须有效。使用独立密钥体系的编码器应同时提供对应的 JWKSource。密码不进入配置对象 toString 或异常消息。
 
 ## 核心功能
 
@@ -210,11 +233,11 @@ Spring Security 通过外层 `WebFilter` 参与请求处理；只有请求通过
 | 过滤器 | order | 职责与后续流向 |
 | --- | --- | --- |
 | `NimbusJwkSetEndpointFilter` | MIN + 100 | 匹配 `/oauth2/jwks`，输出公开 JWK 后直接返回；需有 JWKSource |
-| `RmOpaqueTokenEndpointFilter` | MIN + 200 | 匹配缓存移除请求，按本端点的 HMAC 规则校验并处理后返回；可通过开关关闭 |
+| `RmOpaqueTokenEndpointFilter` | MIN + 200 | 匹配缓存移除请求，按专用资源服务器 API Key 校验并处理后返回；可通过开关关闭 |
 | `ProtectUrlsEndpointFilter` | MIN + 300 | 返回保护路径清单或 SM2 公钥，需有 CryptoService；匹配后就地响应 |
 | `ApiKeyAuthenticationFilter` | MIN + 400 | 识别 API Key，校验并建立认证上下文，随后继续进入安全链；可通过开关关闭 |
 
-这些本地端点在 Spring Security 与路由过滤链之前处理，不能指望后面的 URL 授权或 HMAC GlobalFilter 替它们校验。缓存移除端点有自己的 HMAC 检查；公钥与保护规则端点按各自实现返回公开接入资料。未命中本地端点的请求继续向后执行。
+这些本地端点在 Spring Security 与路由过滤链之前处理，不能指望后面的 URL 授权或 HMAC GlobalFilter 替它们校验。缓存移除端点有自己的专用 API Key 检查；公钥与保护规则端点按各自实现返回公开接入资料。未命中本地端点的请求继续向后执行。
 
 ### API Key：平台应用身份
 
@@ -600,7 +623,7 @@ System 维护 `macula:cloud:system:tenants` Hash（租户编码 → ID）；网�
 - 应用归属 `20`、认证租户 `30`：归属不符，不能接入此网关。
 - 不同认证租户仅平台 ROOT 可配置，目标租户必须存在；该配置不放宽归属隔离。
 
-该校验适用于标准 HMAC 请求入口及启用 HMAC 的 opaque token 清理入口；API Key 不在此次归属隔离规则范围内。认证结果保存在当前请求的可信属性中，再转为 JWT，不向 `TenantContextHolder` 写入临时切换值。调用方传入租户头不会改变网关归属或应用认证租户；下游业务是否允许临时切换，另按 [MyBatisPlus 租户插件](/docs/latest/01_services/框架基础/mybatisplus/#租户插件)落实。
+该校验适用于标准 HMAC 请求入口。opaque token 清理入口独立使用资源服务器 API Key；业务 API Key 不在此次归属隔离规则范围内。认证结果保存在当前请求的可信属性中，再转为 JWT，不向 `TenantContextHolder` 写入临时切换值。调用方传入租户头不会改变网关归属或应用认证租户；下游业务是否允许临时切换，另按 [MyBatisPlus 租户插件](/docs/latest/01_services/框架基础/mybatisplus/#租户插件)落实。
 
 租户映射和应用缓存须与当前 System 同步。升级次序及登记字段见[首次接入](/docs/latest/04_devmanual/首次接入macula-cloud/#1-登记业务应用)；不要在认证租户已不同于归属租户时直接回滚旧网关。
 
@@ -622,7 +645,7 @@ JWT 携带对应 Principal 的可信声明；Token 可带用户角色 / scope，
 
 `GATEWAY_JWK_SET_URI` 填写可访问的网关公钥 URL，例如 `http://application-gateway:8080/oauth2/jwks`；它用于验证网关签发的 JWT，与 IAM 的 introspection 地址分别配置。
 
-当前 `JwtConfiguration` 从 `jwk/jose.jks` 加载 RSA 签名材料，可通过自定义 `JWKSource<SecurityContext>` Bean 覆盖；没有单独的 YAML key-store 配置项。部署时提供目标环境的签名材料，使网关签发与下游验签保持一致。
+当前 `JwtConfiguration` 从 `jwk/jose.jks` 加载 RSA 签名材料，可通过自定义 `JWKSource<SecurityContext>` Bean 覆盖；支持 `macula.gateway.jwt` 配置，见下文签名材料与缓存边界。部署时提供目标环境的签名材料，使网关签发与下游验签保持一致。
 
 JWT 的 `iss` 声明由 `spring.security.oauth2.resourceserver.jwt.issuer-uri` 设置，当前默认 `http://127.0.0.1:9010`。这里是网关签发内部 JWT 的标识配置；JWK 验签材料与下文接口保护使用的 SM2 / SM4 密钥各自独立。
 
@@ -692,20 +715,7 @@ public class RedisConfiguration {
 
 ### Token 缓存移除
 
-默认提供 `POST /gateway/rm/opaqueToken`，用于清除网关缓存的外部 Token 身份信息和关联 JWT 缓存：
-
-```http
-POST /gateway/rm/opaqueToken
-Authorization: hmac username="<AK>", algorithm="hmac-sha256", signature="<Base64签名>"
-Date: <当前请求的HTTP-date>
-Content-Type: application/json
-
-{"token":"<需要清除网关缓存的外部Token>"}
-```
-
-默认要求有效 HMAC，调用方需按 AK/SK 规则为本次请求（包括 JSON Body）签名。开关为 `macula.gateway.rm-opaque-token.enabled`，路径可通过 `rm-opaque-token-endpoint` 调整；`force-hmac-rm-opaque-token-endpoint` 默认 `true`。
-
-该操作只移除网关缓存，不等于撤销 IAM Token，也不会使已经签发给调用方的 JWT 立即失效。凭据撤销与有效期仍需结合认证平台和实际验证链路处理。
+使用 IAM 专用资源服务器 API Key，协议、System Redis 凭据与集群要求见[撤销回调](#iam-专用-api-key-撤销回调)。清理网关缓存不等于撤销 IAM Token，也不取消已经开始的请求。
 
 ### Trace ID 响应头
 
@@ -723,6 +733,37 @@ Content-Type: application/json
 | 三种身份分开验收 | 分别测试 Token、HMAC、API Key 的合法与非法请求；某一种成功不代表其他认证分支已验证。 |
 | 接口保护 | 测试缺少参数、过期时间戳、重复 nonce、修改载荷与合法签名；再验证下游收到明文及前端能解密返回数据。 |
 | 转发与 JWT | 核对入口原始路径、StripPrefix 后路径、服务注册名与网关公钥来源；下游必须继续执行自己的安全检查。 |
+
+### 签名材料与缓存边界
+
+签名配置见[使用配置](#使用配置)。
+
+签名/加密的 POST、PUT、PATCH 请求在本过滤器首次聚合时按实际字节数限制，包括未知 Content-Length 的分块流；聚合超限通过标准 HTTP 413 异常终止后续订阅。已有非 null 缓存对象按原逻辑直接传递，不转换类型、不重复读取或重新限额；普通未进入缓存分支的请求保持原行为。可用 `MACULA_GATEWAY_MAX_CACHED_BODY_SIZE` 调整，不能用 0 或负数关闭限制。过滤器不记录密钥和请求/响应明文。
+
+Opaque Token 缓存命中仍校验 `exp`，过期缓存删除并重新内省；写入 TTL 使用从当前时间到 `exp` 的剩余时间，而非 `exp - iat`。非法 `exp` 拒绝认证；无 `exp` 时最多缓存 5 分钟。缓存键和撤销接口保持不变。
+
+派生 JWT 的缓存键在原前缀后增加类型段：有 `JWT_ID` 使用 `id:`，否则使用 `u:`；保留 API Key 前缀和租户段，避免 ID 与主体名相同导致碰撞。升级不回读旧派生键，旧值自然过期，撤销入口继续调用 `AddJwtGlobalFilter.buildKey`。应用间隔离沿用各网关独立缓存的部署方式。
+
+
+### IAM 专用 API Key 撤销回调
+
+
+复用 `POST /gateway/rm/opaqueToken`（由 `macula.gateway.rm-opaque-token-endpoint` 配置），请求为 `Authorization: Bearer <专用 API Key>`、JSON `{"token":"<access token>"}`。IAM 在资源服务器接入设置中维护实际 HTTPS 回调地址，首次保存生成独立 Key，与内省 OAuth client_secret 分开。成功响应沿用 `Result.success()`。
+
+`RmOpaqueTokenEndpointFilter` 从 `sysRedisTemplate` 读取 System 发布的凭据摘要和路径，按 `spring.security.oauth2.resourceserver.opaquetoken.client-id` 绑定本网关身份。只接受单一 Header 凭据，拒绝 Query、重复 Header、错误 Key、错误资源服务器、错误路径及缺失/不可读取的缓存；失败不能降级绕过认证。清理端点仅认证 API Key；无凭据及 HMAC 请求均拒绝，没有认证关闭开关。构造器直接注入 `sysRedisTemplate`，自定义装配也须直接传入System凭据缓存连接。
+
+System 缓存键为 `CacheConstants.IAM_CALLBACK_CREDENTIAL_PREFIX + resource_client_id`，Hash 含 `apiKeyDigest`（SHA-256十六进制）和 `path`，仅启用的真实资源服务器配置发布，禁用即删除；60秒TTL，30秒从数据库重建。此凭据不赋予普通业务 API 权限。网关的System Redis必须可读该缓存，token缓存仍使用原网关Redis；集群实例必须共享token缓存，否则需分别配置回调。
+
+通过认证后只执行 opaque token 与关联派生 JWT 缓存清理。IAM 对账户所有待撤销access token逐个回调所有资源服务器，部分失败保留重试；这是尽力同步，允许与并发内省存在短暂不一致，不承诺版本水位或固定60秒收敛，也不取消已开始的请求。内省缓存和派生 JWT 沿用原实现。
+
+### 签名与缓存验证
+
+| 场景 | 预期结果与定位 |
+| --- | --- |
+| 独立 KeyStore | 网关成功启动，JWK 公钥与下游验签一致；资源、密码、别名错误应启动失败，先检查挂载路径与配置来源。 |
+| 超限加密 / 签名请求 | 首次聚合超过 `max-cached-body-size` 返回 HTTP 413；调大限额前检查业务请求大小与网关内存。 |
+| 已到期的 opaque Token | 缓存命中也不能继续复用过期身份；检查 Token 的 `exp` 与内省响应。 |
+| 升级后的派生 JWT 缓存 | 使用带 `id:` / `u:` 分类的新键；旧键自然过期，无需通过清空整个 Redis 升级。 |
 
 ## 依赖引入
 

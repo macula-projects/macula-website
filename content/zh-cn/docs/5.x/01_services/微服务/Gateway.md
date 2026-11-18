@@ -3,6 +3,8 @@ aliases: ["/docs/01_services/微服务/gateway/"]
 title: "Macula Boot Starter Cloud Gateway"
 linkTitle: "Gateway"
 weight: 3
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "de40118a4d1519a7ac3d47373064a89dc5229a63", "paths": ["macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/README.md", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/pom.xml", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/GatewayProperties.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/config/JwtConfiguration.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/AddJwtGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/BodyGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/CryptoGlobalFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/filter/RmOpaqueTokenEndpointFilter.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/CachingReactiveOpaqueTokenIntrospector.java", "macula-boot-starters/macula-boot-starter-cloud/macula-boot-starter-cloud-gateway/src/main/java/dev/macula/boot/starter/cloud/gateway/security/ResourceServerConfiguration.java"]}]
 ---
 
 ## 概览
@@ -55,6 +57,13 @@ spring:
       port: 6379
 macula:
   gateway:
+    max-cached-body-size: 10MB
+    jwt:
+      key-store: ${GATEWAY_KEY_STORE}
+      key-store-type: ${GATEWAY_KEY_STORE_TYPE:JKS}
+      key-store-password: ${GATEWAY_KEY_STORE_PASSWORD}
+      key-alias: ${GATEWAY_KEY_ALIAS:jose}
+      # key-password 未配置时沿用 KeyStore 密码
     sign-switch: true                       # 接口签名全局开关，默认true
     force-sign: false                       # 是否强制校验指定URL的接口签名，默认false
     crypto-switch: true           			# 接口加解密全局开关，默认true
@@ -70,6 +79,12 @@ macula:
       ignore-urls: /usr/xxx,/bbb/xxx  		# 忽略认证的路径，Ant Path格式
       only-auth-urls: /usr/xx, /bbb/xxx 	# 仅需认证无需鉴权的路径
 ```
+
+### JWT 签名材料
+
+网关在 `macula.gateway.jwt` 下支持 `key-store`（默认 `classpath:jwk/jose.jks`，file/classpath）、`key-store-type`（默认 JKS）、`key-store-password`、`key-alias`（默认 jose）、可选 `key-password`。默认加载保留原资源和密码约定；5.x 签名资源仍由应用提供，不在 Starter 新增私钥。生产应配置独立 RSA 私钥，使用公开内置材料存在身份伪造风险。显式资源、密码或别名错误时启动失败，不回退。
+
+JWKSource 与 JwtEncoder 分别按类型退让，自定义编码器仍可依赖默认 source。密码不进入配置对象 toString 或加载异常。可通过对应 Spring 环境变量覆盖配置，真实凭据不写入仓库。
 
 ## 核心功能
 
@@ -327,6 +342,23 @@ spring:
             max-age: 1800  								# 预检请求的缓存时间，单位为秒（1800秒=30分钟），在这个时间内，浏览器可以缓存CORS的预检请求结果，不必每次都发送预检请求
         add-to-simple-url-handler-mapping: true  # 是否将CORS配置应用于简单的URL处理器映射（通常用于非路由路径）
 ```
+
+### 签名材料与缓存边界
+
+签名配置见[使用配置](#使用配置)。
+
+`macula.gateway.max-cached-body-size` 默认 10MB（10 MiB），必须为正且不超过 int 字节容量；限制首次聚合的签名 / 加密 POST、PUT、PATCH 请求，包括未知 Content-Length 的分块请求；已有缓存直接沿用，首次聚合超限返回 HTTP 413。Opaque 身份缓存读取时检查 exp，TTL 使用剩余有效期，无 exp 时最多 5 分钟；阻塞 Redis 调度到 boundedElastic。密钥和请求/响应明文不再写日志。
+
+派生 JWT 键只在原前缀后增加 `id:` / `u:`，保留 5.x 的租户 `a` 段，区分 JWT_ID 与主体名。旧未分类键不回读，按原 TTL 自然过期；撤销继续调用同一 buildKey。应用隔离沿用各网关独立缓存的部署方式。5.x 的 Token 清理入口继续使用本分支协议，不使用 latest 的专用 API Key 回调。
+
+### 签名与缓存验证
+
+| 场景 | 预期结果与定位 |
+| --- | --- |
+| 独立 KeyStore | 网关成功启动，JWK 公钥与下游验签一致；资源、密码、别名错误应启动失败，先检查挂载路径与配置来源。 |
+| 超限加密 / 签名请求 | 首次聚合超过 `max-cached-body-size` 返回 HTTP 413；调大限额前检查业务请求大小与网关内存。 |
+| 已到期的 opaque Token | 缓存命中也不能继续复用过期身份；检查 Token 的 `exp` 与内省响应。 |
+| 升级后的派生 JWT 缓存 | 使用带 `id:` / `u:` 分类的新键；旧键自然过期，无需通过清空整个 Redis 升级。 |
 
 ## 依赖引入
 

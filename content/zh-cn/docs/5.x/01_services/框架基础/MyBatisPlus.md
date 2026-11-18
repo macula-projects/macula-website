@@ -3,6 +3,8 @@ aliases: ["/docs/01_services/框架基础/mybatisplus/"]
 title: "Macula Boot Starter MyBatis Plus"
 linkTitle: "MyBatisPlus"
 weight: 3
+manual_content: true
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "de40118a4d1519a7ac3d47373064a89dc5229a63", "paths": ["macula-boot-starters/macula-boot-starter-mybatis-plus/README.md", "macula-boot-starters/macula-boot-starter-mybatis-plus/pom.xml", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/config/MyBatisPlusAutoConfiguration.java", "macula-boot-starters/macula-boot-starter-mybatis-plus/src/main/java/dev/macula/boot/starter/mp/handler/MyDataPermissionHandler.java"]}]
 ---
 
 ## 概览
@@ -120,8 +122,8 @@ interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new TenantLineHan
     @Override
     public Expression getTenantId() {
 
-        // 如果上下文租户ID不为空，则用上下文的，否则用配置的租户ID（适合租户负责人切换租户）
-        if (Objects.nonNull(TenantContextHolder.getCurrentTenantId())) {
+        // 只有已认证且非匿名的 ROOT 可以采用临时租户
+        if (SecurityUtils.isRoot() && Objects.nonNull(TenantContextHolder.getCurrentTenantId())) {
             return new LongValue(TenantContextHolder.getCurrentTenantId());
         }
 
@@ -143,7 +145,7 @@ interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new TenantLineHan
 }));
 ```
 
-- 首先是从TenantContextHolder获取租户ID，适合具有多个租户的用户在前端切换租户ID使用；
+- 已认证且非匿名的 ROOT 优先采用 TenantContextHolder；其他身份忽略该提示，继续使用认证租户；
 - 其次是从登录上下文获取租户ID，一般用于ak/sk访问应用的时候，通过应用配置获取租户ID；
 - 最后是从应用配置的租户ID获取
 
@@ -208,6 +210,10 @@ public enum DataScopeEnum implements IBaseEnum<Integer> {
 
 从原理来说，实际上是通过实现DataPermissionHandler，对具体的SQL语句根据用户的数据权限重新按照部门ID或者用户ID生成新的SQL语句过滤数据。
 
+##### 数据权限用户名约定
+
+SELF 用户名仅接受 `[A-Za-z0-9_]+`；空值或非法字符生成 `1 = 0`，不会删除字符后继续查询。合法值使用单引号 SQL 字面量。原 WHERE 与权限条件分别加括号，避免 OR 分支绕过；ALL / DEFAULT 策略保持原行为。
+
 #### 分页插件
 
 引入PaginationInnerInterceptor分页拦截器，返回IPage<T>接口，具体可参考[官方文档](https://baomidou.com/pages/97710a)
@@ -262,6 +268,10 @@ public IPage<UserVO> listUserPages(UserPageQuery queryParams) {
 #### 字段加解密
 
 请参考 [Crypto章节](../crypto)
+
+### 租户切换身份限制
+
+只有已认证且非匿名的 ROOT 可以采用 Holder 中的临时租户；非 ROOT 忽略提示，继续按认证租户、配置兜底选择，不因提示本身返回 403。Holder 不执行目标租户授权，不修改 JWT。
 
 ## 依赖引入
 

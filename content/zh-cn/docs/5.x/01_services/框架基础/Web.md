@@ -4,7 +4,8 @@ title: "Macula Boot Starter Web"
 linkTitle: "WEB"
 weight: 1
 manual_content: true
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "8c57d381e86905e0b73d456ce012c9dd3e37dd54", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}]
+
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "8c57d381e86905e0b73d456ce012c9dd3e37dd54", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "de40118a4d1519a7ac3d47373064a89dc5229a63", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/pom.xml", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/PhoneMaskingSupport.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java"]}]
 ---
 
 ## 概览
@@ -520,6 +521,8 @@ public class HaveNoBlankValidator implements ConstraintValidator<HaveNoBlank, St
 
 通过使用@Sensitive注解可以令某个字段属性在序列化为JSON时按照一定的规则脱敏，并且预置了如下规则：
 * MOBILE：手机号，如：138****2359
+* CHINESE_NAME_V2：保留首尾、间隔点和斜杠分段，详见下方规则
+* PHONE：自动识别手机或座机，详见下方规则
 * CHINESE_NAME：中文名 ，如：黄**
 * ID_CARD：身份证号，如：如511623********0537
 * FIXED_PHONE：座机号，如：****1234
@@ -595,6 +598,50 @@ public @interface Sensitive {
 }
 ```
 
+#### 姓名与电话号码脱敏
+
+`CHINESE_NAME` 保留原行为；新增 `CHINESE_NAME_V2` 对应 `SensitiveUtil.handlerUsernameV2`：单字不变，两字保留首字，三字及以上保留首尾，连续隐藏字符压缩为一个 `*`；间隔点保留且不计字数，`/` 分段独立处理。
+
+| 输入 | CHINESE_NAME_V2 输出 |
+| --- | --- |
+| 欧阳娜娜 | 欧*娜 |
+| 阿不都·热合曼 | 阿*·*曼 |
+| 欧阳娜娜/李四 | 欧*娜/李* |
+
+```java
+@Sensitive(Sensitive.Type.CHINESE_NAME_V2)
+private String name;
+@Sensitive(Sensitive.Type.PHONE)
+private String phone;
+```
+
+##### 电话规则
+
+
+`SensitiveUtil.handlerMobile`、`handlerFixedPhone`、`handlerPhone` 及 `@Sensitive` 的 `MOBILE`、`FIXED_PHONE`、`PHONE` 类型使用相同规则。`handlerPhone` 仅识别类型并调用对应专用方法，不单独实现掩码。
+
+| 输入 | 入口 | 输出 |
+| --- | --- | --- |
+| `13812340000` | 手机/自适应 | `138****0000` |
+| `+86 13812340000` | 手机/自适应 | `+86 138****0000` |
+| `008613812340000` | 手机/自适应 | `0086138****0000` |
+| `010-87651234-888` | 座机/自适应 | `010-****1234-888` |
+| `010-1234567` | 座机/自适应 | `010-12**567` |
+| `010-1234` | 座机/自适应 | `010-1**4` |
+| `010-123` | 座机/自适应 | `010-***` |
+
+- 全球国际码通过 libphonenumber 离线元数据识别，支持 `+`、`00` 前缀；无国际码时默认中国大陆（CN）。外国本地号码请显式提供国际码，不自动猜测所属国家。
+- 手机本地号码 8 位及以上保留前三后四；座机保留可识别区号，主号 8 位及以上保留后四位。去掉国际码、区号和分机后的主号为 4～7 位时隐藏中间两位，奇数长度左侧少保留一位；1～3 位全部隐藏。电话掩码逐位替换数字，不使用姓名的单星压缩规则。
+- 保留原空格、括号、连字符和国际码表示。明确分机标记支持 `ext`、`ext.`、`x`、`#`、`转`、`分机`；国内 `区号-7或8位主号-分机` 格式也保留分机。普通国际分组连字符不直接视为分机。
+- 号码类型无法区分手机/座机时，`handlerPhone` 委派座机规则；无法确认的区号不额外保留。未知国际码和无法安全解析的格式返回 `*`，null 和空字符串仍返回 null。
+- `handlerMobile` 的国际码后整体本地号码按手机规则处理；`handlerFixedPhone` 才单独保留可识别的座机区号。识别仅用于脱敏，不验证真实归属或可接通性，不联网查询。
+
+##### 验证 JSON 输出
+
+通过 Controller 返回带注解的对象，检查姓名和电话字段是否分别得到表中结果。注解在 JSON 序列化时生效，不会修改数据库原值；直接读取 Java 字段得到的仍是原值。自行调用工具方法时使用返回值，不要把脱敏后的展示值回写为真实联系方式。
+
+若 JSON 仍是原值，先确认返回字段上存在 `@Sensitive` 且实际使用本组件的 Jackson 序列化链；若国际号码结果为 `*`，先检查国际码与分机格式，不要用删除国际码的方式猜测归属。
+
 ### Jackson配置
 
 默认对Jackson做了如下配置
@@ -614,7 +661,12 @@ public Jackson2ObjectMapperBuilderCustomizer customizer() {
 
 ### 租户ID
 
-在HTTP请求头或者请求参数中添加`tenantId`参数可以设置当前请求的租户ID上下文，用户后续的数据库操作按照租户ID隔离数据。一般用在前端界面切换不同租户来管理。
+Header 优先于 Query 提供 `tenantId` 提示；该值本身不代表授权。只有已认证且非匿名的 ROOT 可由 MyBatisPlus 插件采用此值切换租户，其他身份继续使用认证租户和默认值。
+
+#### 请求结束后的清理
+
+TenantFilter 在 finally 清理本次线程租户上下文，包括参数转换失败及下游异常；请求提示不修改 JWT，也不自动取得目标租户权限。
+
 
 ## 依赖引入
 
