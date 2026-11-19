@@ -5,7 +5,7 @@ linkTitle: "WEB"
 weight: 1
 manual_content: true
 
-source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "8c57d381e86905e0b73d456ce012c9dd3e37dd54", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "de40118a4d1519a7ac3d47373064a89dc5229a63", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/pom.xml", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/PhoneMaskingSupport.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "4b10a6b41154969696a7982db862f12986519467", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/test/java/dev/macula/boot/starter/web/utils/SensitiveUtilTest.java"]}]
+source_refs: [{"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "8c57d381e86905e0b73d456ce012c9dd3e37dd54", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-security/README.md"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "de40118a4d1519a7ac3d47373064a89dc5229a63", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/pom.xml", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/filter/TenantFilter.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/PhoneMaskingSupport.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "4b10a6b41154969696a7982db862f12986519467", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/test/java/dev/macula/boot/starter/web/utils/SensitiveUtilTest.java"]}, {"repository": "https://github.com/macula-projects/macula-boot", "branch": "5.x", "commit": "036f9fa6486bee532f817eaa3a5c4e91d5aeaa33", "paths": ["macula-boot-starters/macula-boot-starter-web/README.md", "macula-boot-starters/macula-boot-starter-web/pom.xml", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/handler/SensitiveHandler.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java", "macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/utils/SensitiveUtil.java"]}]
 ---
 
 ## 概览
@@ -532,7 +532,10 @@ public class HaveNoBlankValidator implements ConstraintValidator<HaveNoBlank, St
 * CUSTOM_HIDE：自定义，有多少个字符替换成多少个*
 * CUSTOM_RETAIN_HIDE：保留方式隐藏
 * CUSTOM_OVERLAY：自定义,只替换成指定个*
+* CUSTOM_HANDLER：交给指定的 `SensitiveHandler` 实现处理，见[自定义字段脱敏 Handler](#自定义字段脱敏-handler)
+
 例如：
+
 ```java
 @Data
 public class DemoDto {
@@ -551,15 +554,9 @@ public class DemoDto {
 
 }
 ```
-@Sensitive注解定义：
+`@Sensitive` 注解源码节选（省略 `Type` 枚举，完整定义见[源码](https://github.com/macula-projects/macula-boot/blob/036f9fa6486bee532f817eaa3a5c4e91d5aeaa33/macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/annotation/Sensitive.java)）：
 
 ```java
-/**
- * {@code Sensitvie} 脱敏的JSON注解
- *
- * @author rain
- * @since 2022/7/28 23:48
- */
 @Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
@@ -594,7 +591,13 @@ public @interface Sensitive {
      */
     int overlayRepeat() default 4;
 
-		...
+    /**
+     * CUSTOM_HANDLER是生效
+     */
+    Class<? extends SensitiveHandler> handler() default SensitiveHandler.class;
+
+
+    // Type 枚举省略
 }
 ```
 
@@ -650,6 +653,60 @@ private String phone;
 通过 Controller 返回带注解的对象，检查姓名和电话字段是否分别得到表中结果。注解在 JSON 序列化时生效，不会修改数据库原值；直接读取 Java 字段得到的仍是原值。自行调用工具方法时使用返回值，不要把脱敏后的展示值回写为真实联系方式。
 
 若 JSON 仍是原值，先确认返回字段上存在 `@Sensitive` 且实际使用本组件的 Jackson 序列化链；若国际号码结果为 `*`，先检查国际码与分机格式，不要用删除国际码的方式猜测归属。
+
+#### 自定义字段脱敏 Handler
+
+内置规则不能满足业务需求时，实现 `SensitiveHandler`，并在需要脱敏的 String 字段上指定 `Sensitive.Type.CUSTOM_HANDLER` 和 `handler`。接口源码节选如下：
+
+```java
+public interface SensitiveHandler {
+    String handle(String value, Sensitive sensitive);
+}
+```
+
+处理器同时收到字段原文与该字段的完整注解，可以自行解释 `startInclude`、`endExclude`、`overlayRepeat` 等参数。以下为应用实现示例，处理器与返回对象分别保存为 Java 文件：
+
+```java
+import dev.macula.boot.starter.web.annotation.Sensitive;
+import dev.macula.boot.starter.web.handler.SensitiveHandler;
+import dev.macula.boot.starter.web.utils.SensitiveUtil;
+
+public class AccountMaskingHandler implements SensitiveHandler {
+    @Override
+    public String handle(String value, Sensitive sensitive) {
+        return SensitiveUtil.hide(value, sensitive.startInclude(), sensitive.endExclude());
+    }
+}
+```
+
+```java
+import dev.macula.boot.starter.web.annotation.Sensitive;
+
+public class AccountVO {
+    @Sensitive(value = Sensitive.Type.CUSTOM_HANDLER, handler = AccountMaskingHandler.class,
+        startInclude = 2, endExclude = 6)
+    private String account;
+
+    public AccountVO(String account) {
+        this.account = account;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+}
+```
+
+Controller 返回 `new AccountVO("abcdefgh")` 时，JSON 中的 `account` 应为 `ab****gh`；若启用统一响应包装，该字段位于 `data` 内。
+
+- `handler` 仅在 `CUSTOM_HANDLER` 时使用，默认值 `SensitiveHandler.class` 是未配置标记，不能直接作为实现类。
+- 实现类及无参构造器应公开且可访问；若使用嵌套类，应声明为 `public static`。处理器由序列化器创建，不从 Spring 容器获取，不能依赖自动注入。
+- 实例可能被 Jackson 缓存并跨线程复用，应保持无状态或保证线程安全，不能把本次请求或字段值保存到实例中。
+- null 和空字符串沿用原序列化行为，不调用 Handler；Handler 返回 null 时输出 JSON null。
+
+未指定实现类、无参构造器缺失或不可访问、构造失败时，Jackson 2 的 `JsonMappingException` 会包含字段名、Handler 类名并保留原始原因。处理器执行失败会继续传播异常，不回退输出原文。出现初始化异常时按字段名检查 `handler` 与构造器；出现执行异常时检查处理器逻辑。内置脱敏类型及原有参数保持兼容。
+
+完整源码见 [SensitiveHandler](https://github.com/macula-projects/macula-boot/blob/036f9fa6486bee532f817eaa3a5c4e91d5aeaa33/macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/handler/SensitiveHandler.java) 与 [SensitiveSerializer](https://github.com/macula-projects/macula-boot/blob/036f9fa6486bee532f817eaa3a5c4e91d5aeaa33/macula-boot-starters/macula-boot-starter-web/src/main/java/dev/macula/boot/starter/web/json/SensitiveSerializer.java)。
 
 ### Jackson配置
 
